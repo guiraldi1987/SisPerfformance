@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-club-red:   #cc1e1e;
+  --color-club-dark:  #0f0f0f;
+  --color-club-gold:  #c9a22a;
+
+  /* Zonas de intensidade — semânticas, mantidas igual em dark/light */
+  --color-zone-green:  #4caf50;
+  --color-zone-yellow: #8bc34a;
+  --color-zone-orange: #ff9800;
+  --color-zone-red:    #f44336;
+  --color-zone-hsr:    #f97316;
+  --color-zone-sprint: #ef4444;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-800 transition-colors duration-200;
+  }
+  .dark body {
+    background-color: #111111;
+    color: #e8e8e8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer utilities {
+  .accent-glow { box-shadow: 0 0 0 1px rgba(204, 30, 30, 0.35), 0 2px 12px rgba(204, 30, 30, 0.18); }
+  .stripe-bg {
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 7px,
+      rgba(0,0,0,0.03) 7px, rgba(0,0,0,0.03) 14px
+    );
+  }
+  .dark .stripe-bg {
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 7px,
+      rgba(255,255,255,0.015) 7px, rgba(255,255,255,0.015) 14px
+    );
+  }
+}
