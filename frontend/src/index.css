@@ -1,28 +1,57 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-outfit: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
   --color-club-red:   #cc1e1e;
-  --color-club-dark:  #0f0f0f;
-  --color-club-gold:  #c9a22a;
+  --color-club-red-hover: #b21818;
+  --color-club-red-light: #ef4444;
+  --color-club-dark:  #08090c;
+  --color-club-dark-card: #0e1117;
+  --color-club-gold:  #d4af37;
 
   /* Zonas de intensidade — semânticas, mantidas igual em dark/light */
-  --color-zone-green:  #4caf50;
-  --color-zone-yellow: #8bc34a;
-  --color-zone-orange: #ff9800;
-  --color-zone-red:    #f44336;
-  --color-zone-hsr:    #f97316;
-  --color-zone-sprint: #ef4444;
+  --color-zone-green:  #10b981;
+  --color-zone-yellow: #f59e0b;
+  --color-zone-orange: #f97316;
+  --color-zone-red:    #ef4444;
+  --color-zone-hsr:    #ec4899;
+  --color-zone-sprint: #f43f5e;
 }
 
 @layer base {
-  body {
-    @apply bg-slate-100 text-slate-800 transition-colors duration-200;
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
   }
+  
+  body {
+    @apply bg-slate-50 text-slate-800 transition-colors duration-300;
+    font-family: var(--font-sans);
+  }
+  
   .dark body {
-    background-color: #111111;
-    color: #e8e8e8;
+    background-color: #050608;
+    color: #e2e8f0;
+  }
+
+  /* Melhoria estética geral de scrollbars no tema escuro */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-200 dark:bg-white/10 rounded-full hover:bg-slate-300 dark:hover:bg-white/20;
   }
 }
 
@@ -34,19 +63,130 @@
 }
 
 @layer utilities {
-  .accent-glow { box-shadow: 0 0 0 1px rgba(204, 30, 30, 0.35), 0 2px 12px rgba(204, 30, 30, 0.18); }
+  /* Glassmorphism e Acrílico Premium */
+  .glass-panel {
+    @apply bg-white/70 dark:bg-[#0b0c10]/75 backdrop-blur-md border border-slate-200/40 dark:border-white/[0.04] shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.2)];
+  }
+  
+  .glass-panel-hover {
+    @apply transition-all duration-300 hover:bg-white/90 dark:hover:bg-[#0e1015]/80 hover:border-slate-300/50 dark:hover:border-white/[0.08] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] hover:-translate-y-0.5;
+  }
+
+  /* Glow e Brilho Neon sutil nas bordas e sombras */
+  .accent-glow { 
+    box-shadow: 0 0 0 1px rgba(204, 30, 30, 0.25), 0 4px 20px rgba(204, 30, 30, 0.15); 
+  }
+  
+  .neon-glow-red {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.15), inset 0 0 8px rgba(239, 68, 68, 0.05);
+  }
+
+  .neon-glow-green {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.12), inset 0 0 8px rgba(16, 185, 129, 0.04);
+  }
+
+  /* Stripe backgrounds mais discretos e premium */
   .stripe-bg {
     background-image: repeating-linear-gradient(
-      90deg,
-      transparent 0px, transparent 7px,
-      rgba(0,0,0,0.03) 7px, rgba(0,0,0,0.03) 14px
+      45deg,
+      transparent 0px, transparent 10px,
+      rgba(0,0,0,0.01) 10px, rgba(0,0,0,0.01) 20px
     );
   }
   .dark .stripe-bg {
     background-image: repeating-linear-gradient(
-      90deg,
-      transparent 0px, transparent 7px,
-      rgba(255,255,255,0.015) 7px, rgba(255,255,255,0.015) 14px
+      45deg,
+      transparent 0px, transparent 10px,
+      rgba(255,255,255,0.005) 10px, rgba(255,255,255,0.005) 20px
     );
   }
+
+  /* Text-glow esportivo para títulos e números grandes */
+  .text-glow-red {
+    text-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+  }
+  
+  .text-glow-gold {
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+  }
+
+  /* Efeito de escala elástica */
+  .card-bounce {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+}
+
+/* ─── Print / Save as PDF ────────────────────────────────────────────────── */
+@media print {
+  :root, .dark { color-scheme: light !important; }
+  html, body, .dark body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  aside, nav.print-hide, .print-hide,
+  button.print-hide,
+  [role="dialog"],
+  .print\:hidden { display: none !important; }
+
+  main { padding: 0 !important; }
+  body { margin: 0 !important; }
+  @page { margin: 8mm 10mm; size: A4 landscape; }
+
+  .overflow-x-auto {
+    overflow: visible !important;
+    overflow-x: visible !important;
+  }
+  
+  table {
+    width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+  }
+  
+  table th, table td {
+    padding: 4px 6px !important;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+  }
+
+  table td:first-child, table th:first-child {
+    white-space: nowrap !important;
+  }
+
+  section, article,
+  .bg-white,
+  .dark\:bg-\[\#0a0a0a\],
+  .rounded-xl, .rounded-2xl {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-allow-break {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  h1, h2, h3 { break-after: avoid; page-break-after: avoid; }
+  a { color: inherit !important; text-decoration: none !important; }
+  
+  .border, .border-slate-200, .border-slate-100 {
+    border-color: #cbd5e1 !important;
+  }
+
+  .text-\[10px\], .text-\[11px\] { font-size: 10px !important; }
 }

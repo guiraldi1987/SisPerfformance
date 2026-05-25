@@ -1,0 +1,797 @@
+# Sistema de Gestão de Performance Esportiva — Paulista FC
+
+> **Documento de handover** — captura tudo que foi construído, o que falta, e como continuar em outra máquina.
+
+---
+
+## 🎯 Contexto do Projeto
+
+**Cliente:** Paulista FC — Departamento de Fisiologia
+**Objetivo:** Sistema MVP para análise de performance física de atletas a partir de relatórios GPS Catapult (CSV).
+**Usuário-alvo:** Preparador físico — precisa visualizar carga de treino, identificar atletas em risco de lesão e comparar performance individual ao longo do tempo.
+
+---
+
+## 🛠️ Stack Tecnológica
+
+### Backend
+- **Hono v4** + `@hono/node-server` (porta `3001`)
+- **TypeScript** com `tsx watch` em dev
+- **Drizzle ORM** + **better-sqlite3** (banco local `backend/ieeegp.db`)
+- **PapaParse** para CSV
+- WAL mode + `foreign_keys = ON`
+
+### Frontend
+- **React 19** + **Vite 8** + **TypeScript**
+- **Tailwind CSS v4** (com `@custom-variant dark` e `@theme`)
+- **React Router v6** (BrowserRouter, NavLink, useParams)
+- Tema dark/light com persistência via localStorage
+- Cores do clube: vermelho `#cc1e1e` (`bg-club-red`)
+
+### Decisões importantes
+- Migração de PostgreSQL → SQLite (senha do Postgres era desconhecida)
+- Tailwind v3 → v4 (resolução de conflito de plugin)
+- `parseBody({ all: true })` no Hono v4 — **crítico** para upload de arquivo
+
+---
+
+## 📁 Estrutura
+
+```
+IEEEGP - Cel Eduardo/
+├── backend/
+│   ├── src/
+│   │   ├── index.ts                    # mounting de rotas + cors
+│   │   ├── db/
+│   │   │   ├── index.ts                # conexão SQLite + WAL
+│   │   │   └── schema.ts               # tabelas: jogadores, sessoes, metricas
+│   │   └── routes/
+│   │       ├── upload.ts               # POST /api/upload-gps
+│   │       ├── jogadores.ts            # CRUD + GET /:id/performance
+│   │       ├── sessoes.ts              # GET /, /listagem, /:id, /:id/metricas, /:id/analise, PUT /:id
+│   │       ├── analytics.ts            # team-overview, ACWR, microciclo, posicoes-benchmarks (com p95)
+│   │       ├── auth.ts                 # POST /login, GET /me — JWT HS256
+│   │       └── usuarios.ts             # CRUD de usuários/staff técnico
+│   ├── ieeegp.db                       # SQLite (gitignore)
+│   └── drizzle.config.ts
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx                     # rotas
+│   │   ├── theme.tsx                   # ThemeProvider dark/light
+│   │   ├── pages/
+│   │   │   ├── Layout.tsx              # sidebar com 5 nav links + indicador API
+│   │   │   ├── Painel.tsx              # /painel (visão geral + janela personalizável + anomalias)
+│   │   │   ├── Sessoes.tsx             # /sessoes (lista por mês + calendário + filtros)
+│   │   │   ├── SessaoDashboard.tsx     # /sessao/:id (3 abas)
+│   │   │   ├── Comparar.tsx            # /comparar (comparação de 2-4 jogadores)
+│   │   │   ├── Jogadores.tsx           # /jogadores (CRUD + gestão de elenco + wizard reapresentação)
+│   │   │   ├── JogadorPerfil.tsx       # /jogador/:id (perfil completo)
+│   │   │   ├── NotFound.tsx            # rota 404 catch-all
+│   │   │   ├── Login.tsx               # /login (form de autenticação)
+│   │   │   ├── Upload.tsx              # /upload (form CSV)
+│   │   │   └── Usuarios.tsx            # /usuarios (Gerenciamento do Staff Técnico)
+│   │   ├── components/charts/
+│   │   │   ├── Gauge.tsx                       # gauge SVG semicírculo
+│   │   │   ├── InlineBar.tsx                   # barra inline simples
+│   │   │   ├── AcwrChart.tsx                   # ACWR com bandas
+│   │   │   ├── TrendChart.tsx                  # 4 sparklines (dist/m·min/HSR/sprint)
+│   │   │   ├── MatchTrainingCompare.tsx        # barras pareadas Jogo × Treino
+│   │   │   ├── MicrocicloChart.tsx             # barras MD-N..MD..MD+N
+│   │   │   ├── RadarComparativo.tsx            # radar atleta × posição × p95
+│   │   │   ├── BoxPlotByPosition.tsx           # box plot Tukey por posição
+│   │   │   └── VolumeIntensityScatter.tsx      # scatter 4-quadrantes com zona ideal
+│   │   ├── lib/
+│   │   │   ├── api.ts                  # API_BASE
+│   │   │   ├── authClient.ts           # token storage + fetch interceptor (Bearer + 401 handler)
+│   │   │   ├── constants.ts            # POSICOES, POSICAO_COLOR, POSICAO_SIGLA
+│   │   │   ├── format.ts               # formatData, formatSeconds
+│   │   │   └── insights.ts             # buildInsights() — 4 categorias auto-geradas
+│   │   └── components/
+│   │       ├── AuthProvider.tsx           # contexto de autenticação (useAuth)
+│   │       ├── ProtectedRoute.tsx         # wrapper que exige sessão válida
+│   │       ├── ConfirmModal.tsx           # confirma ação destrutiva (com prop opcional `details`)
+│   │       ├── EditSessaoModal.tsx        # modal reutilizável (editar sessão — usado em Sessoes + SessaoDashboard)
+│   │       ├── Toast.tsx                  # ToastProvider + useToast (sucesso/erro/info, auto-dismiss)
+│   │       ├── RatioCell.tsx              # célula EXC/CON com semáforo + ícone direcional (▼/●/▲)
+│   │       └── ErrorBoundary.tsx
+│   └── public/
+│       └── paulista-logo.png
+├── pdf_pages/                          # screenshots da referência (XV de Jaú x Paulista)
+├── pdf_pages_ref/                      # ref. (Relatório por posição)
+└── HANDOVER.md                         # este arquivo
+```
+
+---
+
+## 🗃️ Schema do Banco
+
+### `jogadores`
+- `id` (PK), `nomeCompleto`, `apelido`, `posicao`, `codigoCsv` (unique), `fotoUrl`
+- **`status`** (default `'ativo'`): `'ativo'` | `'inativo'` — filtra dashboards
+- **`dataChegada`** (ISO, nullable): primeira sessão participada (auto-backfill no boot)
+- **`dataSaida`** (ISO, nullable): preenchido quando vira inativo
+
+### `sessoes`
+- `id`, `data` (YYYY-MM-DD), `tipo` ('Treino'|'Jogo'), `descricao` (jogo), `equipe`, `local`, `createdAt`
+
+### `metricas` (1 linha por jogador-período-sessão)
+**Identidade:** `id`, `jogadorId`, `sessaoId`, `periodo`
+
+**Volume:**
+- `duracao` (segundos), `distanciaTotal` (m), `velocidadeMaxima` (km/h)
+- `hsr` (High Speed Distance, m), `hsrEsforcos`, `sprint` (Sprint Distance, m), `sprintEsforcos`
+- `aceleracoes`, `desaceleracoes`, `acelDesacelTotal`
+
+**Intensidade (por minuto):**
+- `metragemPorMinuto`, `hsrPorMinuto`, `sprintPorMinuto`, `acelDesacelPorMinuto`
+
+**Carga:**
+- `cargaJogador` (Player Load), `cargaPorMinuto`, `maxAceleracao`, `maxDesaceleracao`
+
+**Distribuição por zona de velocidade:**
+- `distStanding` (Z1, 0-6 km/h)
+- `distWalking` (Z2, 6-11)
+- `distJogging` (Z3, 11-14)
+- `distRunning` (Z4, 14-19)
+- `distHi` (Z5, 19-25)
+- (`sprint` já é Z6, > 25 km/h)
+
+### `usuarios`
+- `id` (PK), `username` (unique), `name`, `passwordHash`, `role`, `status` (default `'ativo'`): `'ativo'` | `'inativo'`, `createdAt`
+
+---
+
+## 🔌 Endpoints Backend
+
+### Upload
+- `POST /api/upload-gps` — multipart com `file` + `tipo` + `jogo` + `equipe` + `local`
+  - Lê data automaticamente da linha `Date:,DD/MM/YYYY` do CSV
+  - Auto-cria jogadores ausentes pelo "Player Name"
+  - Suporta períodos: Session, Aquecimento, 1º Tempo, 2º Tempo, Complemento
+
+### Jogadores
+- `GET /api/jogadores?status=ativo|inativo|todos` — lista (default: `ativo`)
+- `GET /api/jogadores/:id` — detalhe
+- `POST /api/jogadores` — cria
+- `PUT /api/jogadores/:id` — atualiza (aceita `status`, `dataChegada`, `dataSaida`; auto-preenche `dataSaida` quando muda para inativo)
+- `POST /api/jogadores/batch-status` — atualização em lote (body: `{ ids[], status, dataSaida? }`) — usado pelo wizard de Reapresentação
+- `DELETE /api/jogadores/:id` — remove permanentemente (preferir marcar inativo para preservar histórico)
+- `GET /api/jogadores/:id/performance?tipo=Treino|Jogo` — histórico de sessões
+- `POST /api/jogadores/:id/foto` — upload multipart com a imagem do atleta (`foto`). Valida formato (JPEG, PNG, WEBP), tamanho máximo de 2MB, exclui a foto antiga do disco local e atualiza o campo `fotoUrl` no banco de dados.
+
+### Sessões
+- `GET /api/sessoes` — lista enxuta (ordem desc por data) — usada por seleção/sidebar
+- `GET /api/sessoes/listagem` — lista **enriquecida** com `atletasCount`, `atletasTotal`, `duracaoMax`, `cargaMedia`, `cargaTotal`, `distMedia` por sessão (single round-trip)
+- `GET /api/sessoes/:id` — detalhe + períodos disponíveis
+- `GET /api/sessoes/:id/metricas?periodo=Session` — métricas por período
+- `GET /api/sessoes/:id/analise` — agregado completo (períodos + atletas Session + médias + participação + zonasVelocidade + **`historico`** com médias do mesmo tipo excluindo a atual)
+- `PUT /api/sessoes/:id` — atualiza metadados (data, tipo, descrição, equipe, local) — **não** altera métricas
+- `DELETE /api/sessoes/:id` — remove (cascade)
+
+### Analytics
+- `GET /api/analytics/team-overview?start=ISO&end=ISO` — Painel do Time
+  - Janela do heatmap **personalizável** via `start`/`end` (fallback: últimos 14d até hoje, max 366d)
+  - Retorna `windowStart`, `windowEnd`, `windowDias` para confirmação
+  - Inclui `anomalias[]` — atletas com |z-score| > 2 vs média pessoal em Player Load, distância e m/min
+  - Também: `alertas` por zona ACWR, lista `atletas`, `cargaSemanal[]`, `insights[]`
+- `GET /api/analytics/jogadores/:id/acwr` — série temporal de ACWR
+- `GET /api/analytics/jogadores/:id/microciclo` — distribuição de carga por dia do ciclo (MD-7..MD..MD+7)
+  - Classifica cada treino do atleta pelo offset ao jogo mais próximo do próprio jogador
+  - Empate na distância → prefere MD- (próximo jogo)
+- `GET /api/analytics/posicoes-benchmarks` — médias + p95 por posição (somente jogos)
+- `GET /api/analytics/comparar?ids=1,2,3` — médias lado-a-lado para 2-4 jogadores (geral, jogos, treinos + sparkline)
+  - `sessaoId=5` — filtra para uma sessão específica
+  - `ultimos=3` — média dos últimos N jogos
+  - Retorna também `sessoes[]` (lista de sessões disponíveis para dropdown)
+  - Cada item inclui também `top.*` (p95 — "melhor da posição") para uso no radar comparativo
+
+### Autenticação
+- `POST /api/auth/login` — autentica usuário e senha (via body JSON `{ username, password }`). Tenta primeiro validar contra o banco de dados na tabela `usuarios` (apenas para contas com status `'ativo'`); se não autenticado ou em caso de falha, utiliza o fallback seguro nas variáveis de ambiente (`AUTH_USERNAME`/`AUTH_PASSWORD_HASH` no `.env`). Retorna token JWT (HS256 com validade configurável de 12 horas) e metadados básicos do usuário.
+- `GET /api/auth/me` — valida o token corrente enviado via header Bearer e ecoa o payload do usuário ativo da sessão.
+
+### Usuários (Staff Técnico)
+- `GET /api/usuarios` — lista todos os profissionais técnicos do staff (sem expor o hash da senha, ordenados alfabeticamente por nome).
+- `POST /api/usuarios` — adiciona um novo profissional ao staff técnico (gerando hash bcrypt com cost 12 e validando unicidade de username).
+- `PUT /api/usuarios/:id` — atualiza dados cadastrais (nome, cargo, status ativo/inativo e nova senha opcional). Protege contra auto-inativação crítica do próprio usuário logado.
+- `DELETE /api/usuarios/:id` — remove permanentemente o usuário do staff (com trava rígida para impedir a auto-exclusão da própria conta em uso).
+
+---
+
+## 🖼️ Páginas Frontend
+
+### `/painel` — Painel do Time
+- **Filtros por Clique nos AlertCards**: Os 4 cards analíticos principais do topo (Alto Risco, Atenção, Sub-treinado, Zona Ideal) agem como botões de filtro interativos. O clique aplica um contorno brilhante com efeito de glow neon correspondente ao status e filtra instantaneamente a lista de atletas abaixo.
+- **Toggle View Switcher (Comutador)**: Seletor estilizado que alterna o modo de visualização entre:
+  - **Aba Grid de Cards (Cards Premium)**: Exibe os atletas no formato "carta tática" premium com sua foto real (usando `<PlayerAvatar>` ou iniciais do jogador com fundo em degradê do clube como fallback), badge de posição correspondente em neon, data da última sessão formatada em relação ao momento atual (ex: "Sessão hoje", "Ontem" ou "Há 3 dias"), valor de ACWR em destaque colorido, barra linear gráfica de progresso de ACWR (com zona ideal entre 0.8 e 1.3 destacada) e tendência de carga (setas animadas ▲/▼/—).
+  - **Aba Tabela (Tabela Tática)**: Redesenhada com paddings amplos, visual limpo e indicador linear de ACWR.
+- Insights auto-gerados (texto).
+- **Card de Anomalias (>2σ)**: atletas cuja última sessão fugiu da média pessoal, com chips por métrica (direção ↑/↓, % delta, z-score) — clicável para `/jogador/:id`. Exibição compacta integrada com `<PlayerAvatar>` para cada jogador em desvio.
+- **Card "Sem participação recente >60d"** (Lote Gestão de Elenco): atletas ativos sem sessão há 60+ dias com botão "Marcar inativo" inline (data de saída = última sessão) — só aparece quando há candidatos.
+- Todo o painel filtra automaticamente apenas atletas com `status='ativo'`.
+- **Carga do Time** com **janela personalizável**:
+  - Chips rápidos: 7d / 14d / 30d / 60d / 90d
+  - Range customizado "De / Até" (ISO `<input type="date">`)
+  - Subtítulo dinâmico: `dd/mm/yyyy → dd/mm/yyyy · N dias`
+  - **Heatmap adaptativo:**
+    - ≤21 dias: linha horizontal de células médias com data + valor + badge JOGO
+    - >21 dias: grid semanal estilo GitHub (7 linhas dom→sáb × N semanas) com labels de mês e legenda gradient
+- Lista de atletas em risco/atenção (clicável → perfil)
+- Lista de atletas sub-treinados/ideal
+
+### `/sessoes` — Arquivo de Sessões (NOVA)
+- Header com totais (sessões, jogos, treinos) + botão "Nova sessão"
+- Toolbar com filtros combinados:
+  - **Busca textual** debounced 200ms (descrição, local, equipe, data)
+  - **Tipo**: Todos / Jogo / Treino
+  - **Range de datas**: De / Até
+  - **Ordenação**: Data ↓/↑ · Carga ↓ · Atletas ↓
+  - **Toggle de vista**: Lista / Calendário
+- **Vista Lista** (default): seções colapsáveis por mês
+  - Header do mês: nome + total + contagem jogos/treinos com bullets coloridos + carga média
+  - Mês mais recente expandido por padrão; com filtros ativos, todos abrem
+  - Grid responsivo 1→2→3→4 colunas de cards
+- **Vista Calendário**: navegação ◄ Mês ► + botão "Hoje"
+  - Grid 7×N com headers, badge MD nos dias de jogo, heat fill vermelho proporcional à carga média
+  - Até 2 chips de descrição por célula, "+N" no overflow
+  - Clique abre painel inferior com cards completos do dia
+- **Cards de sessão** mostram: tile data (mês curto + dia), título (descrição/fallback), local/equipe, badge tipo, 3 stats (atletas, duração, distância em km), barra de carga colorida por intensidade, trash icon no hover
+
+### `/sessao/:id` — Dashboard de Sessão (3 abas)
+
+**Aba Resumo:**
+- 3 donuts grandes: Volume / Geral / Intensidade (% vs benchmark MD)
+  - **Setinhas ↑↓** abaixo de cada donut com delta % vs média histórica do mesmo tipo
+- 6 barras com benchmark line 100% (esquerda absoluto / direita por minuto)
+  - **Coluna extra com setinha ↑↓** + **marcador preto vertical** indicando a média histórica na barra
+- Donut "Participação do Atleta" (Full vs N/A)
+- Volume & Intensity chart por jogador, agrupado por posição — agora **consome benchmarks dinâmicos por posição** quando há ≥3 amostras
+- **Scatter Volume × Intensidade**: 4 quadrantes coloridos (Sobrecarga vermelha / Curto-intenso roxa / Sub-estímulo amarela / Volume sem ritmo azul) + zona Ideal central verde, pontos coloridos pela posição com hover crosshair
+- **Box Plot por Posição**: caixa Q1–Q3 + linha grossa mediana + whiskers Tukey 1.5×IQR + outliers como pontos brancos com hover (toggle entre 5 métricas)
+- **Distribuição por Zona de Velocidade** (stacked bar Z1-Z6 + 6 cards)
+
+**Aba Análise do Período:**
+- Cards 2x2 (Aquecimento, 1º Tempo, 2º Tempo, Complemento)
+- 2 donuts por card (Volume %, Intensidade %)
+- 6 barras por card com benchmark line
+
+**Aba Análise do Atleta:**
+- Tabela com mini-barras coloridas por métrica (cores fixas)
+- Filtros: busca por nome + posição + ordenação por qualquer métrica
+- **Coluna "EXC/CON"** ao final (desac÷acel) com semáforo de risco neuromuscular, mesmas bandas e tooltip do JogadorPerfil — média no rodapé usa média dos ratios atleta-a-atleta
+- Linhas clicáveis → `/jogador/:id`
+
+### `/jogador/:id` — Perfil do Atleta
+- Header com avatar + posição numerada colorida + apelido
+- Filtros: tipo (Todos/Treino/Jogo) + período (Session/1º Tempo/etc.) + **dropdown de sessão específica** (filtra todos os widgets para um snapshot único; respeita Tipo selecionado)
+- Tabela de sessões com mini-barras coloridas por métrica + **coluna "EXC/CON"** (desac÷acel, verde 0.85–1.15, âmbar 0.70–1.30, vermelho fora — indica balanço excêntrico/concêntrico e risco neuromuscular)
+- **Card "Evolução por Sessão"**: 4 sparklines (Distância · m/min · HSR · Sprint), cada um com delta % vs média + média tracejada + último ponto destacado · jogos sólidos · treinos translúcidos
+- **Card "Jogo × Treino"**: barras pareadas (5 métricas) + chip "Treino = X% do jogo" colorido
+- **Card "Insights"**: até 4 bullets coloridos (verde/âmbar/cinza) — Match readiness · Forma recente · Pico · Acel × Desac
+- **Card ACWR** com gráfico de série temporal + bandas coloridas (sub-treinado / ideal / atenção / risco)
+- **Card Microciclo MD-N..MD..MD+N**: barras com janela canônica MD-4..MD+2, MD em vermelho, MD- na cor da métrica, MD+ em cyan, vazios tracejados, toggle entre 5 métricas
+- **Radar Comparativo**: polígono vermelho do atleta sobre cinza tracejado da média da posição, borda externa = p95 (melhor da posição), hover por eixo com z-score relativo
+- 5 Gauges no rodapé (Total Dist, HSR, Sprint, Aceleração, Desaceleração)
+- Modal de edição (apelido + posição)
+
+### `/jogadores` — Lista de Atletas (CRUD + Gestão de Elenco)
+- Header com botão **"Atualizar Elenco"** (vermelho) — abre wizard de reapresentação
+- **Chips de filtro** Ativos / Inativos / Todos com contagem visível
+- Busca textual por nome, apelido, posição ou código CSV
+- Aviso âmbar quando há atletas ativos sem posição
+- Form de cadastro manual (também cria auto via upload de CSV)
+- Tabela com colunas: Jogador · Posição · **Status** (badge animado) · **Período** (desde X · saiu Y) · Código CSV · Ações
+- Inativos aparecem acinzentados com `line-through` no nome
+- **Ações por linha**: Performance (vermelho) · Editar (outline) · **Toggle status** (seta saída ou ↻ reativar) · Remover permanente (ícone rosa)
+- **Modal de edição** estendido: apelido + posição + toggle status (No elenco / Saiu do clube) + date picker auto-preenchido quando muda para inativo
+- **Wizard "Atualizar Elenco para Reapresentação"**: lista todos os ativos pré-marcados — usuário desmarca quem saiu — confirma e o backend faz batch-status em uma chamada
+
+### `/upload` — Importar CSV
+- File picker
+- Tipo (Treino/Jogo)
+- Jogo (nome do adversário/descrição)
+- Equipe (default: Paulista FC)
+- Local
+- **Data lida automaticamente do CSV** (linha `Date:,DD/MM/YYYY`)
+
+### `/usuarios` — Gerenciamento do Staff Técnico (NOVA)
+- Header com contagem dinâmica e botão **"Adicionar Profissional"** (indigo).
+- **Cards de Estatísticas Rápidas** no topo: Total de Profissionais, Contas Ativas e Contas Inativas.
+- Barra de busca textual interativa em tempo real.
+- **Tabela de Profissionais**:
+  - Exibe avatar de inicial, nome completo, login (`@username`), badge com cor contextual conforme a especialidade (ex: azul para Preparador Físico, indigo para Fisiologista, roxo para Treinador, etc.), status com bullet animado pulsante e a data de criação formatada.
+  - Ações inline: **Editar** (abre modal) e **Remover permanente** (ícone lixeira com ConfirmModal integrado).
+  - Trava inteligente: o botão de remoção e o status ficam inativos para a conta ativa do próprio profissional logado (auto-exclusão bloqueada).
+- **Modal de Cadastro/Edição**:
+  - Campos: Nome Completo, Nome de Usuário (desabilitado na edição), Função (dropdown de especialidades), Status da conta (Ativo/Inativo) e alteração/definição de senha com confirmação de segurança.
+  - Toast notifications de feedback imediatos em todas as operações de escrita.
+
+---
+
+## 🎨 Convenções Visuais
+
+### Sistema de Posições Numeradas
+Definido em `frontend/src/lib/constants.ts`:
+
+| Código | Sigla | Posição | Cor |
+|--------|-------|---------|-----|
+| GOL | GK | Goleiro | cinza `#64748b` |
+| 1 | LAT | Lateral Direito | cyan `#0891b2` |
+| 2 | LAT | Lateral Esquerdo | cyan `#0891b2` |
+| 3 | ZAG | Zagueiro | vermelho `#dc2626` |
+| 4 | VOL | Volante | roxo `#7c3aed` |
+| 5 | MC | Meia | roxo `#7c3aed` |
+| 6 | EXT | Extremo | teal `#0d9488` |
+| 7 | ATA | Atacante | âmbar `#f59e0b` |
+
+### Cores por Métrica (mini-barras inline)
+```ts
+M_COLOR = {
+  dist:   '#0d9488', // teal — volume
+  mpm:    '#1e3a5f', // navy — intensidade
+  hsr:    '#f59e0b', // orange — Z4
+  sprint: '#ef4444', // red — Z5
+  acel:   '#0891b2', // cyan
+  desac:  '#a855f7', // purple
+}
+```
+
+### Cores das Zonas de Velocidade
+- Z1 Parado: cinza
+- Z2 Caminhada: verde
+- Z3 Trote: azul
+- Z4 Corrida: amarelo
+- Z5 Alta Intensidade: laranja
+- Z6 Sprint: vermelho
+
+### Notação MD do Microciclo
+- **MD** = Match Day (dia de jogo, sessão tipo='Jogo')
+- **MD-N** = treino N dias antes do jogo (MD-1 = véspera; MD-3/-4 = pico de carga semanal)
+- **MD+N** = treino N dias após o jogo (MD+1 = recuperação)
+- Vocabulário obrigatório em features de microciclo — **nunca** usar "dia -3" ou "3 dias antes".
+
+### Benchmarks
+**MD fixo** (fallback global em métricas de time):
+```ts
+MD = {
+  distanciaTotal: 10000,
+  hsr: 600,
+  acelDesacelTotal: 80,
+  metragemPorMinuto: 95,
+  hsrPorMinuto: 6,
+  acelDesacelPorMinuto: 1.0,
+}
+```
+
+**Benchmarks dinâmicos por posição** (`/api/analytics/posicoes-benchmarks`):
+- Calculados como **média + p95** das sessões tipo='Jogo' por posição
+- Frontend usa via helper `benchFor(posicao, key, map)` no `SessaoDashboard` — só aplica se houver ≥3 amostras (senão volta ao MD fixo)
+- Donuts e BenchBars do Resumo continuam com `MD` fixo (são métricas de time, não de posição)
+
+---
+
+## 📐 Fórmula ACWR (Acute:Chronic Workload Ratio)
+
+Implementada em `backend/src/routes/analytics.ts`.
+
+```
+Aguda(D) = Σ(Player Load nos últimos 7 dias antes de D) / 7
+Crônica(D) = Σ(Player Load nos últimos 28 dias antes de D) / 28
+ACWR(D) = Aguda / Crônica
+```
+
+**Zonas:**
+| ACWR | Zona | Cor |
+|------|------|-----|
+| < 0.8 | Sub-treinado | Amarelo |
+| 0.8 – 1.3 | Ideal | Verde |
+| 1.3 – 1.5 | Atenção | Laranja |
+| > 1.5 | Risco | Vermelho |
+
+**Aviso:** ACWR só é confiável após ~28 dias de dados. Antes disso o componente mostra "Coletando dados base".
+
+---
+
+## 🔬 Detecção de Anomalias (`>2σ` da média pessoal)
+
+Implementada em `/api/analytics/team-overview` (`anomalias[]` no response).
+
+Para cada atleta com ≥4 sessões com participação:
+1. `latest` = sessão mais recente; `baseline` = todas as outras
+2. Para cada métrica em {Player Load, Distância, m/min}:
+   - μ = média do baseline; σ = desvio padrão
+   - z = (latest - μ) / σ
+   - Se |z| > 2, registra a métrica como flagada (com direção `up`/`down` e percentual)
+3. Atletas com pelo menos 1 métrica flagada entram em `anomalias[]`, ordenados pelo maior |z|
+
+Renderizado no Painel como cards âmbar com chips ↑/↓ por métrica.
+
+---
+
+## 📜 Histórico de Implementação (cronológico)
+
+### Fase 1 — Limpeza inicial
+- Auditoria do código do estagiário
+- Migração Tailwind v3 → v4
+- Migração PostgreSQL → SQLite
+- Fix do upload CSV (`parseBody({ all: true })`)
+- Auto-criação de jogadores no upload
+
+### Fase 2 — Layout base
+- Sidebar com sessões dinâmicas
+- ThemeProvider dark/light
+- Cores do clube (vermelho #cc1e1e)
+- Logo do Paulista FC
+
+### Fase 3 — Páginas principais
+- `/jogadores` (CRUD completo)
+- `/jogador/:id` (JogadorPerfil)
+- `/sessao/:id` (3 abas: Resumo / Períodos / Atletas)
+- Heat-map de células com cores por intensidade
+
+### Fase 4 — Estética PDF Catapult
+- Header da sessão com tempo total + equipe + local
+- 3 donuts grandes Volume/Geral/Intensidade
+- Barras com benchmark line 100%
+- Period cards com 6 métricas em 2 colunas
+- Volume & Intensity chart por posição
+
+### Fase 5 — Mini-barras coloridas
+- Substituição de heat-map de fundo por `BarCell`
+- Cores fixas por métrica em SessaoDashboard e JogadorPerfil
+
+### Fase 6 — Filtros e ordenação
+- Tab "Análise do Atleta" com busca + filtro de posição + sort por qualquer coluna
+
+### Fase 7 — Posições numeradas
+- Sistema unificado em `lib/constants.ts`
+- Badges com formato "código - sigla" (ex: "7 - ATA")
+
+### Fase 8 — Botões de ação refinados
+- Hierarquia: primário (vermelho) / secundário (outline) / destrutivo (ícone)
+
+### Fase 9 — Data automática do CSV
+- Backend extrai data da linha `Date:,DD/MM/YYYY` do CSV
+- Removido campo de data do formulário de upload
+
+### Fase 10 — Analytics & Painel do Time
+- Endpoint `/api/analytics/team-overview` com ACWR de todos os atletas
+- Endpoint `/api/analytics/jogadores/:id/acwr` (série temporal)
+- Endpoint `/api/analytics/posicoes-benchmarks` (média por posição)
+- `AcwrChart` com bandas coloridas
+- Página `/painel` com alertas, insights, heatmap calendário, listas por zona
+- 6 colunas novas no schema (zonas Z1-Z5)
+
+### Fase 11 — Lote 1: JogadorPerfil completo
+- `TrendChart` (4 sparklines: Distância · m/min · HSR · Sprint) com delta % vs média e diferenciação de pontos jogo/treino
+- `MatchTrainingCompare` — barras pareadas em 5 métricas com indicador "Treino = X% do jogo"
+- `lib/insights.ts` — `buildInsights()` com 4 categorias auto-geradas: Match readiness, Forma recente, Pico, Balanço Acel × Desac
+- Refactor: fetch de `/jogadores/:id/performance` agora sempre busca todos os tipos; filtro de tipo aplicado no frontend para que widgets de comparação tenham acesso a Jogo + Treino
+
+### Fase 12 — Lote 2: SessaoDashboard avançado
+- Backend: `/sessoes/:id/analise` agora retorna `historico` (médias do mesmo tipo, excluindo a sessão atual)
+- `DeltaBadge` com setinhas ↑↓ vs histórico nos 3 donuts e nas 6 BenchBars do Resumo
+- Marcador preto vertical na BenchBar mostrando posição da média histórica
+- `VolumeIntensityScatter` — scatter SVG 2D com 4 quadrantes coloridos + zona ideal central
+- Helper `benchFor(posicao, key, map)` — `Volume & Intensity` e `Scatter` consomem benchmarks dinâmicos por posição (fallback para `MD` quando posição tem <3 amostras)
+
+### Fase 13 — Lote 3: Análises avançadas
+- Backend: `/api/analytics/jogadores/:id/microciclo` — classifica MD±N pelo offset ao jogo mais próximo (empate prefere MD-)
+- Backend: `posicoes-benchmarks` agora retorna `top.*` (p95 por posição — "melhor da posição")
+- Backend: detecção de anomalias (z-score > 2 vs média pessoal) em `team-overview`
+- `MicrocicloChart` — barras MD-4..MD+2 com cores por tipo de dia, toggle de métrica
+- `RadarComparativo` — polígono atleta vs média posição vs p95
+- `BoxPlotByPosition` — Tukey 1.5×IQR com outliers, toggle entre 5 métricas
+- Cards de Anomalias no Painel com chips por métrica
+- Memória `notacao_md_microciclo.md` salva (vocabulário obrigatório)
+
+### Fase 14 — Página `/sessoes` inteligente
+- Backend: `GET /api/sessoes/listagem` com stats agregados (atletas, carga média, duração, distância)
+- `Sessoes.tsx` (novo): vista Lista por mês colapsável + vista Calendário com navegação ◄►
+- Filtros: busca debounced, tipo, range datas, ordenação
+- Cards ricos com tile-data, badges, 3 stats inline e barra de carga colorida por intensidade
+- **Sidebar simplificado**: removido o lista inline de sessões, sobraram 4 nav links uniformes (Painel / Sessões / Elenco / Upload GPS)
+- Removido `Outlet context={{ recarregarSessoes }}` e referências em `Upload.tsx`/`Sessoes.tsx`
+
+### Fase 15 — Heatmap de Carga personalizável
+- Backend: `/team-overview` aceita `start`/`end` ISO (compat: fallback 14d até hoje, max 366d)
+- Response inclui `windowStart`, `windowEnd`, `windowDias` para confirmação
+- Frontend Painel: chips 7/14/30/60/90d + range "De/Até" customizado
+- `HeatmapCalendario` adaptativo:
+  - ≤21 dias: layout linear com células 56×64px (visão original)
+  - >21 dias: grid semanal estilo GitHub (7×N células 12×12px) com labels de mês e legenda gradient
+
+### Fase 16 — Edição de sessões
+- Backend: `PUT /api/sessoes/:id` — atualiza data, tipo, descrição, equipe e local
+- `EditSessaoModal` componente reutilizável (`components/EditSessaoModal.tsx`)
+  - Campos: tipo (toggle Treino/Jogo), descrição, data, equipe, local
+  - Aviso explícito em banner âmbar quando o tipo muda (afeta ACWR, microciclo, benchmarks, anomalias, histórico)
+- Botão "Editar" (ícone lápis) no header do `/sessao/:id` — abre modal, após salvar re-fetch dos dados
+- Ícone lápis nos cards do `/sessoes` (hover) — edição rápida sem entrar na sessão
+
+### Fase 17 — Comparação de jogadores
+- Backend: `GET /api/analytics/comparar?ids=1,2,3` — médias (geral/jogos/treinos) + últimas 10 sessões
+  - Suporte a `sessaoId` (sessão específica) e `ultimos` (últimos N jogos)
+  - Retorna lista de sessões disponíveis para dropdown do filtro inteligente
+- Frontend: página `/comparar` com:
+  - Seleção de 2-4 jogadores com filtro por posição
+  - Radar SVG sobreposto (5 métricas)
+  - Barras comparativas por métrica (destaque verde = melhor)
+  - Sparklines de evolução recente (dist, m/min, HSR, sprint)
+  - Tabela ranking com 🥇 por métrica
+  - **Filtro inteligente** com 3 camadas:
+    - Chips rápidos: "Último Jogo" | "Últ. 3 Jogos" | "Últ. 5 Jogos" | "Todos os Jogos" | "Todas Sessões"
+    - Dropdown para selecionar jogo/treino específico (ex: "05/04 — Portuguesa Santista x Paulista FC")
+    - Re-fetch automático ao trocar filtro
+- Sidebar: novo link "Comparar" entre Sessões e Configuração
+
+### Fase 18 — Redesign UI/UX Premium
+- Otimização visual profunda no `/painel`:
+  - Cards de alerta (Risco/Ideal/etc.) transformados em componentes premium com anéis de progresso SVG animados e sombras estilizadas.
+  - Header atualizado com barra de gradiente `vermelho→laranja` e "badges" compactos para estatísticas rápidas.
+  - Tabela de atletas consolidada em visual profissional, com uma **mini-barra de ACWR inline** (com overlay da zona verde ideal) e tipografia forte.
+- Otimização no `/sessoes` (Cards e Calendário):
+  - Cartões ganharam faixas de "accent" laterais com cores contextuais (Jogo=vermelho, Alta/Media/Baixa carga = Laranja/Teal/Cyan).
+  - Barra de carga contínua alterada para gradiente direcional.
+  - Calendário reformulado para remover opacidades difusas vermelhas, utilizando faixas coloridas e fundo escuro que ressalta os badges textuais.
+- **Paleta de Cores de Ação Moderna**: 
+  - Saída do monocromático vermelho para uso semântico em botões: ações de salvar e edição utilizam forte contraste com tons **Indigo**, enquanto ações de remover/cancelar utilizam tons vibrantes **Rose**.
+  - `EditSessaoModal` e `ConfirmModal` refeitos do zero para padrão SaaS: bordas ultra-arredondadas (`rounded-2xl`), overlay de fundo com desfoque de vidro (`backdrop-blur-sm`), ícones vetorizados no cabeçalho.
+
+### Fase 19 — Polimento + Export PDF
+- **Auditoria geral** identificou bugs e fricções; correções aplicadas:
+  - `Comparar`: pré-fetch da lista de sessões no mount (dropdown agora populado desde a abertura, sem precisar comparar primeiro).
+  - `Layout`: polling periódico (30s) do indicador "API Online" + botão "Tentar" quando offline (reconnect manual sem F5).
+  - `ConfirmModal`: aceita props opcionais `details` (chip de contexto, ex: "05/04/2026 · Portuguesa Santista x Paulista FC") e `confirmLabel`.
+  - `App.tsx`: rota catch-all `*` → `NotFound` page com link de volta e botão "Ir para o Painel".
+- **Empty states**:
+  - Painel — card de Anomalias agora aparece sempre; quando não há detecções, mostra mensagem verde explicando que a janela é ±2σ e que precisa ≥4 sessões por atleta.
+- **Toast system** (`components/Toast.tsx`):
+  - `ToastProvider` global no `App.tsx` + hook `useToast()` com atalhos `success`/`error`/`info`.
+  - Auto-dismiss em 3.5s, posição fixed top-right, animação slide-in.
+  - Integrado em `Sessoes` (remover/editar sessão) e `SessaoDashboard` (editar sessão).
+- **Export PDF via Print CSS** (zero dependências):
+  - `index.css` ganhou bloco `@media print` com força `print-color-adjust: exact`, oculta sidebar/dialogs/`.print-hide`, layout A4, `break-inside: avoid` em cards.
+  - Botão "Imprimir" nos headers de **Painel**, **SessaoDashboard**, **JogadorPerfil** e **Comparar** chama `window.print()` → diálogo nativo "Salvar como PDF".
+  - Marcações `print-hide` em filtros, toolbars e seleção de jogadores (Comparar) para PDF limpo.
+  - Toasts e modals auto-ocultados via `@media print`.
+
+### Fase 20 — Gestão de Elenco (status ativo/inativo + temporal)
+**Problema**: jogadores são auto-criados pelo upload mas nunca saem. Em virada de temporada/reapresentação, o sistema acumula ex-atletas que poluem ACWR, comparativos e listagens.
+
+**Solução**: modelo temporal explícito + filtros default + wizard de batch.
+- **Schema** (`jogadores`): 3 colunas novas — `status` (default `'ativo'`), `dataChegada`, `dataSaida`.
+- **Migration auto-aplicada no boot** (`db/index.ts`): `ensureColumn` idempotente + backfill `dataChegada = MIN(sessoes.data)` por atleta. Nenhuma ação manual necessária.
+- **Backend**:
+  - `GET /jogadores?status=ativo|inativo|todos` (default ativo).
+  - `PUT /jogadores/:id` aceita `status`, `dataSaida` — auto-preenche `dataSaida` na transição ativo→inativo, zera ao reativar.
+  - **`POST /jogadores/batch-status`** novo — `{ ids[], status, dataSaida? }` para o wizard.
+  - `team-overview` filtra `status='ativo'` para ACWR, anomalias, listagens (histórico de sessões/métricas continua intacto).
+- **Frontend `/jogadores` repaginado**:
+  - Chips Ativos/Inativos/Todos com contagem.
+  - Busca textual; aviso quando há ativos sem posição.
+  - Coluna Status (badge animado) + Período (Desde DD/MM · Saiu DD/MM).
+  - Modal de edição estende para status + date picker.
+  - Toggle rápido de status (botão na linha) — sem precisar abrir modal.
+- **Wizard "Atualizar Elenco para Reapresentação"**:
+  - Botão no header → modal full-list dos ativos pré-marcados.
+  - Visual: verde = permanece, rose com `line-through` = sai.
+  - Footer mostra "X permanecem · Y sairão" em tempo real.
+  - Confirma → batch-status com `dataSaida` = hoje → toast com contagem.
+- **Painel — card "Sem participação recente >60d"**:
+  - Calcula no frontend `diasSemSessao` por atleta usando `ultimaSessao` do `team-overview`.
+  - Só aparece quando há candidatos.
+  - Botão inline "Marcar inativo" (PUT direto, `dataSaida` = última sessão do atleta).
+  - Após confirmar, atleta some do dashboard imediatamente (re-fetch).
+- **Comportamento preservado**:
+  - Métricas históricas e sessões nunca filtradas — só dashboards/listagens.
+  - DELETE permanente continua disponível (com aviso "prefira marcar como inativo").
+  - Upload de CSV cria atletas novos com `status='ativo'`, `dataChegada` = data da sessão importada.
+
+### Fase 21 — EXC/CON Ratio + Filtro de Sessão no JogadorPerfil + replicação no SessaoDashboard
+- Componente compartilhado **`components/RatioCell.tsx`** com helper `computeECRatio(acel, desac)` e prop opcional `ratio` direta (para footers de média).
+- Nova coluna **"EXC/CON"** na tabela do **JogadorPerfil** e ao final da aba **Análise do Atleta** do `/sessao/:id` — `desac ÷ acel`, com semáforo de risco neuromuscular:
+  - **0.85–1.15** verde (balanceado).
+  - **0.70–0.85 ou 1.15–1.30** âmbar (atenção).
+  - **<0.70 ou >1.30** vermelho (assimetria forte: ratio alto = sobrecarga excêntrica → risco de lesão muscular; ratio baixo = perfil concêntrico/explosivo).
+- Linha de médias usa **média dos ratios (sessão-a-sessão no JogadorPerfil; atleta-a-atleta no SessaoDashboard)** — descarta entradas com acel=0; mais honesta que ratio das médias.
+- Novo filtro **dropdown de sessão** ao lado de Tipo/Período no header:
+  - Default "Todas as sessões" → comportamento original (agregado).
+  - Selecionar uma sessão específica filtra `sessoesComPeriodo` para 1 linha → tabela, trend (vira ponto único), insights, jogo×treino, stats e gauges passam a refletir aquele snapshot.
+  - Auto-limpa quando a sessão sai do conjunto disponível (ex: mudança de tipo/período).
+  - Badge no header alterna entre "N sessões" e "Snapshot · DD/MM/YYYY" conforme o estado.
+- ACWR, microciclo e radar continuam mostrando série completa (não filtram por sessão única, pois precisam de histórico).
+
+### Fase 22 — Alinhamento de colunas com o PDF oficial (Metros/min + Vel. Máx)
+- Padronização das duas tabelas principais para casar com a ordem do "Departamento de Performance" (PDF do clube): `Atleta → Posição → Distância → Metros/min → Vel. Máx (km/h) → HSD/Sprint → Acc → Dcc → Exc/Con`.
+- **`/sessao/:id` — aba Análise do Atleta**: nova coluna **Vel. Máx (km/h)** entre `m/min` e `HSR Z4`.
+  - Header sortable (`SortKey += 'velocidadeMaxima'`) + opção no dropdown "Ordenar".
+  - Célula sem barra (vel. máx é métrica de pico — barra de proporção não agrega) — apenas número com 1 casa decimal; "—" quando atleta não participou (vel=0).
+  - Footer média descarta entradas com vel=0 (mais honesto que diluir média com zeros).
+  - colSpan empty state 12 → 13.
+- **`/jogador/:id` — tabela de performance**: nova coluna **m/min** entre `Dist. Total` e `Vel. Máx`.
+  - Calculada client-side a partir de `distanciaTotal / (duracao/60)` — endpoint não retorna `metragemPorMinuto` por período, mas tem dist+duração.
+  - `BarCell` com `M_COLOR.mpm = '#1e3a5f'` (navy — mesma cor usada em SessaoDashboard, consistência visual).
+  - `stats` ganha `avgMpm` e `maxMpm`.
+  - colSpan empty state 12 → 13.
+- **Zonas EXC/CON**: o PDF oficial do clube usa zonas diferentes (`<0.85 verde`, `>1.15 vermelho` — interpretação "demanda excêntrica"). Decisão registrada: **manter nossa interpretação de balanço simétrico** (`0.85–1.15 verde`). O clube alinha conosco, não o contrário.
+- **`RatioCell`**: ícone direcional ao lado do número (`▼` ratio<0.85 concêntrico · `●` balanceado · `▲` ratio>1.15 excêntrico). Cor = severidade · ícone = direção em torno de 1.0 — torna inequívoco distinguir âmbar baixo de vermelho baixo em monitores de baixo contraste.
+
+### Fase 23 — Login (autenticação single-user com JWT)
+Primeiro módulo de acesso restrito, pra entregar o sistema pro Eduardo testar.
+- **Backend**:
+  - `bcryptjs` + `dotenv` + `hono/jwt`
+  - `backend/.env` (gitignore) com `AUTH_USERNAME`, `AUTH_PASSWORD_HASH` (bcrypt cost 12), `AUTH_USER_NAME`, `AUTH_USER_ROLE`, `JWT_SECRET` (48 bytes hex), `JWT_EXPIRES_IN_HOURS`, `CORS_ORIGIN`.
+  - `backend/.env.example` documenta como gerar hash/secret.
+  - **`routes/auth.ts`**: `POST /api/auth/login` (valida + assina JWT HS256) e `GET /api/auth/me` (ecoa payload do token corrente).
+  - **Middleware global** em `src/index.ts` aplica `jwt({ secret, alg: 'HS256' })` em todas as rotas `/api/*` exceto `/api/auth/login`.
+  - Mensagem genérica em falha de login (não revela se o erro foi user vs senha).
+  - CORS atualizado pra liberar header `Authorization` no pré-flight.
+- **Frontend**:
+  - **`lib/authClient.ts`**: storage do token/user em `localStorage` (`auth_token`, `auth_user`, `auth_expires_at`) + `installFetchInterceptor()` que faz patch em `window.fetch` injetando `Authorization: Bearer` em chamadas à `API_BASE` e tratando `401` (limpa storage + redireciona pra `/login?next=…`). Patch global evita refatorar as 18 chamadas espalhadas.
+  - **`components/AuthProvider.tsx`**: contexto + hook `useAuth()`; reage a evento `auth-change` (logout interno) e `storage` (logout em outro tab).
+  - **`components/ProtectedRoute.tsx`**: wrapper que redireciona pra `/login` preservando `?next=` quando não há sessão.
+  - **`pages/Login.tsx`**: form simples com logo, botão "Mostrar/Ocultar senha", mensagem de erro inline, autofocus no username, autocomplete habilitado.
+  - **`App.tsx`**: instala interceptor no boot; `AuthProvider` envolvendo as rotas; `/login` público; resto dentro de `<ProtectedRoute><Layout/></ProtectedRoute>`.
+  - **`Layout.tsx`**: bloco de usuário no topo do footer da sidebar (avatar com iniciais + nome + role + botão "Sair" que limpa storage e navega pra `/login`).
+- **Credenciais atuais (definidas em `.env`)**:
+  - usuário: `eduardo.tavares`
+  - senha: combinada com o admin (hash bcrypt no `.env`, fora do git).
+  - role: "Preparador Físico".
+  - JWT válido por 12h.
+- **Trade-offs aceitos no MVP**:
+  - localStorage em vez de HttpOnly cookie — vulnerável a XSS mas simples; trocar quando subir pra produção com domínio.
+  - Single-user hardcoded — sem tabela `users`. Quando precisar de outro usuário, refatorar.
+  - JWT_SECRET fixo no `.env` — em produção, usar secret manager (Render/Fly secrets, AWS SSM etc.).
+
+### Fase 24 — Upload e Exibição de Fotos Reais dos Jogadores
+- **Backend Hono**: Criação do endpoint `POST /api/jogadores/:id/foto` para upload de imagem (`foto`), realizando validação de tipo (JPEG, PNG, WEBP), tamanho máximo de 2MB, exclusão da foto anterior do disco e salvamento com nome único em `/uploads/fotos/`.
+- **Serviço Estático**: Habilitação de `serveStatic({ root: './' })` para servir `/uploads/*` diretamente pelo backend Hono para o frontend React.
+- **Frontend React**: Criação do componente `<PlayerAvatar.tsx>` que exibe a foto do atleta com formato circular e bordas neon estilizadas conforme o status ou iniciais em degradê moderno se não houver arquivo. Inclusão de botão e input de upload no modal de cadastro/edição em `Jogadores.tsx` (atualizando dinamicamente a foto e mostrando Toasts de feedback).
+
+### Fase 25 — Redesenho e Modernização do Painel do Time (Cards Premium & Filtros)
+- Refatoração profunda de `frontend/src/pages/Painel.tsx` com Glassmorphism avançado e HSL harmonizados.
+- **AlertCards Interativos**: Adicionado estado `filtroZona` para realizar filtragem instantânea do elenco ao clicar nos cards de KPIs analíticos do topo (Alto Risco, Atenção, Sub-treinado, Zona Ideal), aplicando efeito neon glow de contorno brilhante.
+- **Seletor de Visualização (Comutador)**: Adicionado comutador estilizado no topo do elenco para alternar suavemente entre Grid de Cards Premium e a Tabela Tática clássica refinada.
+- **Grid de Cards Fisiológicos**: Layout premium de "carta tática" individual contendo o avatar real (`PlayerAvatar`), badge de posição, indicador de recência temporal relativo (ex: "Sessão hoje"), tendência de carga com setas animadas, e barra linear gráfica de ACWR que destaca a zona ideal (0.8 a 1.3).
+- **Integração Geral de Avatares**: Aplicação do componente `<PlayerAvatar>` na listagem de anomalias (desvios de z-score) e na tabela de elenco para consolidação da identidade visual premium e eliminação de placeholders genéricos.
+
+### Fase 26 — Gerenciamento do Staff Técnico (Múltiplos Usuários no Banco SQLite)
+- **Tabela de Usuários**: Modelagem e inclusão da tabela `usuarios` no schema do Drizzle ORM (tanto para SQLite quanto Postgres).
+- **CRUD Completo de Equipe**: Implementação da rota de backend `/api/usuarios` e da tela `/usuarios` no frontend, com formulário de cadastro, troca de senha, alteração de status ativo/inativo e remoção física.
+- **Controles de Segurança e Robustez**:
+  - Proteção contra auto-inativação e auto-exclusão no front e backend (comparando com o payload do JWT).
+  - Criptografia forte de senha com bcryptjs (cost 12).
+- **Login Híbrido Avançado**: Ajuste na rota `POST /api/auth/login` para buscar o profissional no banco de dados SQLite com fallback automático e seguro para a variável `.env` se necessário.
+- **Sidebar Estendida**: Link "Usuários" incluído na seção "Administração" da sidebar do `Layout.tsx` (exclusivo para pessoal técnico autorizado).
+
+---
+
+## ✅ Status — Tudo do roadmap original implementado
+
+Todos os Lotes 1, 2 e 3 do plano original foram concluídos:
+
+- **Lote 1 — JogadorPerfil completo**
+  - [x] Trend line multi-métrica (4 sparklines)
+  - [x] Match vs Training load (barras pareadas)
+  - [x] Smart insights textuais (4 categorias)
+
+- **Lote 2 — SessaoDashboard avançado**
+  - [x] Comparativo sessão vs histórico (setinhas ↑↓)
+  - [x] Scatter Volume × Intensidade
+  - [x] Consumir benchmarks dinâmicos por posição
+
+- **Lote 3 — Análises avançadas**
+  - [x] Microciclo MD- no perfil do jogador
+  - [x] Radar comparativo
+  - [x] Box plot por posição
+  - [x] Detecção de anomalias (>2σ)
+
+### Bônus extras já entregues
+- Página `/sessoes` com vista lista + calendário e filtros completos
+- Heatmap de carga com janela personalizável (chips + range customizado, layout adaptativo)
+- Edição de sessões (2 pontos de acesso: card list + header dashboard, aviso de impacto ao mudar tipo)
+- Comparação lado a lado de jogadores (radar + barras + sparklines + ranking)
+- Export PDF via Print CSS em todas as 4 páginas-chave (Painel, Sessão, Jogador, Comparar) — zero deps, fidelidade total à UI
+- Toast system global + página 404 + reconnect API
+- **Gestão de elenco com status ativo/inativo, datas de chegada/saída, wizard de reapresentação e sugestões automáticas de inatividade**
+
+### Bônus que ainda precisariam dados extras
+- **Heatmap posicional** — precisaria coordenadas GPS por segundo (Catapult não exporta no CSV)
+- **Wellness/RPE × carga** — precisaria input subjetivo dos jogadores (formulário separado)
+- **Match readiness score composto** (ACWR + dias desde última pesada + RPE)
+
+---
+
+## 🚀 Como Rodar
+
+### Pré-requisitos
+- Node 20+
+- Python (apenas para gerar imagens dos PDFs de referência — opcional)
+
+### Setup inicial (primeira vez)
+```bash
+# Backend
+cd backend
+npm install
+npm run db:push    # cria/atualiza schema SQLite
+npm run dev        # roda em :3001
+
+# Frontend (outro terminal)
+cd frontend
+npm install
+npm run dev        # roda em :5173
+```
+
+### Após mudanças no schema
+```bash
+# Pare o backend (Ctrl+C)
+cd backend
+del ieeegp.db ieeegp.db-wal ieeegp.db-shm  # opcional, se quiser limpar
+npm run db:push
+npm run dev
+```
+
+### Após `git clone` em outra máquina
+```bash
+cd "IEEEGP - Cel Eduardo"
+cd backend && npm install && npm run db:push && npm run dev &
+cd ../frontend && npm install && npm run dev
+```
+
+> ⚠️ O arquivo `backend/ieeegp.db` é local e contém os dados. Se mudou de máquina, faça upload dos CSVs novamente OU copie o arquivo `.db` da máquina anterior.
+
+---
+
+## 🧪 Testando o Sistema
+
+1. Acessar `http://localhost:5173/`
+2. **Upload**: importar CSV no `/upload` (data lida automaticamente do CSV)
+3. **Painel**: ver `/painel` — anomalias aparecem se houver atletas com desvio >2σ; heatmap pode ser ajustado nos chips ou range
+4. **Sessões**: ver `/sessoes` — alternar Lista/Calendário, filtrar por tipo, buscar por adversário
+5. **Sessão**: clicar em qualquer card → 3 abas (Resumo com setinhas + scatter + box plot, Períodos, Atletas)
+6. **Jogador**: clicar em uma linha da aba "Atletas" → trend, jogo×treino, insights, ACWR, microciclo, radar, gauges
+7. **Editar posição**: `/jogadores` → clicar em "Editar" e selecionar posição numerada (ex: "7 - Atacante")
+
+---
+
+## 📂 Arquivos de Referência (no projeto)
+
+- `Relatório de GP por posição II.pdf` — referência da tabela do JogadorPerfil
+- `XV de Jaú x Paulista.pdf` — referência das 4 páginas do dashboard de sessão
+- `pdf_pages/page_1.png` a `page_4.png` — screenshots renderizados
+
+---
+
+## 🔁 Continuação em Outra Máquina
+
+**Para retomar a conversa com o Claude Code:**
+
+1. Clone/copie o projeto para a outra máquina
+2. Rode `npm install` em ambos `backend/` e `frontend/`
+3. Abra o Claude Code no diretório do projeto
+4. Diga ao Claude: *"Leia o HANDOVER.md para entender onde paramos"*
+
+**Sobre exportar este chat:**
+O chat completo do Claude Code não é exportável programaticamente, mas o histórico é armazenado em:
+`~/.claude/projects/c--Users-DELL-Desktop-IEEEGP---Cel-Eduardo/`
+Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto (`memory/MEMORY.md` + arquivos de tipos `feedback`/`project`/`reference`). Em outra máquina, o Claude Code começa fresh — por isso este HANDOVER.md é a forma mais confiável de transferir contexto.
+
+> 📌 **Convenção de manutenção**: toda alteração não-trivial (rota nova, página nova, refactor estrutural) deve ser refletida neste HANDOVER.md ao final do trabalho — atualizar Estrutura, Endpoints, Páginas, Histórico (nova "Fase N") e a data no rodapé.
+
+---
+
+## 📝 Decisões de Design Importantes
+
+- **CSV Catapult** é a fonte primária — o sistema é construído em volta dele
+- **Player Load** é a métrica de carga preferida para ACWR (vs distância simples)
+- **Período "Session"** representa o total da sessão; outros períodos são subdivisões
+- **Posições numeradas** seguem padrão tático brasileiro mas são **opcionais** (jogadores criados via upload começam sem posição)
+- **Benchmark MD fixo** (10000m, 600m HSR…) é fallback global; sempre que possível, frontend usa **benchmarks dinâmicos por posição** (média ou p95) calculados das sessões tipo='Jogo'
+- **Histórico de comparação no Resumo** usa apenas sessões do **mesmo tipo** da atual (Treino vs Treino, Jogo vs Jogo) — evita comparar maçãs com laranjas
+- **Microciclo MD±N** é classificado pelo jogo mais próximo do **próprio atleta** (empate → MD-) — focado em preparação, não em recuperação genérica
+- **Radar do jogador** usa apenas Jogos do atleta como base (casa com `posicoes-benchmarks` que também é só de jogos)
+- **Anomalias** exigem ≥4 sessões (3 de baseline + 1 atual) para que μ/σ tenham sentido estatístico
+
+---
+
+**Última atualização:** sessão de chat de 2026-05-22 — Modernização e Redesenho do Painel do Time com Cards Premium, Filtros Interativos por Clique nos AlertCards, Upload e Exibição de Fotos Reais dos Jogadores com PlayerAvatar (Fases 24 e 25); Gerenciamento do Staff Técnico de múltiplos usuários no banco SQLite com login híbrido e tela de administração dedicada (Fase 26).

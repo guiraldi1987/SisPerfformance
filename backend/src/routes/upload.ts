@@ -5,57 +5,92 @@ import Papa from 'papaparse';
 
 const uploadRouter = new Hono();
 
-function timeToSeconds(timeString: string): number {
-  if (!timeString) return 0;
-  const parts = timeString.split(':').map(p => parseInt(p, 10) || 0);
+function timeToSeconds(t: string): number {
+  if (!t) return 0;
+  const parts = t.split(':').map(p => parseInt(p, 10) || 0);
   if (parts.length === 3) return parts[0]! * 3600 + parts[1]! * 60 + parts[2]!;
   if (parts.length === 2) return parts[0]! * 60 + parts[1]!;
   return 0;
 }
 
-// POST /upload-gps
+// Converte DD/MM/YYYY → YYYY-MM-DD
+function parseCsvDate(raw: string): string | null {
+  const m = raw.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) return null;
+  return `${m[3]}-${m[2]!.padStart(2, '0')}-${m[1]!.padStart(2, '0')}`;
+}
+
+// Extrai metadados das linhas antes do header "Player Name"
+function extractMeta(lines: string[]): Record<string, string> {
+  const meta: Record<string, string> = {};
+  for (const line of lines) {
+    // Formato: Key:,Value  ou  "Key:",Value
+    const sep = line.indexOf(',');
+    if (sep === -1) continue;
+    const key   = line.slice(0, sep).replace(/"/g, '').replace(/:$/, '').trim();
+    const value = line.slice(sep + 1).replace(/"/g, '').trim();
+    if (key) meta[key] = value;
+  }
+  return meta;
+}
+
+const num = (v: unknown): number => (v == null || v === '' ? 0 : Number(v) || 0);
+const int = (v: unknown): number => Math.round(num(v));
+
 uploadRouter.post('/upload-gps', async (c) => {
   try {
-    // { all: true } é obrigatório para receber File em multipart no Hono v4
     const body = await c.req.parseBody({ all: true });
 
-    const dataSessao = body['data'] as string;
-    const tipoSessao = body['tipo'] as string;
+    const tipoSessao   = body['tipo']   as string;
+    const jogoSessao   = (body['jogo']   as string) || null;
+    const equipeSessao = (body['equipe'] as string) || null;
+    const localSessao  = (body['local']  as string) || null;
     const file = body['file'];
 
     if (!file || typeof file === 'string') {
       return c.json({ error: 'Nenhum arquivo enviado. Verifique o campo "file".' }, 400);
     }
-    if (!dataSessao || !tipoSessao) {
-      return c.json({ error: 'Campos "data" e "tipo" são obrigatórios.' }, 400);
+    if (!tipoSessao) {
+      return c.json({ error: 'Campo "tipo" é obrigatório.' }, 400);
     }
 
-    const [novaSessao] = await db.insert(sessoes).values({
-      data: dataSessao,
-      tipo: tipoSessao,
-    }).returning();
-
-    if (!novaSessao) return c.json({ error: 'Falha ao criar sessão.' }, 500);
-
-    const todosJogadores = await db.select().from(jogadores);
-    const mapJogadores = new Map(todosJogadores.map(j => [j.codigoCsv, j.id]));
-
-    const csvText = await (file as File).text();
-    const lines = csvText.split('\n');
+    const csvText  = await (file as File).text();
+    const lines    = csvText.split('\n');
     const headerIndex = lines.findIndex(line => line.startsWith('"Player Name"'));
 
     if (headerIndex === -1) {
       return c.json({ error: 'Cabeçalho "Player Name" não encontrado no CSV.' }, 400);
     }
 
+    // Extrai data do CSV (linha 0: "Date:,15/02/2026")
+    const metaLines = lines.slice(0, headerIndex);
+    const meta = extractMeta(metaLines);
+    const dataSessao = parseCsvDate(meta['Date'] ?? '');
+
+    if (!dataSessao) {
+      return c.json({ error: 'Data não encontrada no CSV. Linha esperada: "Date:,DD/MM/YYYY".' }, 400);
+    }
+
+    const [novaSessao] = await db.insert(sessoes).values({
+      data:      dataSessao,
+      tipo:      tipoSessao,
+      descricao: jogoSessao,
+      equipe:    equipeSessao,
+      local:     localSessao,
+    }).returning();
+
+    if (!novaSessao) return c.json({ error: 'Falha ao criar sessão.' }, 500);
+
+    const todosJogadores = await db.select().from(jogadores);
+    const mapJogadores = new Map<string, number>(todosJogadores.map((j: any): [string, number] => [j.codigoCsv, j.id]));
+
     const validCsvText = lines.slice(headerIndex).join('\n');
     const parsed = Papa.parse(validCsvText, {
       header: true,
       skipEmptyLines: true,
-      dynamicTyping: true,
+      dynamicTyping: false,
     });
 
-    // Auto-cria jogadores ausentes para não bloquear o primeiro upload
     const nomesNoCsv = Array.from(new Set(
       (parsed.data as any[])
         .map((r: any) => r['Player Name'])
@@ -66,21 +101,10 @@ uploadRouter.post('/upload-gps', async (c) => {
       const criados = await db.insert(jogadores)
         .values(ausentes.map(n => ({ nomeCompleto: n, codigoCsv: n })))
         .returning();
-      criados.forEach((j: { id: number; codigoCsv: string }) => mapJogadores.set(j.codigoCsv, j.id));
+      criados.forEach((j: any) => mapJogadores.set(j.codigoCsv, j.id));
     }
 
-    const linhasInserir: {
-      jogadorId: number;
-      sessaoId: number;
-      periodo: string;
-      duracao: number;
-      distanciaTotal: number;
-      velocidadeMaxima: number;
-      hsr: number;
-      sprint: number;
-      aceleracoes: number;
-      desaceleracoes: number;
-    }[] = [];
+    const linhasInserir: (typeof metricas.$inferInsert)[] = [];
 
     for (const row of parsed.data as any[]) {
       const jogadorId = mapJogadores.get(row['Player Name']);
@@ -88,15 +112,31 @@ uploadRouter.post('/upload-gps', async (c) => {
 
       linhasInserir.push({
         jogadorId,
-        sessaoId: novaSessao.id,
-        periodo: String(row['Period Name'] || 'Desconhecido'),
-        duracao: timeToSeconds(String(row['Duration'] ?? '')),
-        distanciaTotal: Number(row['Distance'] ?? 0),
-        velocidadeMaxima: Number(row['Max Velocity'] ?? 0),
-        hsr: Number(row['High Speed Distance'] ?? 0),
-        sprint: Number(row['Sprint Distance'] ?? 0),
-        aceleracoes: Number(row['Acceleration Efforts'] ?? 0),
-        desaceleracoes: Number(row['Deceleration Efforts'] ?? 0),
+        sessaoId:             novaSessao.id,
+        periodo:              String(row['Period Name'] || 'Desconhecido'),
+        duracao:              timeToSeconds(String(row['Duration'] ?? '')),
+        distanciaTotal:       num(row['Distance']),
+        velocidadeMaxima:     num(row['Max Velocity']),
+        metragemPorMinuto:    num(row['Meterage Per Minute']),
+        hsr:                  num(row['High Speed Distance']),
+        hsrEsforcos:          int(row['High Speed Efforts']),
+        hsrPorMinuto:         num(row['High Speed Distance Per Minute']),
+        sprint:               num(row['Sprint Distance']),
+        sprintEsforcos:       int(row['Sprint Efforts']),
+        sprintPorMinuto:      num(row['Sprint Dist Per Min']),
+        aceleracoes:          int(row['Acceleration Efforts']),
+        desaceleracoes:       int(row['Deceleration Efforts']),
+        acelDesacelTotal:     int(row['Accel + Decel Efforts']),
+        acelDesacelPorMinuto: num(row['Accel + Decel Efforts Per Minute']),
+        cargaJogador:         num(row['Player Load']),
+        cargaPorMinuto:       num(row['Player Load Per Minute']),
+        maxAceleracao:        num(row['Max Acceleration']),
+        maxDesaceleracao:     num(row['Max Deceleration']),
+        distStanding:         num(row['Standing Distance']),
+        distWalking:          num(row['Walking Distance']),
+        distJogging:          num(row['Jogging Distance']),
+        distRunning:          num(row['Running Distance']),
+        distHi:               num(row['HI Distance']),
       });
     }
 
@@ -105,9 +145,10 @@ uploadRouter.post('/upload-gps', async (c) => {
     }
 
     return c.json({
-      message: 'Upload concluído!',
-      sessaoId: novaSessao.id,
-      registros: linhasInserir.length,
+      message:          'Upload concluído!',
+      sessaoId:         novaSessao.id,
+      dataSessao,
+      registros:        linhasInserir.length,
       jogadoresCriados: ausentes.length,
     });
   } catch (error) {

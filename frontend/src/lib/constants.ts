@@ -21,3 +21,53 @@ export function getHrColor(pct: number): string {
   }
   return '#f44336';
 }
+
+// ─── Posições (numeração tática) ──────────────────────────────────────────────
+// Goleiro fora da numeração (GOL); 1-7 para zonas táticas de campo
+export const POSICOES = [
+  'GOL - Goleiro',
+  '1 - Lateral Direito',
+  '2 - Lateral Esquerdo',
+  '3 - Zagueiro',
+  '4 - Volante',
+  '5 - Meia',
+  '6 - Extremo',
+  '7 - Atacante',
+] as const;
+
+// Extrai apenas o código (ex: "3 - Zagueiro" → "3")
+export const posicaoCodigo = (p: string | null): string =>
+  p?.split(' - ')[0]?.trim() ?? '—';
+
+// Cores por código de posição (para badges e gráficos)
+export const POSICAO_COLOR: Record<string, string> = {
+  GOL: '#64748b', // slate
+  '1': '#0891b2', // cyan
+  '2': '#0891b2',
+  '3': '#dc2626', // red — defesa
+  '4': '#7c3aed', // purple — meio defensivo
+  '5': '#7c3aed',
+  '6': '#0d9488', // teal — flanco ofensivo
+  '7': '#f59e0b', // amber — ataque
+};
+
+// Sigla curta de cada posição (estilo Catapult: ATA, GK, ZAG, VOL, MC, LAT)
+export const POSICAO_SIGLA: Record<string, string> = {
+  GOL: 'GK',
+  '1': 'LAT',
+  '2': 'LAT',
+  '3': 'ZAG',
+  '4': 'VOL',
+  '5': 'MC',
+  '6': 'EXT',
+  '7': 'ATA',
+};
+
+// Formata posição como "número - sigla" (ex: "7 - ATA"); goleiro = "GK"
+export const posicaoLabel = (p: string | null): string => {
+  if (!p) return '—';
+  const codigo = posicaoCodigo(p);
+  const sigla = POSICAO_SIGLA[codigo];
+  if (!sigla) return p;
+  return codigo === 'GOL' ? sigla : `${codigo} - ${sigla}`;
+};
