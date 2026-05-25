@@ -791,6 +791,17 @@ cp -r /tmp/uploads ~/apexpro/backend/
 pm2 start apexpro-backend
 ```
 
+### Fase 28 — Correções de Print/Export PDF
+Após o deploy em produção, ao testar o `window.print()` da página `/comparar`, três bugs do CSS de impressão foram descobertos e corrigidos:
+
+1. **Conteúdo cortado a 1 página** — o `<main>` em `Layout.tsx` tem `overflow-y-auto max-h-screen` (essencial para o scroll interno na navegação), e isso **clipava** tudo que passasse da viewport ao imprimir, gerando 1 página só com o resto sumindo. **Fix:** no `@media print`, override de `main`, `html`, `body`, `#root`, `[class*="min-h-screen"]` para `overflow: visible !important; max-height: none !important; height: auto !important;`. **Esse fix afeta todas as 4 páginas com botão Imprimir** (Painel, Sessão, Jogador, Comparar), não só Comparar.
+2. **Páginas em branco** — `break-inside: avoid` em `.rounded-xl/.rounded-2xl` empurrava o card do Radar (~430px) inteiro para a 2ª página quando o card anterior ocupava muito da 1ª, deixando boa parte da 1ª em branco. **Fix:** bloco geral no `@media print` que compacta paddings (`p-6 → 10px`, `px-8 → 16px`, etc.), gaps (`gap-6 → 10px`), espaçamento vertical (`space-y-6 → 8px`), tipografia do header e força o grid `lg:grid-cols-5` (Radar 2 + Métricas 3) a continuar lado a lado mesmo em print.
+3. **Card "Métricas Detalhadas" cortado** — com 7 métricas e 2-4 jogadores, o card ultrapassava a altura útil da página A4 landscape. **Fix:** classe `print-compact-metrics` aplicada ao card específico, que comprime altura das barras (`h-5 → 10px`), espaçamentos internos (`space-y-4 → 4px`, `space-y-1 → 1px`) e fonte das labels/valores. Resultado: as 7 métricas cabem confortavelmente ao lado do radar na mesma página.
+
+**Bônus:** SVGs grandes ganharam `max-height: 280px` em print (evita radar/scatter explodir), e sparklines dentro de células de tabela ganharam `max-height: 36px` (mantêm o tamanho compacto que faz sentido em relatório).
+
+Todas as alterações ficaram concentradas em `frontend/src/index.css` (bloco `@media print`) e numa única classe no JSX de `Comparar.tsx` — sem mudança de comportamento em modo tela.
+
 #### Trade-offs aceitos no MVP de produção
 - **SQLite em vez de Postgres** — basta pro volume atual (5 users, 6 sessões/semana, DB ~200kb). Migrar quando passar de ~50 GB ou >20 conexões simultâneas.
 - **Backup só local na VPS** — aceitável pra MVP; precisa virar off-site quando virar SaaS pago.
@@ -935,4 +946,4 @@ Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto
 
 ---
 
-**Última atualização:** sessão de chat de 2026-05-25 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27).
+**Última atualização:** sessão de chat de 2026-05-25 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28).
