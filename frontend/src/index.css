@@ -189,4 +189,15 @@
   }
 
   .text-\[10px\], .text-\[11px\] { font-size: 10px !important; }
+
+  /* Card "Métricas Detalhadas" da página Comparar: comprime tudo p/ caber em 1 página */
+  .print-compact-metrics {
+    padding: 12px !important;
+  }
+  .print-compact-metrics > p { margin-bottom: 6px !important; }
+  .print-compact-metrics .space-y-4 > * + * { margin-top: 4px !important; }
+  .print-compact-metrics .space-y-1 > * + * { margin-top: 1px !important; }
+  .print-compact-metrics .h-5 { height: 10px !important; }
+  .print-compact-metrics .text-\[10px\],
+  .print-compact-metrics .text-\[11px\] { font-size: 8.5px !important; }
 }
