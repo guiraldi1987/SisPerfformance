@@ -402,7 +402,7 @@ export const Comparar: React.FC = () => {
               </div>
 
               {/* Barras (3/5) */}
-              <div className={`lg:col-span-3 ${cardCls}`}>
+              <div className={`lg:col-span-3 ${cardCls} print-allow-break`}>
                 <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Métricas Detalhadas</h2>
                 <p className="text-[11px] text-slate-400 mb-4">Barras comparativas — <span className="text-emerald-500 font-bold">verde</span> = melhor no grupo</p>
                 <div className="space-y-4">
