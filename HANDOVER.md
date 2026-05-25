@@ -664,6 +664,140 @@ Primeiro módulo de acesso restrito, pra entregar o sistema pro Eduardo testar.
 - **Login Híbrido Avançado**: Ajuste na rota `POST /api/auth/login` para buscar o profissional no banco de dados SQLite com fallback automático e seguro para a variável `.env` se necessário.
 - **Sidebar Estendida**: Link "Usuários" incluído na seção "Administração" da sidebar do `Layout.tsx` (exclusivo para pessoal técnico autorizado).
 
+### Fase 27 — Deploy em Produção (VPS Hostgator + HTTPS)
+**Objetivo:** sair do `localhost` e entregar acesso público pro Eduardo testar de qualquer lugar, com domínio próprio e HTTPS.
+
+**URL pública:** **https://apexpro.grupommp.com.br**
+
+#### Infraestrutura contratada
+- **VPS Hostgator Cloud 1 (VPS OCI NVMe 2)** — 1 vCPU · 2 GB RAM · 50 GB NVMe · São Paulo · Ubuntu 22.04.5 LTS
+- **IP público:** `143.95.212.89` · **Porta SSH:** `22022` (não-padrão)
+- **Custo:** R$ 334,68/ano (1º ano com 49% OFF) · renovação R$ 539,80/ano (~R$ 45/mês)
+- **Domínio:** subdomínio `apexpro.grupommp.com.br` apontando via registro **A** no cPanel da Hostgator (zona DNS do `grupommp.com.br`)
+
+#### Hardening e usuários
+- **Swap 2 GB** criado em `/swapfile` (`swappiness=10`) — evita OOM no build do Vite, já que a RAM é 2 GB.
+- **Usuário `apexpro`** (não-root) com `sudo NOPASSWD` — todo o app roda sob esse usuário.
+- **SSH só por chave** — `PasswordAuthentication no`, `PermitRootLogin prohibit-password`. Duas chaves Ed25519 cadastradas:
+  - `apexpro_vps` (no Windows de dev) — acesso administrativo.
+  - `github_deploy` (na VPS, em `/home/apexpro/.ssh/`) — deploy key read-only configurada em `https://github.com/guiraldi1987/SisPerfformance/settings/keys` (sem `Allow write access`).
+- **UFW firewall**: bloqueia tudo, libera apenas `22022/tcp` (SSH), `80/tcp` (HTTP) e `443/tcp` (HTTPS).
+- **fail2ban**: jail `sshd` na porta 22022, ban de 1h após 5 falhas em 10 min.
+- **`/etc/hosts`** ajustado pra resolver o hostname `vps-15396635.143.95.212.89` localmente (elimina os warnings `sudo: unable to resolve host`).
+
+#### Stack instalada
+- **Node.js v20.20.2** + **npm 10.8.2** (via NodeSource)
+- **PM2 7.0.1** com `pm2 startup systemd` (sobe sozinho no reboot)
+- **Nginx 1.18.0** (reverse proxy + static)
+- **Certbot 5.6.0** (via snap, com renovação automática via `snap.certbot.renew.timer`)
+- **build-essential + python3** (pra compilação nativa do `better-sqlite3`)
+- **sqlite3** (CLI, usado pelo script de backup com `.backup` consistency-safe)
+
+#### Layout no servidor
+```
+/home/apexpro/
+├── apexpro/                              # repo clonado (branch main)
+│   ├── backend/
+│   │   ├── .env                          # produção (chmod 600, fora do git)
+│   │   ├── ieeegp.db                     # SQLite local (vazio no boot — alimenta via upload)
+│   │   ├── uploads/fotos/                # fotos dos atletas (gitignore)
+│   │   └── ...
+│   ├── frontend/
+│   │   ├── .env.production               # VITE_API_URL=/api (relativo, mesmo host do front)
+│   │   └── dist/                         # build do Vite (servido pelo Nginx como root)
+│   └── backup.sh                         # script de backup chamado pelo cron
+└── backups/                              # tarballs comprimidos (mantém 14 dias)
+```
+
+#### Arquitetura HTTP (Nginx + PM2)
+- `/etc/nginx/sites-available/apexpro` → symlink em `sites-enabled/`. Config completa:
+  - `listen 80` + `listen 443 ssl http2` (Certbot atualizou o conf automaticamente).
+  - `root /home/apexpro/apexpro/frontend/dist;`
+  - `location /api/` → `proxy_pass http://127.0.0.1:3001;` com `Host`, `X-Real-IP`, `X-Forwarded-For`, `X-Forwarded-Proto`, suporte a WebSocket upgrade e `proxy_read_timeout 300s`.
+  - `location /uploads/` → mesmo proxy pro backend (que serve `serveStatic({ root: './' })` em `uploads/fotos/`).
+  - `location /` → `try_files $uri $uri/ /index.html;` (SPA fallback).
+  - Cache de assets (`js|css|woff2|svg|png|webp|...`) com `expires 30d; Cache-Control: public, immutable;`.
+  - Gzip habilitado (`text/plain`, `text/css`, `application/json`, `application/javascript`, `application/xml`).
+  - `client_max_body_size 10M` — pra acomodar CSVs maiores e uploads de fotos.
+  - Redirect automático `http://` → `https://` (gerado pelo Certbot com `--redirect`).
+  - O default server do Nginx (`/etc/nginx/sites-enabled/default`) foi removido pra evitar conflito de host header.
+
+- **PM2**: `apexpro-backend` rodando `npm start` (que é `tsx src/index.ts`) em fork mode, com restart automático em crash e boot. Process list salvo em `~/.pm2/dump.pm2`.
+
+#### Variáveis de ambiente de produção (`backend/.env`)
+- `NODE_ENV=production`
+- `PORT=3001`
+- `AUTH_USERNAME=eduardo.tavares` (mesmo usuário do dev, hash bcrypt preservado)
+- `AUTH_USER_NAME=Eduardo Luiz Tavares` · `AUTH_USER_ROLE=Preparador Físico`
+- **`JWT_SECRET` regenerado em produção** (não compartilha com dev — boa prática). 48 bytes hex via `crypto.randomBytes`.
+- `JWT_EXPIRES_IN_HOURS=12`
+- `CORS_ORIGIN=https://apexpro.grupommp.com.br` (travado no domínio, sem mais wildcard `*`).
+
+#### SSL/TLS
+- Certificado emitido pelo **Let's Encrypt** via `certbot --nginx -d apexpro.grupommp.com.br --redirect --agree-tos --email guiraldi1987@gmail.com`.
+- Vencimento inicial: **2026-08-23**. Renovação automática agendada pelo timer `snap.certbot.renew.timer` (roda 2x/dia, renova quando faltam <30 dias).
+- ⚠️ Pegadinha resolvida durante o deploy: o cPanel da Hostgator criou automaticamente um registro A duplicado de `apexpro.grupommp.com.br` apontando pro IP do servidor compartilhado (`192.185.223.220`). Tivemos que **deletar manualmente** esse registro no "Modify The Zones" — caso contrário o DNS retornava 2 IPs e o Let's Encrypt podia falhar o challenge.
+
+#### Backup diário (`~/apexpro/backup.sh`)
+- **Cron de produção**: `0 3 * * * /home/apexpro/apexpro/backup.sh >> /home/apexpro/backups/backup.log 2>&1` (diário às 3h da manhã do horário do servidor).
+- Estratégia:
+  1. `sqlite3 ieeegp.db ".backup ..."` — snapshot consistente mesmo com WAL ativo (não trava o app).
+  2. `tar -czf` empacota o snapshot + a pasta `uploads/` num único arquivo `apexpro-YYYYMMDD-HHMMSS.tar.gz` em `~/backups/`.
+  3. Mantém os **14 backups mais recentes**, apaga o resto via `ls -1t | tail -n +15 | xargs -r rm`.
+- ⚠️ **Limite atual**: backups ficam **na própria VPS**. Se o disco corromper, perdeu tudo. Pra produção séria, espelhar pra S3/Backblaze/scp off-site.
+
+#### Repositório no GitHub
+- **Repo privado**: `https://github.com/guiraldi1987/SisPerfformance` (nota: nome com 2 "f" — histórico de typo, não vale a pena renomear).
+- O initial commit existia mas tinha só a Fase 1; todo o trabalho das Fases 2–26 foi consolidado num único commit `feat: fases 2-26 - sistema completo...` (49 arquivos, +11220 linhas) e empurrado pra `main`.
+- `.gitignore` reforçado pra excluir: `backend/*.db*`, `backend/uploads/`, `.env*`, `chat_*_exportado.txt`, `exportar_chat.js`, `.claude/settings.local.json`.
+- Os arquivos `backend/ieeegp.db*` que estavam no índice do git original foram removidos com `git rm --cached` (não afeta o local; só para de ser versionado).
+
+#### Comandos úteis do dia a dia
+
+**Conectar via SSH (do Windows):**
+```bash
+ssh -i ~/.ssh/apexpro_vps -p 22022 apexpro@143.95.212.89
+```
+
+**Deploy de novas versões (após `git push origin main` da máquina local):**
+```bash
+cd ~/apexpro && git pull
+cd backend && npm install && npm run db:push
+cd ../frontend && npm install && npm run build
+pm2 restart apexpro-backend
+```
+
+**Logs do backend ao vivo:**
+```bash
+pm2 logs apexpro-backend --lines 50
+```
+
+**Monitor de recursos (CPU/RAM/restart count):**
+```bash
+pm2 monit
+```
+
+**Forçar backup manual:**
+```bash
+~/apexpro/backup.sh && ls -lh ~/backups/
+```
+
+**Restaurar de um backup:**
+```bash
+pm2 stop apexpro-backend
+tar -xzf ~/backups/apexpro-YYYYMMDD-HHMMSS.tar.gz -C /tmp/
+cp /tmp/ieeegp-*.db ~/apexpro/backend/ieeegp.db
+cp -r /tmp/uploads ~/apexpro/backend/
+pm2 start apexpro-backend
+```
+
+#### Trade-offs aceitos no MVP de produção
+- **SQLite em vez de Postgres** — basta pro volume atual (5 users, 6 sessões/semana, DB ~200kb). Migrar quando passar de ~50 GB ou >20 conexões simultâneas.
+- **Backup só local na VPS** — aceitável pra MVP; precisa virar off-site quando virar SaaS pago.
+- **JWT em localStorage** — herdado do dev (Fase 23); vulnerável a XSS. Trocar por HttpOnly cookie quando subir tier de segurança.
+- **Single-tier deploy** — frontend + backend + DB no mesmo VPS. Pra escalar horizontalmente, separar: VPS pequeno pro backend, S3/Cloudflare Pages pro frontend, Postgres gerenciado.
+- **Sem CI/CD** — deploy é `git pull && build && pm2 restart` manual via SSH. Quando a frequência de deploy aumentar, configurar GitHub Actions com SSH deploy.
+
 ---
 
 ## ✅ Status — Tudo do roadmap original implementado
@@ -695,6 +829,9 @@ Todos os Lotes 1, 2 e 3 do plano original foram concluídos:
 - Toast system global + página 404 + reconnect API
 - **Gestão de elenco com status ativo/inativo, datas de chegada/saída, wizard de reapresentação e sugestões automáticas de inatividade**
 
+### Infraestrutura entregue
+- ✅ Sistema **em produção** com domínio próprio, HTTPS, backup diário automatizado e PM2 garantindo uptime — pronto para o Eduardo testar de qualquer lugar.
+
 ### Bônus que ainda precisariam dados extras
 - **Heatmap posicional** — precisaria coordenadas GPS por segundo (Catapult não exporta no CSV)
 - **Wellness/RPE × carga** — precisaria input subjetivo dos jogadores (formulário separado)
@@ -703,6 +840,10 @@ Todos os Lotes 1, 2 e 3 do plano original foram concluídos:
 ---
 
 ## 🚀 Como Rodar
+
+### Ambientes
+- **Desenvolvimento (local)**: `http://localhost:5173/` (Vite) + `http://localhost:3001/api` (Hono)
+- **Produção (Hostgator VPS)**: **https://apexpro.grupommp.com.br** (Nginx + PM2 + Let's Encrypt) — ver Fase 27 para detalhes completos da infra
 
 ### Pré-requisitos
 - Node 20+
@@ -744,7 +885,7 @@ cd ../frontend && npm install && npm run dev
 
 ## 🧪 Testando o Sistema
 
-1. Acessar `http://localhost:5173/`
+1. Acessar `http://localhost:5173/` em dev ou `https://apexpro.grupommp.com.br` em produção
 2. **Upload**: importar CSV no `/upload` (data lida automaticamente do CSV)
 3. **Painel**: ver `/painel` — anomalias aparecem se houver atletas com desvio >2σ; heatmap pode ser ajustado nos chips ou range
 4. **Sessões**: ver `/sessoes` — alternar Lista/Calendário, filtrar por tipo, buscar por adversário
@@ -794,4 +935,4 @@ Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto
 
 ---
 
-**Última atualização:** sessão de chat de 2026-05-22 — Modernização e Redesenho do Painel do Time com Cards Premium, Filtros Interativos por Clique nos AlertCards, Upload e Exibição de Fotos Reais dos Jogadores com PlayerAvatar (Fases 24 e 25); Gerenciamento do Staff Técnico de múltiplos usuários no banco SQLite com login híbrido e tela de administração dedicada (Fase 26).
+**Última atualização:** sessão de chat de 2026-05-25 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27).
