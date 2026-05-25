@@ -210,4 +210,37 @@
   .print-compact-metrics .h-5 { height: 10px !important; }
   .print-compact-metrics .text-\[10px\],
   .print-compact-metrics .text-\[11px\] { font-size: 8.5px !important; }
+
+  /* Compactação geral para impressão (Comparar e outras páginas) */
+  header { padding: 8px 16px !important; }
+  header h1 { font-size: 14px !important; line-height: 1.1 !important; }
+  header p { font-size: 9px !important; margin: 0 !important; }
+
+  main { padding: 8px 12px !important; }
+  main.p-6 { padding: 8px 12px !important; }
+  .space-y-6 > * + * { margin-top: 8px !important; }
+  .space-y-7 > * + * { margin-top: 10px !important; }
+  .p-6 { padding: 10px !important; }
+  .p-8 { padding: 12px !important; }
+  .px-8 { padding-left: 16px !important; padding-right: 16px !important; }
+  .py-4 { padding-top: 6px !important; padding-bottom: 6px !important; }
+  .mb-4 { margin-bottom: 6px !important; }
+  .mb-3 { margin-bottom: 4px !important; }
+  .mt-4 { margin-top: 6px !important; }
+  .gap-6 { gap: 10px !important; }
+  .gap-3 { gap: 4px !important; }
+
+  /* Força layouts de grid 2/3-5 a permanecerem lado a lado em print */
+  .lg\:grid-cols-5 {
+    grid-template-columns: 2fr 3fr !important;
+  }
+  .lg\:col-span-2 { grid-column: span 1 / span 1 !important; }
+  .lg\:col-span-3 { grid-column: span 1 / span 1 !important; }
+
+  /* Capa altura de SVGs grandes (radar, sparklines) */
+  svg { max-height: 280px !important; }
+  .w-full.block[viewBox] { max-height: 260px !important; }
+
+  /* Sparklines pequenos não devem encolher demais */
+  td svg { max-height: 36px !important; }
 }
