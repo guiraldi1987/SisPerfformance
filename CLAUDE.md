@@ -98,6 +98,65 @@ Apenas para evitar ruído na escolha:
 
 ---
 
+## 🎯 Roteamento de Skills — REGRA OBRIGATÓRIA
+
+Skills (`/comando`) são **invocações pré-empacotadas** de agentes/fluxos. **Devem ser usadas como padrão nos gatilhos abaixo**, sem precisar do usuário pedir.
+
+### Gatilhos automáticos (invocar quando o evento ocorrer)
+
+| Quando | Skill a invocar | Razão |
+|---|---|---|
+| Concluí 3+ fixes/refactor seguidos no mesmo branch | `/simplify` | Revisa duplicação, reuso, simplificações antes de fechar a sessão |
+| Vou empurrar mudança que toca `routes/`, `auth.ts`, `index.ts`, JWT, CORS, ou env vars | `/security-review` | Auditoria de segurança antes do `git push` em prod |
+| Vou implementar feature NOVA (não-trivial: 3+ arquivos, lib nova, mudança de schema) | `/workflow [descrição]` | Roda research → plan → implement com quality gates |
+| Preciso de docs atualizadas de lib (Hono, Drizzle, Vite, Tailwind v4) antes de implementar | `/research [topic]` | Evita codar com memória estale |
+| Tenho research mas não plano | `/plan [feature]` | Cria blueprint cirúrgico com rollback |
+| Tenho research + plano e quero executar | `/implement` | TDD + self-correction 3x |
+| Conversa passou de ~50 mensagens E percebo respostas mais lentas/divagantes | `/context optimize` | Combate context rot (39% melhoria, 84% menos tokens) |
+| Estou abrindo o projeto numa máquina nova e CLAUDE.md não existe | `/init` | Gera CLAUDE.md inicial — **NÃO é o caso aqui, já existe** |
+| Tarefa pede polling/monitoramento periódico ("verifica a cada 5min", "babysit") | `/loop [intervalo] [comando]` | Recorrência local |
+| Tarefa pede agendamento cron remoto ("toda 2ª às 9h", "amanhã às 15h") | `/schedule` | Agentes remotos em cron |
+
+### Gatilhos manuais (sob pedido do usuário)
+
+| Quando o usuário pedir... | Skill |
+|---|---|
+| "Revisa esse PR" | `/review` |
+| "Auditoria de segurança no branch" | `/security-review` |
+| "Simplifica esse código" | `/simplify` |
+| "Reduz os popups de permissão" | `fewer-permission-prompts` |
+| "Adiciona um hook quando X" / "Permite o comando Y" / "Seta var Z" | `update-config` |
+| "Customiza meu atalho de teclado" | `keybindings-help` |
+| "Analisa meu CLAUDE.md" | `/context analyze` |
+
+### Skills auto-invocadas pelo sistema (não precisa fazer nada)
+
+Estas rodam automaticamente quando o agente apropriado é invocado — **não invocar manualmente**:
+
+- `research-methodology` (dentro de `docs-researcher`)
+- `planning-methodology` (dentro de `implementation-planner`)
+- `quality-validation` (gates entre fases do workflow)
+- `pattern-recognition` (após implementações bem-sucedidas)
+- `context-engineering` (curação contínua do contexto)
+
+### Skills a NUNCA invocar neste projeto
+
+- `claude-api` — só faz sentido se estivéssemos construindo um app que CHAMA o Claude (não é o caso; usamos Claude como dev tool, não como dependência runtime do sistema).
+
+---
+
+### 🔗 Combos recomendados (skills + agentes em sequência)
+
+| Cenário | Fluxo |
+|---|---|
+| **Pré-deploy de mudança grande** | `/security-review` → se passar, `git push` → `pm2 restart` na VPS |
+| **Nova feature complexa (ex: integração wellness/RPE)** | `/workflow "adicionar formulário de RPE diário..."` (faz tudo) OU `/research RPE wellness API` → `/plan` → `/implement` (com revisão entre fases) |
+| **Bug profundo + fix** | invocar `brahma-investigator` (root cause) → aplicar fix → `Code Reviewer` agente |
+| **Limpeza pós-sprint de fixes** | `/simplify` → revisar sugestões → commitar consolidado |
+| **Onboarding de outro dev no projeto** | `Codebase Onboarding Engineer` agente → eles leem `HANDOVER.md` + `CLAUDE.md` |
+
+---
+
 ## ⚙️ Convenções do projeto (lembretes operacionais)
 
 1. **Branch `main` é a versão de produção.** Toda mudança commitada e empurrada vai pra VPS no próximo `git pull` (manual hoje).
@@ -122,4 +181,4 @@ Se um commit acidentalmente subir algo sensível, **invocar `Security Engineer` 
 
 ---
 
-**Versão deste arquivo:** 1.0 (criado 2026-05-25 ao final da Fase 28 do HANDOVER).
+**Versão deste arquivo:** 1.1 (2026-05-28 — adicionado roteamento de skills com gatilhos automáticos + combos).
