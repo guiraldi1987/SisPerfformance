@@ -3,6 +3,7 @@ import { API_BASE } from '../lib/api';
 import { useToast } from '../components/Toast';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { Button } from '../components/ui/Button';
+import { PageHeader } from '../components/ui/PageHeader';
 
 interface BackupMeta {
   filename: string;
@@ -97,19 +98,19 @@ export const Backups = () => {
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">Backups</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
-            Backup automático diário às 03:00. Mantém os últimos 5 automáticos; os manuais ficam até serem excluídos.
-          </p>
-        </div>
-        <Button onClick={handleCreate} disabled={creating}>
-          {creating ? 'Criando…' : 'Criar backup agora'}
-        </Button>
-      </div>
+    <div>
+      <PageHeader
+        eyebrow="Administração"
+        title="Backups"
+        subtitle="Backup automático diário às 03:00. Mantém os últimos 5 automáticos; os manuais ficam até serem excluídos."
+        actions={
+          <Button onClick={handleCreate} disabled={creating}>
+            {creating ? 'Criando…' : 'Criar backup agora'}
+          </Button>
+        }
+      />
 
+      <main className="p-6 md:p-8 max-w-4xl mx-auto">
       {loading ? (
         <p className="text-slate-500 dark:text-slate-400 text-sm">Carregando…</p>
       ) : list.length === 0 ? (
@@ -171,6 +172,7 @@ export const Backups = () => {
         onConfirm={handleDelete}
         onCancel={() => setConfirmTarget(null)}
       />
+      </main>
     </div>
   );
 };
