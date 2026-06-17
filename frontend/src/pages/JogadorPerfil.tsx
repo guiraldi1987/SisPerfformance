@@ -9,7 +9,7 @@ import { TrendChart, type TrendPoint } from '../components/charts/TrendChart';
 import { MatchTrainingCompare, type CompareData } from '../components/charts/MatchTrainingCompare';
 import { MicrocicloChart, type MicrocicloPonto } from '../components/charts/MicrocicloChart';
 import { RadarComparativo, type RadarAxis } from '../components/charts/RadarComparativo';
-import { POSICOES, posicaoCodigo, POSICAO_COLOR } from '../lib/constants';
+import { POSICOES, posicaoCodigo, POSICAO_COLOR, M_COLOR } from '../lib/constants';
 import { buildInsights } from '../lib/insights';
 import { RatioCell, computeECRatio } from '../components/RatioCell';
 
@@ -63,21 +63,6 @@ const fmtSec = (s: number) => {
 
 const fmtNum = (v: number, dec = 0) =>
   v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-
-// Cores fixas por métrica (igual zonas do PDF Catapult)
-const M_COLOR = {
-  dist:    '#0d9488', // teal — volume
-  mpm:     '#1e3a5f', // navy — intensidade (mesmo do SessaoDashboard)
-  hsr:     '#f59e0b', // orange — Z4
-  hsrE:    '#f59e0b',
-  sprint:  '#ef4444', // red — Z5
-  sprE:    '#ef4444',
-  acel:    '#0891b2', // cyan/blue
-  desac:   '#a855f7', // purple
-  acelD:   '#64748b', // slate
-  carga:   '#7c3aed', // roxo/violeta — Player Load
-  cMin:    '#a855f7', // roxo mais claro — PL/min
-};
 
 // Mini-barra de intensidade ao lado do número (estilo PDF) - responsiva e fluida
 const BarCell: React.FC<{

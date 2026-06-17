@@ -33,11 +33,11 @@
   --surface-input:    #f8fafc; /* campos de formulário */
 
   --metric-dist:   #0d9488; /* teal */
-  --metric-mpm:    #1e3a8a; /* navy */
-  --metric-hsr:    #f97316; /* orange */
+  --metric-mpm:    #1e3a5f; /* navy */
+  --metric-hsr:    #f59e0b; /* orange */
   --metric-sprint: #ef4444; /* red */
-  --metric-acel:   #06b6d4; /* cyan */
-  --metric-desac:  #7c3aed; /* purple */
+  --metric-acel:   #0891b2; /* cyan */
+  --metric-desac:  #a855f7; /* purple */
 }
 .dark {
   --surface-base:     #050608;

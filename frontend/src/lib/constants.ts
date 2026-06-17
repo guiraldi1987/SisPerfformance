@@ -17,12 +17,17 @@ export const ZONES = {
 
 // ─── Paleta canônica por métrica (badges, gráficos, legendas) ────────────────
 export const M_COLOR = {
-  dist:   '#0d9488', // teal — distância total
-  mpm:    '#1e3a8a', // navy — metragem/min
-  hsr:    '#f97316', // orange — high-speed running
-  sprint: '#ef4444', // red — sprint
-  acel:   '#06b6d4', // cyan — acelerações
-  desac:  '#7c3aed', // purple — desacelerações
+  dist:   '#0d9488', // teal — volume
+  mpm:    '#1e3a5f', // navy — intensidade
+  hsr:    '#f59e0b', // orange — Z4
+  hsrE:   '#f59e0b',
+  sprint: '#ef4444', // red — Z5
+  sprE:   '#ef4444',
+  acel:   '#0891b2', // cyan
+  desac:  '#a855f7', // purple
+  acelD:  '#64748b', // slate
+  carga:  '#7c3aed', // Player Load
+  cMin:   '#a855f7', // PL/min
 } as const;
 
 export function getHrColor(pct: number): string {
