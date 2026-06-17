@@ -5,6 +5,7 @@ import { formatData } from '../lib/format';
 import { posicaoCodigo, POSICAO_COLOR, posicaoLabel } from '../lib/constants';
 import { useToast } from '../components/Toast';
 import { PlayerAvatar } from '../components/PlayerAvatar';
+import { LoadingState } from '../components/ui/LoadingState';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -542,7 +543,7 @@ export const Painel: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="flex items-center justify-center h-screen text-slate-450 dark:text-slate-500 text-xs font-semibold uppercase tracking-widest font-outfit">Carregando painel analítico…</div>;
+  if (loading) return <LoadingState label="Carregando painel analítico…" />;
   if (erro)    return <div className="flex items-center justify-center h-screen text-red-500 text-xs font-semibold uppercase tracking-wider font-outfit">{erro}</div>;
   if (!data || !atletasAgrupados) return null;
 
