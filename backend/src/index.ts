@@ -10,6 +10,7 @@ import sessoesRouter from './routes/sessoes';
 import analyticsRouter from './routes/analytics';
 import authRouter from './routes/auth';
 import usuariosRouter from './routes/usuarios';
+import backupsRouter from './routes/backups';
 
 const app = new Hono();
 
@@ -47,6 +48,7 @@ app.route('/api/jogadores', jogadoresRouter);
 app.route('/api/sessoes', sessoesRouter);
 app.route('/api/analytics', analyticsRouter);
 app.route('/api/usuarios', usuariosRouter);
+app.route('/api/backups', backupsRouter);
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3001;
 console.log(`Server is running on port ${port}`);
