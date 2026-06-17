@@ -27,24 +27,34 @@ backupsRouter.post('/', async (c) => {
 
 // GET /:filename — baixa o .zip
 backupsRouter.get('/:filename', (c) => {
-  const filename = c.req.param('filename');
-  const full = resolveBackupPath(filename);
-  if (!full) return c.json({ erro: 'Nome de arquivo inválido' }, 400);
-  if (!existsSync(full)) return c.json({ erro: 'Backup não encontrado' }, 404);
-  const data = readFileSync(full);
-  return c.body(data, 200, {
-    'Content-Type': 'application/zip',
-    'Content-Disposition': `attachment; filename="${filename}"`,
-  });
+  try {
+    const filename = c.req.param('filename');
+    const full = resolveBackupPath(filename);
+    if (!full) return c.json({ erro: 'Nome de arquivo inválido' }, 400);
+    if (!existsSync(full)) return c.json({ erro: 'Backup não encontrado' }, 404);
+    const data = readFileSync(full);
+    return c.body(data, 200, {
+      'Content-Type': 'application/zip',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+    });
+  } catch (err) {
+    console.error('[backups] erro ao baixar:', err);
+    return c.json({ erro: 'Falha ao baixar backup' }, 500);
+  }
 });
 
 // DELETE /:filename — exclui o .zip
 backupsRouter.delete('/:filename', (c) => {
-  const filename = c.req.param('filename');
-  if (!isValidBackupName(filename)) return c.json({ erro: 'Nome de arquivo inválido' }, 400);
-  const ok = deleteBackup(filename);
-  if (!ok) return c.json({ erro: 'Backup não encontrado' }, 404);
-  return c.json({ sucesso: true });
+  try {
+    const filename = c.req.param('filename');
+    if (!isValidBackupName(filename)) return c.json({ erro: 'Nome de arquivo inválido' }, 400);
+    const ok = deleteBackup(filename);
+    if (!ok) return c.json({ erro: 'Backup não encontrado' }, 404);
+    return c.json({ sucesso: true });
+  } catch (err) {
+    console.error('[backups] erro ao excluir:', err);
+    return c.json({ erro: 'Falha ao excluir backup' }, 500);
+  }
 });
 
 export default backupsRouter;
