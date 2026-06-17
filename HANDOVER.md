@@ -45,13 +45,16 @@ IEEEGP - Cel Eduardo/
 │   │   ├── db/
 │   │   │   ├── index.ts                # conexão SQLite + WAL
 │   │   │   └── schema.ts               # tabelas: jogadores, sessoes, metricas
+│   │   ├── services/
+│   │   │   └── backup.ts               # lógica de snapshot + zip (better-sqlite3.backup + archiver)
 │   │   └── routes/
 │   │       ├── upload.ts               # POST /api/upload-gps
 │   │       ├── jogadores.ts            # CRUD + GET /:id/performance
 │   │       ├── sessoes.ts              # GET /, /listagem, /:id, /:id/metricas, /:id/analise, PUT /:id
 │   │       ├── analytics.ts            # team-overview, ACWR, microciclo, posicoes-benchmarks (com p95)
 │   │       ├── auth.ts                 # POST /login, GET /me — JWT HS256
-│   │       └── usuarios.ts             # CRUD de usuários/staff técnico
+│   │       ├── usuarios.ts             # CRUD de usuários/staff técnico
+│   │       └── backups.ts              # POST/GET/download/DELETE /api/backups (+ agendador node-cron)
 │   ├── ieeegp.db                       # SQLite (gitignore)
 │   └── drizzle.config.ts
 ├── frontend/
@@ -69,7 +72,8 @@ IEEEGP - Cel Eduardo/
 │   │   │   ├── NotFound.tsx            # rota 404 catch-all
 │   │   │   ├── Login.tsx               # /login (form de autenticação)
 │   │   │   ├── Upload.tsx              # /upload (form CSV)
-│   │   │   └── Usuarios.tsx            # /usuarios (Gerenciamento do Staff Técnico)
+│   │   │   ├── Usuarios.tsx            # /usuarios (Gerenciamento do Staff Técnico)
+│   │   │   └── Backups.tsx             # /backups (Administração → Backups — criar, listar, baixar, excluir)
 │   │   ├── components/charts/
 │   │   │   ├── Gauge.tsx                       # gauge SVG semicírculo
 │   │   │   ├── InlineBar.tsx                   # barra inline simples
@@ -195,6 +199,13 @@ IEEEGP - Cel Eduardo/
 - `PUT /api/usuarios/:id` — atualiza dados cadastrais (nome, cargo, status ativo/inativo e nova senha opcional). Protege contra auto-inativação crítica do próprio usuário logado.
 - `DELETE /api/usuarios/:id` — remove permanentemente o usuário do staff (com trava rígida para impedir a auto-exclusão da própria conta em uso).
 
+### Backups
+Todos sob JWT (`Authorization: Bearer`):
+- `POST /api/backups` — dispara backup manual imediato; retorna o nome do arquivo gerado.
+- `GET /api/backups` — lista todos os backups disponíveis em `backend/backups/` (nome, tamanho, data).
+- `GET /api/backups/:filename` — faz download do arquivo `.zip` correspondente.
+- `DELETE /api/backups/:filename` — remove o arquivo de backup informado.
+
 ---
 
 ## 🖼️ Páginas Frontend
@@ -304,6 +315,13 @@ IEEEGP - Cel Eduardo/
 - **Modal de Cadastro/Edição**:
   - Campos: Nome Completo, Nome de Usuário (desabilitado na edição), Função (dropdown de especialidades), Status da conta (Ativo/Inativo) e alteração/definição de senha com confirmação de segurança.
   - Toast notifications de feedback imediatos em todas as operações de escrita.
+
+### `/backups` — Backups do Banco de Dados (Administração)
+- Acessível pelo menu **Administração → Backups** na sidebar.
+- Botão **"Criar backup agora"** — aciona `POST /api/backups`, exibe toast de sucesso com nome do arquivo gerado e atualiza a lista automaticamente.
+- **Tabela de backups** com colunas: nome do arquivo, tamanho (formatado), data/hora de criação e ações.
+- Ações por linha: **Baixar** (download direto do `.zip`) e **Excluir** (com `ConfirmModal` de confirmação).
+- Exibe indicador de backup automático diário (03:00 America/Sao_Paulo) e política de retenção (5 mais recentes automáticos; manuais até exclusão explícita).
 
 ---
 
@@ -802,6 +820,18 @@ Após o deploy em produção, ao testar o `window.print()` da página `/comparar
 
 Todas as alterações ficaram concentradas em `frontend/src/index.css` (bloco `@media print`) e numa única classe no JSX de `Comparar.tsx` — sem mudança de comportamento em modo tela.
 
+### Fase 29 — Backup do banco de dados
+
+Feature de backup acessível pelo menu Administração → Backups.
+
+- **O que faz:** gera um `.zip` com snapshot consistente do `ieeegp.db` (via `better-sqlite3.backup()`) + a pasta `uploads/` (fotos dos atletas), salvo em `backend/backups/` na VPS.
+- **Disparo:** botão "Criar backup agora" (manual) + automático diário às 03:00 America/Sao_Paulo (`node-cron`).
+- **Retenção:** mantém os 5 backups automáticos mais recentes; manuais ficam até exclusão.
+- **Endpoints** (sob JWT): `POST /api/backups`, `GET /api/backups`, `GET /api/backups/:filename` (download), `DELETE /api/backups/:filename`.
+- **Arquivos:** `backend/src/services/backup.ts`, `backend/src/routes/backups.ts`, `backend/src/db/index.ts` (`snapshotDatabase`), `frontend/src/pages/Backups.tsx`.
+- **Deps novas:** `archiver`, `node-cron`.
+- **Deploy:** após `git pull` na VPS, rodar `npm install` no backend (deps novas) antes do `pm2 restart apexpro-backend`. A pasta `backend/backups/` é criada no boot e está no `.gitignore`.
+
 #### Trade-offs aceitos no MVP de produção
 - **SQLite em vez de Postgres** — basta pro volume atual (5 users, 6 sessões/semana, DB ~200kb). Migrar quando passar de ~50 GB ou >20 conexões simultâneas.
 - **Backup só local na VPS** — aceitável pra MVP; precisa virar off-site quando virar SaaS pago.
@@ -946,4 +976,4 @@ Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto
 
 ---
 
-**Última atualização:** sessão de chat de 2026-05-25 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28).
+**Última atualização:** sessão de chat de 2026-06-17 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29).
