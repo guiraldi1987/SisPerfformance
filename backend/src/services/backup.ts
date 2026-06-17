@@ -83,25 +83,27 @@ export async function createBackup(source: 'auto' | 'manual'): Promise<BackupMet
 
   await snapshotDatabase(tmpDbPath);
 
-  await new Promise<void>((resolvePromise, reject) => {
-    const output = createWriteStream(zipPath);
-    const archive = new ZipArchive({ zlib: { level: 9 } });
-    output.on('close', () => resolvePromise());
-    output.on('error', reject);
-    archive.on('error', reject);
-    archive.pipe(output);
-    archive.file(tmpDbPath, { name: 'ieeegp.db' });
-    if (existsSync(UPLOADS_DIR)) archive.directory(UPLOADS_DIR, 'uploads');
-    archive.finalize();
-  });
-
-  for (const ext of ['', '-wal', '-shm']) {
-    const p = tmpDbPath + ext;
-    if (existsSync(p)) unlinkSync(p);
+  try {
+    await new Promise<void>((resolvePromise, reject) => {
+      const output = createWriteStream(zipPath);
+      const archive = new ZipArchive({ zlib: { level: 9 } });
+      output.on('close', () => resolvePromise());
+      output.on('error', reject);
+      archive.on('error', reject);
+      archive.pipe(output);
+      archive.file(tmpDbPath, { name: 'ieeegp.db' });
+      if (existsSync(UPLOADS_DIR)) archive.directory(UPLOADS_DIR, 'uploads');
+      archive.finalize();
+    });
+  } finally {
+    for (const ext of ['', '-wal', '-shm']) {
+      const p = tmpDbPath + ext;
+      if (existsSync(p)) unlinkSync(p);
+    }
   }
 
   if (source === 'auto') pruneAutoBackups();
 
-  const { size } = statSync(zipPath);
-  return { filename, size, createdAt: new Date().toISOString(), source };
+  const { size, mtime } = statSync(zipPath);
+  return { filename, size, createdAt: mtime.toISOString(), source };
 }
