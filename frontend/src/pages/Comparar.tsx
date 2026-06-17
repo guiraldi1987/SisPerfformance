@@ -213,12 +213,12 @@ export const Comparar: React.FC = () => {
     return POSICOES.filter(p => set.has(p));
   }, [elenco]);
 
-  const cardCls = 'bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/[0.06] p-6';
+  const cardCls = 'bg-card rounded-xl border border-slate-200 dark:border-white/[0.06] p-6';
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-[#111111]">
+    <div className="min-h-screen bg-surface">
       {/* HEADER */}
-      <header className="bg-white dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-white/[0.06] px-8 py-4 flex items-start justify-between gap-4">
+      <header className="bg-card border-b border-slate-200 dark:border-white/[0.06] px-8 py-4 flex items-start justify-between gap-4">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Análise Comparativa</p>
           <h1 className="text-xl font-extrabold text-slate-900 dark:text-white">Comparar Jogadores</h1>
@@ -244,7 +244,7 @@ export const Comparar: React.FC = () => {
             </div>
             <div className="flex items-center gap-3">
               <select value={filtroPosicao} onChange={e => { setFiltroPosicao(e.target.value); setSelecionados([]); setDados(null); }}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 bg-white dark:bg-[#11161d] text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red">
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 bg-input text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red">
                 <option value="">Todas as posições</option>
                 {posicoesDisp.map(p => <option key={p} value={p}>{p}</option>)}
               </select>
@@ -345,7 +345,7 @@ export const Comparar: React.FC = () => {
                       if (v > 0) { setFiltroPreset('sessao'); setSessaoEscolhida(v); setTipo('geral'); }
                       else { setFiltroPreset('todos-jogos'); setSessaoEscolhida(null); setTipo('jogos'); }
                     }}
-                    className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 bg-white dark:bg-[#11161d] text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red max-w-[280px]"
+                    className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 bg-input text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red max-w-[280px]"
                   >
                     <option value="">— Selecionar jogo —</option>
                     {sessoesDisp.filter(s => s.tipo === 'Jogo').map(s => (
@@ -383,7 +383,7 @@ export const Comparar: React.FC = () => {
                 const nome = j.jogador.apelido || j.jogador.nome.split(',')[0] || j.jogador.nome;
                 return (
                   <button key={j.jogador.id} onClick={() => navigate(`/jogador/${j.jogador.id}`)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/[0.06] hover:border-slate-300 transition-colors">
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-card border border-slate-200 dark:border-white/[0.06] hover:border-slate-300 transition-colors">
                     <span className="w-3 h-3 rounded-full shrink-0" style={{ background: color }} />
                     <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{nome}</span>
                     <span className="text-[10px] text-slate-400">{posicaoLabel(j.jogador.posicao)} · {(j[tipo] as Stats).sessoes}s</span>

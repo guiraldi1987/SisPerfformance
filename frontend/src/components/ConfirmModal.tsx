@@ -25,7 +25,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-modal-title"
-        className="bg-white dark:bg-[#111111] rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 border border-slate-200 dark:border-white/[0.06] animate-in fade-in zoom-in-95 duration-200"
+        className="bg-elevated rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 border border-slate-200 dark:border-white/[0.06] animate-in fade-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-start gap-4 mb-6">

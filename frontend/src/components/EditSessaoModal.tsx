@@ -56,14 +56,14 @@ export const EditSessaoModal: React.FC<EditSessaoModalProps> = ({ sessao, onClos
     }
   };
 
-  const inputCls = 'w-full px-3 py-2 text-sm bg-slate-50 dark:bg-[#11161d] border border-slate-200 dark:border-white/10 rounded-lg text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red transition-colors';
+  const inputCls = 'w-full px-3 py-2 text-sm bg-input border border-slate-200 dark:border-white/10 rounded-lg text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red transition-colors';
   const labelCls = 'block text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all" onClick={onClose}>
       <div
         role="dialog" aria-modal="true"
-        className="bg-white dark:bg-[#111111] rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-white/[0.06] animate-in fade-in zoom-in-95 duration-200"
+        className="bg-elevated rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-white/[0.06] animate-in fade-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-5">

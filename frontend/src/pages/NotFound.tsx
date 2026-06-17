@@ -5,8 +5,8 @@ export const NotFound: React.FC = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-[#111111] p-6">
-      <div className="max-w-md w-full bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/[0.06] rounded-2xl p-8 text-center shadow-xl">
+    <div className="min-h-screen flex items-center justify-center bg-surface p-6">
+      <div className="max-w-md w-full bg-card border border-slate-200 dark:border-white/[0.06] rounded-2xl p-8 text-center shadow-xl">
         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-club-red/10 border border-club-red/20 flex items-center justify-center">
           <span className="text-3xl font-extrabold text-club-red">404</span>
         </div>

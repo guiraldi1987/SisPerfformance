@@ -104,10 +104,10 @@ export const Layout: React.FC = () => {
     }`;
 
   return (
-    <div className="min-h-screen flex bg-slate-50 dark:bg-[#050608] transition-colors duration-300">
+    <div className="min-h-screen flex bg-surface transition-colors duration-300">
 
       {/* ── SIDEBAR ── */}
-      <aside className="w-64 shrink-0 flex flex-col bg-white dark:bg-[#08090c] border-r border-slate-200/50 dark:border-white/[0.04] transition-colors duration-300 relative z-20">
+      <aside className="w-64 shrink-0 flex flex-col bg-card border-r border-slate-200/50 dark:border-white/[0.04] transition-colors duration-300 relative z-20">
 
         {/* Logo Club */}
         <div className="px-6 py-6 flex items-center gap-3 border-b border-slate-100 dark:border-white/[0.04]">

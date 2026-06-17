@@ -548,10 +548,10 @@ export const Painel: React.FC = () => {
   if (!data || !atletasAgrupados) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#050608] pb-10 transition-colors duration-300">
+    <div className="min-h-screen bg-surface pb-10 transition-colors duration-300">
 
       {/* HEADER PRINCIPAL */}
-      <header className="relative overflow-hidden bg-white dark:bg-[#08090c] border-b border-slate-200/50 dark:border-white/[0.04] px-8 py-6 select-none z-10 transition-colors">
+      <header className="relative overflow-hidden bg-card border-b border-slate-200/50 dark:border-white/[0.04] px-8 py-6 select-none z-10 transition-colors">
         {/* Luz tática superior */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-club-red via-club-gold to-club-red" />
         
@@ -642,7 +642,14 @@ export const Painel: React.FC = () => {
               const isRisco = insight.toLowerCase().includes('risco') || insight.toLowerCase().includes('acwr > 1.5');
               const isBaixa = insight.toLowerCase().includes('sub-treinado') || insight.toLowerCase().includes('acwr < 0.8');
               const isVolume = insight.toLowerCase().includes('volume') || insight.toLowerCase().includes('%');
-              const icon = isRisco ? '⚠️' : isBaixa ? '📉' : isVolume ? '📊' : '💡';
+              const iconColor = isRisco ? 'text-red-500' : isBaixa ? 'text-yellow-500' : 'text-club-red';
+              const iconPath = isRisco
+                ? 'M12 9v4m0 4h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0z' // alerta
+                : isBaixa
+                ? 'M23 18l-9.5-9.5-5 5L1 6'   // tendência de queda
+                : isVolume
+                ? 'M3 3v18h18M18 17V9M13 17V5M8 17v-3' // barras
+                : 'M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z'; // lâmpada
               const border = isRisco ? 'border-red-500/20 dark:border-red-500/10' 
                            : isBaixa ? 'border-yellow-500/20 dark:border-yellow-500/10'
                            : 'border-slate-200/50 dark:border-white/[0.04]';
@@ -651,7 +658,9 @@ export const Painel: React.FC = () => {
                        : 'bg-white/60 dark:bg-white/[0.01]';
               return (
                 <div key={i} className={`flex items-start gap-3.5 px-4.5 py-4 rounded-2xl border ${border} ${bg} glass-panel transition-all duration-300 hover:shadow-sm`}>
-                  <span className="text-lg mt-0.5 shrink-0 select-none">{icon}</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`w-5 h-5 mt-0.5 shrink-0 ${iconColor}`}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
+                  </svg>
                   <p className="text-xs font-semibold text-slate-700 dark:text-slate-350 leading-relaxed font-sans">{insight}</p>
                 </div>
               );
@@ -661,7 +670,7 @@ export const Painel: React.FC = () => {
 
         {/* ANOMALIAS */}
         {data.anomalias && (
-          <div className="bg-white dark:bg-[#08090c] border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
+          <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
             <div className="flex flex-wrap items-baseline justify-between mb-4 gap-2">
               <div>
                 <h3 className={`text-[10px] font-extrabold uppercase tracking-widest font-outfit ${
@@ -772,7 +781,7 @@ export const Painel: React.FC = () => {
 
         {/* GESTÃO DE ELENCO */}
         {candidatosInativar.length > 0 && (
-          <div className="bg-white dark:bg-[#08090c] border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
+          <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
             <div className="flex flex-wrap items-baseline justify-between mb-4 gap-3">
               <div>
                 <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-amber-500 dark:text-amber-400 font-outfit">
@@ -832,7 +841,7 @@ export const Painel: React.FC = () => {
         )}
 
         {/* HEATMAP CALENDÁRIO */}
-        <div className="bg-white dark:bg-[#08090c] border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
+        <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
             <div>
               <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 font-outfit">
@@ -867,13 +876,13 @@ export const Painel: React.FC = () => {
                   max={windowEnd}
                   aria-label="Data de início"
                   onChange={e => e.target.value && setWindowStart(e.target.value)}
-                  className="px-3 py-1.5 text-xs bg-slate-50 dark:bg-[#050608] border border-slate-200/60 dark:border-white/[0.06] rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-club-red font-mono select-all" />
+                  className="px-3 py-1.5 text-xs bg-input border border-slate-200/60 dark:border-white/[0.06] rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-club-red font-mono select-all" />
                 <span>ATÉ</span>
                 <input type="date" value={windowEnd}
                   min={windowStart} max={todayIso()}
                   aria-label="Data de fim"
                   onChange={e => e.target.value && setWindowEnd(e.target.value)}
-                  className="px-3 py-1.5 text-xs bg-slate-50 dark:bg-[#050608] border border-slate-200/60 dark:border-white/[0.06] rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-club-red font-mono select-all" />
+                  className="px-3 py-1.5 text-xs bg-input border border-slate-200/60 dark:border-white/[0.06] rounded-xl text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-club-red font-mono select-all" />
               </div>
             </div>
           </div>
@@ -882,7 +891,7 @@ export const Painel: React.FC = () => {
         </div>
 
         {/* GESTÃO DO ELENCO COM SELETOR DE VISUALIZAÇÃO PREMIUM */}
-        <div className="bg-white dark:bg-[#08090c] border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
+        <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-5 gap-4">
             <div>
               <div className="flex items-center gap-2.5">

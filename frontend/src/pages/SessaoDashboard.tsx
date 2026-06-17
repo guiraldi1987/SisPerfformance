@@ -1226,7 +1226,7 @@ export const SessaoDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-[#111111] transition-colors duration-300">
+    <div className="min-h-screen bg-surface transition-colors duration-300">
 
       <EditSessaoModal
         sessao={editando ? sessao : null}

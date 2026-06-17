@@ -275,7 +275,7 @@ export const Jogadores: React.FC = () => {
     }
   };
 
-  const inputCls = 'border border-slate-300 dark:border-white/10 bg-white dark:bg-[#11161d] dark:text-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-club-red';
+  const inputCls = 'border border-slate-300 dark:border-white/10 bg-input dark:text-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-club-red';
 
   // Atletas sem posição entre os ativos (sugestão de ação)
   const ativosSemPosicao = useMemo(
@@ -300,7 +300,7 @@ export const Jogadores: React.FC = () => {
       {/* Edit Modal */}
       {editJogador && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setEditJogador(null)}>
-          <div className="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-card border border-slate-200 dark:border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
             <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">Editar Jogador</h3>
             <p className="text-xs text-slate-400 mb-2">{editJogador.nomeCompleto}</p>
             
@@ -423,7 +423,7 @@ export const Jogadores: React.FC = () => {
       {/* Wizard de Reapresentação */}
       {wizardOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setWizardOpen(false)}>
-          <div className="bg-white dark:bg-[#0d1117] border border-slate-200 dark:border-white/10 rounded-2xl p-6 w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-card border border-slate-200 dark:border-white/10 rounded-2xl p-6 w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
             <h3 className="text-lg font-extrabold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
               <span className="w-7 h-7 rounded-full bg-club-red/15 text-club-red text-base flex items-center justify-center">↻</span>
               Atualizar Elenco para Reapresentação
@@ -560,7 +560,7 @@ export const Jogadores: React.FC = () => {
       {loading && <p className="text-slate-500 dark:text-slate-400 text-sm">Carregando…</p>}
       {erro && <p className="text-rose-500 text-sm">{erro}</p>}
 
-      <div className="border border-slate-200 dark:border-white/5 rounded-xl overflow-hidden bg-white dark:bg-[#0d1117]">
+      <div className="border border-slate-200 dark:border-white/5 rounded-xl overflow-hidden bg-card">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-white/[0.03] text-slate-600 dark:text-slate-400 text-[11px] uppercase">
             <tr>

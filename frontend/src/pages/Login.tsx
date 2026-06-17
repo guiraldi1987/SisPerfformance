@@ -36,7 +36,7 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#050608] px-4 relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-surface px-4 relative overflow-hidden transition-colors duration-300">
       
       {/* Decorative Blur Background (Mesh Gradient) */}
       <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-club-red/10 dark:bg-club-red/[0.07] blur-[100px] pointer-events-none" />
@@ -93,7 +93,7 @@ export const Login: React.FC = () => {
                 required
                 value={username}
                 onChange={e => setUsername(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#07080a] border border-slate-200 dark:border-white/[0.08] rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all duration-200"
+                className="w-full px-4 py-2.5 text-sm bg-input border border-slate-200 dark:border-white/[0.08] rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all duration-200"
                 placeholder="seu.usuario"
               />
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400">
@@ -117,7 +117,7 @@ export const Login: React.FC = () => {
                 required
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full pl-4 pr-20 py-2.5 text-sm bg-slate-50 dark:bg-[#07080a] border border-slate-200 dark:border-white/[0.08] rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all duration-200"
+                className="w-full pl-4 pr-20 py-2.5 text-sm bg-input border border-slate-200 dark:border-white/[0.08] rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all duration-200"
                 placeholder="••••••••"
               />
               <button

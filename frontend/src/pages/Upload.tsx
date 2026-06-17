@@ -46,7 +46,7 @@ export const Upload: React.FC = () => {
     }
   };
 
-  const inputCls = 'border border-slate-300 dark:border-white/10 bg-white dark:bg-[#11161d] dark:text-slate-200 rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:border-club-red';
+  const inputCls = 'border border-slate-300 dark:border-white/10 bg-input dark:text-slate-200 rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:border-club-red';
   const labelCls = 'block text-xs font-bold tracking-wider uppercase mb-1.5 text-slate-500 dark:text-slate-400';
 
   return (
@@ -58,7 +58,7 @@ export const Upload: React.FC = () => {
         Importar arquivo Catapult (.csv) — a data é lida automaticamente do arquivo.
       </p>
 
-      <form onSubmit={enviar} className="space-y-5 bg-white dark:bg-[#0a0a0a] p-6 rounded-xl border border-slate-200 dark:border-white/[0.06]">
+      <form onSubmit={enviar} className="space-y-5 bg-card p-6 rounded-xl border border-slate-200 dark:border-white/[0.06]">
 
         {/* Arquivo */}
         <div>

@@ -42,7 +42,7 @@ export const PlayerAvatar: React.FC<PlayerAvatarProps> = ({
         sizeClasses[size]
       } ${
         resolvedUrl
-          ? 'bg-slate-100 dark:bg-[#11161d]'
+          ? 'bg-slate-100 dark:bg-input'
           : 'bg-gradient-to-br from-indigo-500/20 to-purple-600/30 text-indigo-700 dark:text-indigo-300 border-indigo-200/50 dark:border-indigo-500/20 shadow-[0_2px_10px_rgba(99,102,241,0.1)]'
       } ${className}`}
     >

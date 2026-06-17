@@ -151,7 +151,7 @@ const SessaoCard: React.FC<{
   const accentColor = isJogo ? '#cc1e1e' : ratio >= 0.7 ? '#f59e0b' : '#0d9488';
   return (
     <button onClick={onClick}
-      className="group relative w-full text-left bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/[0.06] overflow-hidden hover:shadow-lg hover:border-slate-300 dark:hover:border-white/15 transition-all hover:-translate-y-0.5">
+      className="group relative w-full text-left bg-card rounded-xl border border-slate-200 dark:border-white/[0.06] overflow-hidden hover:shadow-lg hover:border-slate-300 dark:hover:border-white/15 transition-all hover:-translate-y-0.5">
       {/* Accent bar lateral */}
       <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl" style={{ background: accentColor }} />
 
@@ -265,7 +265,7 @@ const MesSection: React.FC<{
   return (
     <section className="mb-3">
       <button onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/[0.06] hover:border-slate-300 dark:hover:border-white/10 transition-all group">
+        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-card border border-slate-200 dark:border-white/[0.06] hover:border-slate-300 dark:hover:border-white/10 transition-all group">
         <Icon.Chevron open={open} />
         <h3 className="text-sm font-extrabold text-slate-900 dark:text-white capitalize">
           {monthLabel(mesKey)}
@@ -416,7 +416,7 @@ const CalendarView: React.FC<{
                   ? 'border-club-red ring-1 ring-club-red/50 shadow-md shadow-club-red/10 bg-club-red/5'
                   : isToday
                     ? 'border-slate-400 dark:border-white/30 bg-slate-50 dark:bg-white/[0.02]'
-                    : 'border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0a0a0a]'
+                    : 'border-slate-200 dark:border-white/[0.06] bg-card'
               } ${sessoesNoDia.length > 0
                   ? 'cursor-pointer hover:border-slate-300 dark:hover:border-white/15 hover:shadow-lg hover:-translate-y-0.5'
                   : 'opacity-40 cursor-default'
@@ -458,7 +458,7 @@ const CalendarView: React.FC<{
 
       {/* Painel do dia selecionado */}
       {diaSelecionado && sessoesDoDia.length > 0 && (
-        <div className="relative overflow-hidden bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/[0.06] rounded-xl p-5 shadow-lg mt-2">
+        <div className="relative overflow-hidden bg-card border border-slate-200 dark:border-white/[0.06] rounded-xl p-5 shadow-lg mt-2">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-club-red via-orange-500 to-amber-400" />
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
@@ -618,7 +618,7 @@ export const Sessoes: React.FC = () => {
   const mesMaisRecente = porMes[0]?.[0] ?? null;
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-[#111111]">
+    <div className="min-h-screen bg-surface">
       <ConfirmModal
         open={pendingDeleteId !== null}
         message="Remover esta sessão e todas as suas métricas?"
@@ -639,7 +639,7 @@ export const Sessoes: React.FC = () => {
       />
 
       {/* HEADER */}
-      <header className="relative overflow-hidden bg-white dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-white/[0.06] px-8 py-5">
+      <header className="relative overflow-hidden bg-card border-b border-slate-200 dark:border-white/[0.06] px-8 py-5">
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-club-red via-orange-500 to-amber-400" />
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
@@ -684,7 +684,7 @@ export const Sessoes: React.FC = () => {
               type="text" value={busca}
               onChange={e => setBusca(e.target.value)}
               placeholder="Buscar adversário, local, equipe ou data..."
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#11161d] border border-slate-200 dark:border-white/10 rounded-lg text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-input border border-slate-200 dark:border-white/10 rounded-lg text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red"
             />
           </div>
 
@@ -706,10 +706,10 @@ export const Sessoes: React.FC = () => {
           <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-widest">De</span>
             <input type="date" value={de} onChange={e => setDe(e.target.value)}
-              className="px-2 py-1 text-[11px] bg-slate-50 dark:bg-[#11161d] border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red" />
+              className="px-2 py-1 text-[11px] bg-input border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red" />
             <span className="text-[10px] font-bold uppercase tracking-widest">Até</span>
             <input type="date" value={ate} onChange={e => setAte(e.target.value)}
-              className="px-2 py-1 text-[11px] bg-slate-50 dark:bg-[#11161d] border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red" />
+              className="px-2 py-1 text-[11px] bg-input border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red" />
           </div>
 
           {/* Sort (apenas vista lista) */}
@@ -717,7 +717,7 @@ export const Sessoes: React.FC = () => {
             <div className="flex items-center gap-1">
               <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ordenar</span>
               <select value={sort} onChange={e => setSort(e.target.value as SortKey)}
-                className="px-2 py-1 text-[11px] bg-slate-50 dark:bg-[#11161d] border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red">
+                className="px-2 py-1 text-[11px] bg-input border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red">
                 <option value="dataDesc">Data ↓</option>
                 <option value="dataAsc">Data ↑</option>
                 <option value="cargaDesc">Carga ↓</option>
