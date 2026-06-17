@@ -8,6 +8,7 @@
     "start": "tsx src/index.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "smoke:backup": "tsx scripts/smoke-backup.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

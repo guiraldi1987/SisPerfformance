@@ -253,5 +253,12 @@ async function bootstrap() {
 // Executar bootstrapping de forma assíncrona logo após inicializar a conexão
 bootstrap();
 
+export async function snapshotDatabase(destPath: string): Promise<void> {
+  if (isPostgres || !sqlite) {
+    throw new Error('Snapshot disponível apenas para SQLite (produção).');
+  }
+  await sqlite.backup(destPath);
+}
+
 export { db, isPostgres };
 
