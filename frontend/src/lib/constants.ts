@@ -15,6 +15,16 @@ export const ZONES = {
   sprint: '#ef4444',  // vermelho-500
 } as const;
 
+// ─── Paleta canônica por métrica (badges, gráficos, legendas) ────────────────
+export const M_COLOR = {
+  dist:   '#0d9488', // teal — distância total
+  mpm:    '#1e3a8a', // navy — metragem/min
+  hsr:    '#f97316', // orange — high-speed running
+  sprint: '#ef4444', // red — sprint
+  acel:   '#06b6d4', // cyan — acelerações
+  desac:  '#7c3aed', // purple — desacelerações
+} as const;
+
 export function getHrColor(pct: number): string {
   for (const zone of ZONES.hr) {
     if (pct <= zone.max) return zone.color;
