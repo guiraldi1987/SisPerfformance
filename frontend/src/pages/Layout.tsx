@@ -40,6 +40,13 @@ const Icon = {
       <path d="M16 3h5v5M8 3H3v5M21 3l-7 7M3 3l7 7M16 21h5v-5M8 21H3v-5M21 21l-7-7M3 21l7-7" />
     </svg>
   ),
+  Backup: () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
+      <ellipse cx="12" cy="5" rx="8" ry="3" />
+      <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3" />
+      <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+    </svg>
+  ),
   Sun: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 rotate-0 transition-transform duration-500 hover:rotate-90">
       <circle cx="12" cy="12" r="4" />
@@ -143,6 +150,7 @@ export const Layout: React.FC = () => {
               <NavLink to="/jogadores" className={navCls}><Icon.Players /> Elenco</NavLink>
               <NavLink to="/upload"    className={navCls}><Icon.Upload />  Upload GPS</NavLink>
               <NavLink to="/usuarios"  className={navCls}><Icon.Users />   Usuários</NavLink>
+              <NavLink to="/backups"   className={navCls}><Icon.Backup />  Backups</NavLink>
             </nav>
           </div>
         </div>

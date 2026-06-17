@@ -20,6 +20,7 @@ const Painel          = React.lazy(() => import('./pages/Painel').then(m => ({ d
 const Sessoes         = React.lazy(() => import('./pages/Sessoes').then(m => ({ default: m.Sessoes })));
 const Comparar        = React.lazy(() => import('./pages/Comparar').then(m => ({ default: m.Comparar })));
 const Usuarios        = React.lazy(() => import('./pages/Usuarios').then(m => ({ default: m.Usuarios })));
+const Backups         = React.lazy(() => import('./pages/Backups').then(m => ({ default: m.Backups })));
 const NotFound        = React.lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 const Login           = React.lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
 
@@ -46,6 +47,7 @@ function App() {
                     <Route path="/upload"      element={<Upload />} />
                     <Route path="/comparar"    element={<Comparar />} />
                     <Route path="/usuarios"    element={<Usuarios />} />
+                    <Route path="/backups"     element={<Backups />} />
                     <Route path="*"            element={<NotFound />} />
                   </Route>
                 </Routes>
