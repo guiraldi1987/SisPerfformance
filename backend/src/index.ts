@@ -11,6 +11,9 @@ import analyticsRouter from './routes/analytics';
 import authRouter from './routes/auth';
 import usuariosRouter from './routes/usuarios';
 import backupsRouter from './routes/backups';
+import cron from 'node-cron';
+import { ensureBackupsDir, createBackup } from './services/backup';
+import { isPostgres } from './db';
 
 const app = new Hono();
 
@@ -57,4 +60,18 @@ serve({
   fetch: app.fetch,
   port
 });
+
+ensureBackupsDir();
+
+if (!isPostgres) {
+  cron.schedule('0 3 * * *', async () => {
+    try {
+      const meta = await createBackup('auto');
+      console.log(`[backup] automático criado: ${meta.filename} (${meta.size} bytes)`);
+    } catch (err) {
+      console.error('[backup] falha no backup automático:', err);
+    }
+  }, { timezone: 'America/Sao_Paulo' });
+  console.log('[backup] agendador diário ativo (03:00 America/Sao_Paulo)');
+}
 
