@@ -25,6 +25,27 @@
   --color-zone-sprint: #f43f5e;
 }
 
+/* Superfícies semânticas — invertem sob .dark, fonte única de verdade dos fundos */
+:root {
+  --surface-base:     #f8fafc; /* slate-50 — fundo de página */
+  --surface-card:     #ffffff; /* cards/painéis */
+  --surface-elevated: #ffffff; /* modais */
+  --surface-input:    #f8fafc; /* campos de formulário */
+
+  --metric-dist:   #0d9488; /* teal */
+  --metric-mpm:    #1e3a8a; /* navy */
+  --metric-hsr:    #f97316; /* orange */
+  --metric-sprint: #ef4444; /* red */
+  --metric-acel:   #06b6d4; /* cyan */
+  --metric-desac:  #7c3aed; /* purple */
+}
+.dark {
+  --surface-base:     #050608;
+  --surface-card:     #08090c;
+  --surface-elevated: #0d1117;
+  --surface-input:    #11161d;
+}
+
 @layer base {
   html {
     font-family: var(--font-sans);
@@ -115,6 +136,12 @@
     @apply transition-all duration-300;
     transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
+
+  /* Superfícies canônicas — substituem os fundos hex ad-hoc */
+  .bg-surface  { background-color: var(--surface-base); }
+  .bg-card     { background-color: var(--surface-card); }
+  .bg-elevated { background-color: var(--surface-elevated); }
+  .bg-input    { background-color: var(--surface-input); }
 }
 
 /* ─── Print / Save as PDF ────────────────────────────────────────────────── */
@@ -174,8 +201,7 @@
   }
 
   section, article,
-  .bg-white,
-  .dark\:bg-\[\#0a0a0a\],
+  .bg-white, .bg-card,
   .rounded-xl, .rounded-2xl {
     break-inside: avoid;
     page-break-inside: avoid;
