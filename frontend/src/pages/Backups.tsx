@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { API_BASE } from '../lib/api';
 import { useToast } from '../components/Toast';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { Button } from '../components/ui/Button';
 
 interface BackupMeta {
   filename: string;
@@ -104,13 +105,9 @@ export const Backups = () => {
             Backup automático diário às 03:00. Mantém os últimos 5 automáticos; os manuais ficam até serem excluídos.
           </p>
         </div>
-        <button
-          onClick={handleCreate}
-          disabled={creating}
-          className="px-5 py-2.5 rounded-xl text-sm font-bold bg-club-red text-white hover:brightness-110 shadow-lg shadow-club-red/25 transition-all active:scale-95 disabled:opacity-60"
-        >
+        <Button onClick={handleCreate} disabled={creating}>
           {creating ? 'Criando…' : 'Criar backup agora'}
-        </button>
+        </Button>
       </div>
 
       {loading ? (
