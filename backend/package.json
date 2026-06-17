@@ -16,18 +16,22 @@
   "description": "",
   "dependencies": {
     "@hono/node-server": "^2.0.1",
+    "archiver": "^8.0.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.9.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.18",
+    "node-cron": "^3.0.3",
     "papaparse": "^5.5.3",
     "pg": "^8.21.0"
   },
   "devDependencies": {
+    "@types/archiver": "^8.0.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.6.0",
+    "@types/node-cron": "^3.0.11",
     "@types/papaparse": "^5.5.2",
     "@types/pg": "^8.20.0",
     "drizzle-kit": "^0.31.10",
