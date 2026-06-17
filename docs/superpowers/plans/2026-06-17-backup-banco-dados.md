@@ -207,8 +207,10 @@ export async function snapshotDatabase(destPath: string): Promise<void> {
 
 Create `backend/src/services/backup.ts`:
 
+> **API do archiver@8:** a v8 é um pacote ESM puro sem export default/factory — exporta classes nomeadas (`ZipArchive extends Archiver`). Usar `import { ZipArchive } from 'archiver'` + `new ZipArchive({ zlib: { level: 9 } })` (NÃO `archiver('zip', …)`, que era a API v6/v7).
+
 ```ts
-import archiver from 'archiver';
+import { ZipArchive } from 'archiver';
 import { createWriteStream, existsSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'fs';
 import { join, resolve, sep } from 'path';
 import { fileURLToPath } from 'url';
@@ -295,7 +297,7 @@ export async function createBackup(source: 'auto' | 'manual'): Promise<BackupMet
 
   await new Promise<void>((resolvePromise, reject) => {
     const output = createWriteStream(zipPath);
-    const archive = archiver('zip', { zlib: { level: 9 } });
+    const archive = new ZipArchive({ zlib: { level: 9 } });
     output.on('close', () => resolvePromise());
     output.on('error', reject);
     archive.on('error', reject);
