@@ -6,6 +6,7 @@ import { posicaoCodigo, POSICAO_COLOR, posicaoLabel } from '../lib/constants';
 import { VolumeIntensityScatter, type ScatterPoint } from '../components/charts/VolumeIntensityScatter';
 import { BoxPlotByPosition } from '../components/charts/BoxPlotByPosition';
 import { EditSessaoModal } from '../components/EditSessaoModal';
+import { LoadingState } from '../components/ui/LoadingState';
 import { useToast } from '../components/Toast';
 import { RatioCell, computeECRatio } from '../components/RatioCell';
 
@@ -1204,7 +1205,7 @@ export const SessaoDashboard: React.FC = () => {
     { key: 'atletas'  as Tab, label: 'Análise do Atleta' },
   ], []);
 
-  if (loading) return <div className="flex items-center justify-center h-64 text-slate-400 text-sm">Carregando…</div>;
+  if (loading) return <LoadingState label="Carregando sessão…" />;
   if (erro)    return <div className="flex items-center justify-center h-64 text-red-500 text-sm">{erro}</div>;
   if (!data)   return null;
 

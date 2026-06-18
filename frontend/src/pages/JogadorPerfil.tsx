@@ -9,6 +9,7 @@ import { TrendChart, type TrendPoint } from '../components/charts/TrendChart';
 import { MatchTrainingCompare, type CompareData } from '../components/charts/MatchTrainingCompare';
 import { MicrocicloChart, type MicrocicloPonto } from '../components/charts/MicrocicloChart';
 import { RadarComparativo, type RadarAxis } from '../components/charts/RadarComparativo';
+import { LoadingState } from '../components/ui/LoadingState';
 import { POSICOES, posicaoCodigo, POSICAO_COLOR, M_COLOR } from '../lib/constants';
 import { buildInsights } from '../lib/insights';
 import { RatioCell, computeECRatio } from '../components/RatioCell';
@@ -403,7 +404,7 @@ export const JogadorPerfil: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="flex items-center justify-center h-64 text-slate-400 text-sm">Carregando…</div>;
+  if (loading) return <LoadingState label="Carregando perfil do atleta…" />;
   if (erro)    return <div className="flex items-center justify-center h-64 text-red-500 text-sm">{erro}</div>;
   if (!data)   return null;
 
