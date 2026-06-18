@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface ConfirmModalProps {
   open: boolean;
@@ -14,7 +14,29 @@ interface ConfirmModalProps {
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   open, message, details, confirmLabel = 'Sim, remover', onConfirm, onCancel,
 }) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const prevFocus = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    prevFocus.current = document.activeElement as HTMLElement | null;
+    cancelRef.current?.focus();
+    return () => { prevFocus.current?.focus?.(); };
+  }, [open]);
+
   if (!open) return null;
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') { e.stopPropagation(); onCancel(); return; }
+    if (e.key === 'Tab') {
+      const f = dialogRef.current?.querySelectorAll<HTMLElement>('button');
+      if (!f || f.length === 0) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  };
 
   return (
     <div
@@ -22,11 +44,13 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
       onClick={onCancel}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-modal-title"
         className="bg-elevated rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 border border-slate-200 dark:border-white/[0.06] animate-in fade-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}
+        onKeyDown={onKeyDown}
       >
         <div className="flex items-start gap-4 mb-6">
           <div className="flex-shrink-0 w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-500/10 flex items-center justify-center border border-rose-200 dark:border-rose-500/20">
@@ -50,6 +74,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         </div>
         <div className="flex justify-end gap-3">
           <button
+            ref={cancelRef}
             onClick={onCancel}
             className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors"
           >
