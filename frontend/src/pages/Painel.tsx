@@ -6,6 +6,7 @@ import { posicaoCodigo, POSICAO_COLOR, posicaoLabel } from '../lib/constants';
 import { useToast } from '../components/Toast';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { LoadingState } from '../components/ui/LoadingState';
+import { ConfirmModal } from '../components/ConfirmModal';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -468,6 +469,7 @@ export const Painel: React.FC = () => {
   // Novos Estados
   const [filtroZona, setFiltroZona] = useState<Zona | null>(null);
   const [tipoVisualizacao, setTipoVisualizacao] = useState<'cards' | 'tabela'>('cards');
+  const [inativarAlvo, setInativarAlvo] = useState<AtletaAnalise | null>(null);
 
   const atletasFiltrados = useMemo(() => {
     if (!data) return [];
@@ -822,7 +824,7 @@ export const Painel: React.FC = () => {
                       </p>
                     </button>
 
-                    <button onClick={() => marcarInativo(a)}
+                    <button onClick={() => setInativarAlvo(a)}
                       title={`Marcar inativo (data de saída = ${a.ultimaSessao ? formatData(a.ultimaSessao) : 'hoje'})`}
                       className="px-3 py-1.5 rounded-xl text-[9px] font-extrabold bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 hover:text-rose-600 transition-all cursor-pointer font-outfit uppercase tracking-widest active:scale-95 shadow-sm">
                       Inativar Atleta
@@ -1100,6 +1102,14 @@ export const Painel: React.FC = () => {
           )}
         </div>
       </main>
+      <ConfirmModal
+        open={inativarAlvo !== null}
+        message={`Marcar este atleta como inativo? A data de saída será registrada como ${inativarAlvo?.ultimaSessao ? formatData(inativarAlvo.ultimaSessao) : 'hoje'}.`}
+        details={inativarAlvo ? (inativarAlvo.apelido || inativarAlvo.nome.split(',')[0]) : undefined}
+        confirmLabel="Sim, inativar"
+        onConfirm={() => { if (inativarAlvo) marcarInativo(inativarAlvo); setInativarAlvo(null); }}
+        onCancel={() => setInativarAlvo(null)}
+      />
     </div>
   );
 };
