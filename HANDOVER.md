@@ -880,6 +880,40 @@ Por decisão de escopo, as seguintes tarefas ficam para as próximas ondas:
 #### Deploy
 Frontend-only: apenas rebuild do frontend na VPS (`npm run build` em `frontend/`). Nenhuma mudança de schema, endpoints ou dependências do backend.
 
+### Fase 31 — UX Onda 2: Estados & Segurança
+
+Segunda onda do programa de 5 ondas (`docs/superpowers/specs/2026-06-17-ux-frontend-program-design.md`). Escopo desta onda: acessibilidade de foco no modal de confirmação, proteção de ações destrutivas, skeletons nas páginas restantes, estados vazios com CTA e validação de arquivo no Upload. Frontend-only — nenhuma mudança no backend, nenhuma dependência nova.
+
+#### ConfirmModal acessível (`frontend/src/components/ConfirmModal.tsx`)
+- Foco inicial no botão "Cancelar" ao abrir o modal.
+- `Escape` cancela e fecha (sem alteração da API pública do componente).
+- Focus trap entre os dois botões (Tab / Shift+Tab não escapa do modal enquanto aberto).
+- Foco restaurado ao elemento que disparou a abertura ao fechar.
+
+#### Confirmação ao inativar atleta (`frontend/src/pages/Painel.tsx`)
+- A ação "Inativar Atleta" agora passa pelo `ConfirmModal` antes de ser executada.
+- Antes desta onda a ação era disparada diretamente, sem nenhuma confirmação — risco de perda de dados acidental.
+
+#### Skeletons de carregamento (`<LoadingState>`)
+- `JogadorPerfil.tsx` e `SessaoDashboard.tsx` — as duas páginas com loading de tela cheia que ainda usavam estado de carregamento ad-hoc — adotaram o componente `LoadingState` criado na Onda 1.
+- Cobertura de skeleton agora completa nas páginas com fetch de dados.
+
+#### Estados vazios com CTA (`<EmptyState>`)
+- `Backups.tsx` — exibe `EmptyState` quando a lista de backups está vazia.
+- `Comparar.tsx` — exibe `EmptyState` quando menos de 2 jogadores estão selecionados para comparação.
+
+#### Validação + feedback no Upload (`frontend/src/pages/Upload.tsx`)
+- Valida extensão do arquivo (apenas `.csv`) e tamanho (máx. 15 MB) com erro inline descritivo.
+- Botão "Enviar" fica desabilitado até que um arquivo válido seja selecionado.
+- Durante o envio: spinner + texto "Processando…" no botão; botão desabilitado para evitar duplo-submit.
+
+#### Deferido para Onda 4 — Acessibilidade
+- Drag-and-drop na área de upload.
+- `role="alert"` no erro de validação do Upload (anúncio a leitores de tela).
+
+#### Deploy
+Frontend-only: apenas rebuild do frontend na VPS (`npm run build` em `frontend/`). Nenhuma mudança de schema, endpoints ou dependências do backend.
+
 ---
 
 ## ✅ Status — Tudo do roadmap original implementado
@@ -1017,4 +1051,4 @@ Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto
 
 ---
 
-**Última atualização:** sessão de chat de 2026-06-17 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30).
+**Última atualização:** sessão de chat de 2026-06-17 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30); UX Onda 2 — `ConfirmModal` acessível (foco/trap/Escape/restore), confirmação obrigatória ao inativar atleta no Painel, skeletons em `JogadorPerfil` e `SessaoDashboard`, estados vazios com CTA em `Backups` e `Comparar`, validação de extensão/tamanho + feedback de envio no `Upload` (Fase 31).
