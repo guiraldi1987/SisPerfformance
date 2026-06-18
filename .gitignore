@@ -21,3 +21,6 @@ chat_exportado.txt
 exportar_chat.js
 
 .claude/settings.local.json
+
+# Mockups do companion visual (brainstorming)
+.superpowers/
