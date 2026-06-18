@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_BASE } from '../lib/api';
 import { formatData } from '../lib/format';
 import { POSICOES, posicaoCodigo, POSICAO_COLOR, posicaoLabel } from '../lib/constants';
+import { EmptyState } from '../components/ui/EmptyState';
 
 interface SessaoDisp { id: number; data: string; tipo: string; descricao: string | null; equipe: string | null; local: string | null; }
 type FiltroPreset = 'ultimo-1' | 'ultimo-3' | 'ultimo-5' | 'todos-jogos' | 'tudo' | 'sessao';
@@ -494,6 +495,17 @@ export const Comparar: React.FC = () => {
               </div>
             </div>
           </>
+        )}
+        {(!dados || dados.length < 2) && (
+          <EmptyState
+            icon={
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-full h-full">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 17V9M15 17v-5M3 3v18h18M21 7l-6 6-4-4-5 5" />
+              </svg>
+            }
+            title="Selecione ao menos 2 jogadores"
+            description="Marque de 2 a 4 jogadores acima para comparar as métricas lado a lado."
+          />
         )}
       </main>
     </div>

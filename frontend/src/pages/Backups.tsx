@@ -4,6 +4,7 @@ import { useToast } from '../components/Toast';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { Button } from '../components/ui/Button';
 import { PageHeader } from '../components/ui/PageHeader';
+import { EmptyState } from '../components/ui/EmptyState';
 
 interface BackupMeta {
   filename: string;
@@ -114,7 +115,10 @@ export const Backups = () => {
       {loading ? (
         <p className="text-slate-500 dark:text-slate-400 text-sm">Carregando…</p>
       ) : list.length === 0 ? (
-        <p className="text-slate-500 dark:text-slate-400 text-sm">Nenhum backup ainda. Clique em "Criar backup agora".</p>
+        <EmptyState
+          title="Nenhum backup ainda"
+          description={'Clique em “Criar backup agora” para gerar o primeiro backup do banco.'}
+        />
       ) : (
         <div className="rounded-2xl border border-slate-200 dark:border-white/[0.06] overflow-hidden">
           <table className="w-full text-sm">
