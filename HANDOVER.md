@@ -914,6 +914,35 @@ Segunda onda do programa de 5 ondas (`docs/superpowers/specs/2026-06-17-ux-front
 #### Deploy
 Frontend-only: apenas rebuild do frontend na VPS (`npm run build` em `frontend/`). Nenhuma mudança de schema, endpoints ou dependências do backend.
 
+### Fase 32 — Dark Premium: Vidro & Profundidade
+
+Refresh visual do tema escuro em três incrementos, todos concentrados em `frontend/src/index.css` e em cinco páginas/componentes. Nenhuma mudança no backend, no `@media print` ou no tema claro.
+
+#### Tokens translúcidos + halo radial de fundo (`frontend/src/index.css`)
+- Substituição dos valores opacos das CSS vars de superfície no escopo `.dark` por camadas translúcidas RGBA: `--surface-card: rgba(255,255,255,0.045)`, `--surface-elevated: rgba(255,255,255,0.07)`, `--surface-input: rgba(255,255,255,0.04)`; base `#080b10`.
+- Halo radial de profundidade adicionado ao `.dark body` e ao `.dark .bg-surface` via `background-image: radial-gradient(...)` — cria a sensação de vinheta central que ancora a hierarquia visual.
+
+#### Sheen de topo + sombra de elevação (`frontend/src/index.css`)
+- `.dark .bg-card` e `.dark .bg-elevated` receberam `background-image` com gradiente linear sutil (sheen de luz no topo) que simula reflexo em superfície de vidro.
+- `box-shadow` de elevação adicionado aos mesmos utilitários: sombra escura difusa com highlight interno claro, separando visualmente camadas empilhadas.
+
+#### Limpeza de hex ad-hoc — escala translúcida (5 arquivos)
+Cinco arquivos ainda usavam cores hexadecimais escuras hard-coded que conflitavam com os novos tokens; substituídas pelas utilities ou variáveis semânticas:
+
+- **`frontend/src/index.css`** — classes `.glass-panel` e `.glass-panel-hover` trocadas para `rgba` da escala translúcida.
+- **`frontend/src/pages/Sessoes.tsx`** — fundos de calendário/card substituídos.
+- **`frontend/src/components/Layout.tsx`** — sidebar e fundo do shell substituídos.
+- **`frontend/src/pages/Painel.tsx`** — fundos de seção e cards substituídos.
+- **`frontend/src/pages/SessaoDashboard.tsx`** — header sticky preservou blur em `#080b10` (overlay de scroll); demais fundos substituídos.
+
+#### Escopo e restrições
+- **Dark-only:** todas as alterações são restritas aos seletores `.dark …`. O tema claro ficou intacto.
+- **`@media print` não alterado:** o bloco de impressão não recebe nenhum dos novos gradientes/sombras. Validação visual em `Ctrl+P` feita separadamente pelo responsável.
+- **Sem libs externas, sem mudança de schema ou endpoint.**
+
+#### Deploy
+Frontend-only: rebuild do frontend na VPS (`npm run build` em `frontend/`). Nenhuma dep nova.
+
 ---
 
 ## ✅ Status — Tudo do roadmap original implementado
@@ -1051,4 +1080,4 @@ Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto
 
 ---
 
-**Última atualização:** sessão de chat de 2026-06-17 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30); UX Onda 2 — `ConfirmModal` acessível (foco/trap/Escape/restore), confirmação obrigatória ao inativar atleta no Painel, skeletons em `JogadorPerfil` e `SessaoDashboard`, estados vazios com CTA em `Backups` e `Comparar`, validação de extensão/tamanho + feedback de envio no `Upload` (Fase 31).
+**Última atualização:** sessão de chat de 2026-06-18 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30); UX Onda 2 — `ConfirmModal` acessível (foco/trap/Escape/restore), confirmação obrigatória ao inativar atleta no Painel, skeletons em `JogadorPerfil` e `SessaoDashboard`, estados vazios com CTA em `Backups` e `Comparar`, validação de extensão/tamanho + feedback de envio no `Upload` (Fase 31); Dark Premium — tokens `.dark` translúcidos (surface-card/elevated/input em RGBA), halo radial de fundo, sheen de topo + sombra de elevação nos utilitários `.bg-card`/`.bg-elevated`, limpeza de hex ad-hoc em 5 arquivos (`index.css`, `Sessoes.tsx`, `Layout.tsx`, `Painel.tsx`, `SessaoDashboard.tsx`); dark-only, light e print intactos (Fase 32).
