@@ -40,10 +40,10 @@
   --metric-desac:  #a855f7; /* purple */
 }
 .dark {
-  --surface-base:     #050608;
-  --surface-card:     #08090c;
-  --surface-elevated: #0d1117;
-  --surface-input:    #11161d;
+  --surface-base:     #080b10;
+  --surface-card:     rgba(255, 255, 255, 0.045);
+  --surface-elevated: rgba(255, 255, 255, 0.07);
+  --surface-input:    rgba(255, 255, 255, 0.04);
 }
 
 @layer base {
@@ -59,7 +59,9 @@
   }
   
   .dark body {
-    background-color: #050608;
+    background-color: #080b10;
+    background-image: radial-gradient(130% 90% at 50% -10%, #141b26 0%, #0b0f16 45%, #080b10 100%);
+    background-attachment: fixed;
     color: #e2e8f0;
   }
 
@@ -139,6 +141,10 @@
 
   /* Superfícies canônicas — substituem os fundos hex ad-hoc */
   .bg-surface  { background-color: var(--surface-base); }
+  .dark .bg-surface {
+    background-image: radial-gradient(130% 90% at 50% -10%, #141b26 0%, #0b0f16 45%, #080b10 100%);
+    background-attachment: fixed;
+  }
   .bg-card     { background-color: var(--surface-card); }
   .bg-elevated { background-color: var(--surface-elevated); }
   .bg-input    { background-color: var(--surface-input); }
