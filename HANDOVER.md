@@ -97,7 +97,12 @@ IEEEGP - Cel Eduardo/
 │   │       ├── EditSessaoModal.tsx        # modal reutilizável (editar sessão — usado em Sessoes + SessaoDashboard)
 │   │       ├── Toast.tsx                  # ToastProvider + useToast (sucesso/erro/info, auto-dismiss)
 │   │       ├── RatioCell.tsx              # célula EXC/CON com semáforo + ícone direcional (▼/●/▲)
-│   │       └── ErrorBoundary.tsx
+│   │       ├── ErrorBoundary.tsx
+│   │       └── ui/                        # componentes compartilhados do design system (Onda 1)
+│   │           ├── Button.tsx             # variantes primary/ghost/danger com foco visível
+│   │           ├── PageHeader.tsx         # faixa de acento + eyebrow + título
+│   │           ├── LoadingState.tsx       # skeleton animado (substitui spinners ad-hoc)
+│   │           └── EmptyState.tsx         # estado vazio padronizado
 │   └── public/
 │       └── paulista-logo.png
 ├── pdf_pages/                          # screenshots da referência (XV de Jaú x Paulista)
@@ -839,6 +844,42 @@ Feature de backup acessível pelo menu Administração → Backups.
 - **Single-tier deploy** — frontend + backend + DB no mesmo VPS. Pra escalar horizontalmente, separar: VPS pequeno pro backend, S3/Cloudflare Pages pro frontend, Postgres gerenciado.
 - **Sem CI/CD** — deploy é `git pull && build && pm2 restart` manual via SSH. Quando a frequência de deploy aumentar, configurar GitHub Actions com SSH deploy.
 
+### Fase 30 — UX Onda 1: Fundações (Design System)
+
+Primeira onda de um programa de 5 ondas documentado em `docs/superpowers/specs/2026-06-17-ux-frontend-program-design.md`. Escopo desta onda: estabelecer tokens de superfície, paleta de métricas canônica, componentes compartilhados e varredura completa de fundos hard-coded. Frontend-only — nenhuma mudança no backend.
+
+#### Tokens de superfície (`frontend/src/index.css` — bloco `@theme`)
+- CSS vars `--surface-base`, `--surface-card`, `--surface-elevated`, `--surface-input` que invertem automaticamente sob `.dark`.
+- Expostos como classes utilitárias Tailwind: `.bg-surface`, `.bg-card`, `.bg-elevated`, `.bg-input`.
+- CSS vars de paleta de métricas `--metric-dist`, `--metric-mpm`, `--metric-hsr`, `--metric-sprint`, `--metric-acel`, `--metric-desac` (reservadas para uso futuro em SVG inline).
+
+#### Paleta de métricas canônica (`frontend/src/lib/constants.ts`)
+- `M_COLOR` (11 chaves) de-duplicada e centralizada: anteriormente duplicada no `JogadorPerfil`, agora fonte única em `constants.ts`.
+- Valores reais preservados — sem alteração visual.
+
+#### Componentes compartilhados (`frontend/src/components/ui/`)
+Quatro componentes novos do design system:
+- **`Button.tsx`** — variantes `primary` / `ghost` / `danger`; foco visível acessível; tamanhos `sm` / `md` / `lg`.
+- **`PageHeader.tsx`** — faixa de acento lateral colorida + eyebrow (subtítulo) + título principal. Adotado em `Backups.tsx`.
+- **`LoadingState.tsx`** — skeleton animado em grade; substitui spinners ad-hoc e estados de carregamento inconsistentes. Adotado em `Painel.tsx`.
+- **`EmptyState.tsx`** — estado vazio padronizado com ícone, título e descrição.
+
+#### Varredura de tokens — fundos hex substituídos pelas utilities
+14 arquivos tiveram fundos hex ad-hoc (`#050608`, `#08090c`, `#0a0a0a`, `#0d1117`, `#11161d`, `#07080a`, `#111111`) substituídos pelas utilities `bg-surface` / `bg-card` / `bg-elevated` / `bg-input`:
+
+- **Páginas:** `Layout.tsx`, `Login.tsx`, `NotFound.tsx`, `Comparar.tsx`, `JogadorPerfil.tsx`, `Sessoes.tsx`, `SessaoDashboard.tsx`, `Jogadores.tsx`, `Painel.tsx`, `Upload.tsx`, `Usuarios.tsx`
+- **Componentes:** `ConfirmModal.tsx`, `EditSessaoModal.tsx`, `PlayerAvatar.tsx`
+- Variantes glass / translúcidas preservadas onde existiam.
+- Emojis dos insights do `Painel.tsx` substituídos por SVGs inline (sem dependência externa).
+
+#### Deferido para Ondas 2–4
+Por decisão de escopo, as seguintes tarefas ficam para as próximas ondas:
+- Consolidação de raio/borda (borderRadius tokens).
+- Aplicação completa das regras de tipografia (escala de type).
+
+#### Deploy
+Frontend-only: apenas rebuild do frontend na VPS (`npm run build` em `frontend/`). Nenhuma mudança de schema, endpoints ou dependências do backend.
+
 ---
 
 ## ✅ Status — Tudo do roadmap original implementado
@@ -976,4 +1017,4 @@ Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto
 
 ---
 
-**Última atualização:** sessão de chat de 2026-06-17 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29).
+**Última atualização:** sessão de chat de 2026-06-17 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30).
