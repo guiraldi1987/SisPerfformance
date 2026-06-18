@@ -226,7 +226,7 @@ const SessaoCard: React.FC<{
         <button
           onClick={onEdit}
           title="Editar sessão"
-          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-[#1a1a1a] text-indigo-500 border border-slate-200 dark:border-white/10 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 shadow-sm hover:shadow-indigo-500/25 transition-all"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-indigo-500 border border-slate-200 dark:border-white/10 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 shadow-sm hover:shadow-indigo-500/25 transition-all"
           onMouseDown={e => e.stopPropagation()}
         >
           <Icon.Edit />
@@ -234,7 +234,7 @@ const SessaoCard: React.FC<{
         <button
           onClick={onDelete}
           title="Remover sessão"
-          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-[#1a1a1a] text-rose-500 border border-slate-200 dark:border-white/10 hover:bg-rose-500 hover:text-white hover:border-rose-500 shadow-sm hover:shadow-rose-500/25 transition-all"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-rose-500 border border-slate-200 dark:border-white/10 hover:bg-rose-500 hover:text-white hover:border-rose-500 shadow-sm hover:shadow-rose-500/25 transition-all"
           onMouseDown={e => e.stopPropagation()}
         >
           <Icon.Trash />

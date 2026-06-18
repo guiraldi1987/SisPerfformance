@@ -918,7 +918,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
             type="text" value={busca}
             onChange={e => setBusca(e.target.value)}
             placeholder="Buscar atleta pelo nome ou apelido…"
-            className="w-full pl-9 pr-4 py-1.5 text-xs bg-white/70 dark:bg-[#0c1015]/60 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all"
+            className="w-full pl-9 pr-4 py-1.5 text-xs bg-white/70 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all"
           />
         </div>
 
@@ -927,7 +927,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
           <select 
             value={filtroPos} 
             onChange={e => setFiltroPos(e.target.value)}
-            className="px-3 py-1.5 text-xs bg-white/70 dark:bg-[#0c1015]/60 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all"
+            className="px-3 py-1.5 text-xs bg-white/70 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all"
           >
             <option value="Todas">Todas as Posições</option>
             {posicoes.map(p => <option key={p} value={p}>{p}</option>)}
@@ -939,7 +939,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
           <select 
             value={sortBy} 
             onChange={e => setSortBy(e.target.value as SortKey)}
-            className="px-3 py-1.5 text-xs bg-white/70 dark:bg-[#0c1015]/60 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all"
+            className="px-3 py-1.5 text-xs bg-white/70 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all"
           >
             <option value="nome">Nome</option>
             <option value="posicao">Posição</option>
@@ -958,7 +958,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
           </select>
           <button
             onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
-            className="px-3 py-1.5 text-xs bg-white/70 dark:bg-[#0c1015]/60 border border-slate-200 dark:border-white/10 rounded-xl text-slate-600 dark:text-slate-350 font-bold hover:border-club-red hover:text-club-red focus:outline-none transition-all flex items-center gap-1 select-none"
+            className="px-3 py-1.5 text-xs bg-white/70 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-xl text-slate-600 dark:text-slate-350 font-bold hover:border-club-red hover:text-club-red focus:outline-none transition-all flex items-center gap-1 select-none"
             title={sortDir === 'asc' ? 'Crescente' : 'Decrescente'}
           >
             {sortDir === 'asc' ? '↑ Cresc.' : '↓ Decresc.'}
@@ -1236,7 +1236,7 @@ export const SessaoDashboard: React.FC = () => {
       />
 
       {/* ═══════════════════ HEADER PREMIUM BACKDROP-BLUR & STICKY ═══════════════════ */}
-      <header className="sticky top-0 z-40 backdrop-blur-lg bg-white/85 dark:bg-[#0a0a0a]/85 border-b border-slate-200/40 dark:border-white/[0.04] px-3 md:px-4 lg:px-4 py-4.5 shadow-sm dark:shadow-black/25">
+      <header className="sticky top-0 z-40 backdrop-blur-lg bg-white/85 dark:bg-[#080b10]/85 border-b border-slate-200/40 dark:border-white/[0.04] px-3 md:px-4 lg:px-4 py-4.5 shadow-sm dark:shadow-black/25">
         {/* Linha 1: título + botões + tabs */}
         <div className="flex items-center justify-between gap-6 mb-4 flex-wrap">
           <div className="min-w-0 flex items-center gap-3">

@@ -166,7 +166,7 @@ export const Layout: React.FC = () => {
                   <div className="w-9 h-9 rounded-full bg-club-red/10 flex items-center justify-center text-xs font-bold text-club-red shrink-0 border border-club-red/20 font-outfit">
                     {iniciais}
                   </div>
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-[#08090c]" />
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-[#0b0f16]" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate font-outfit">

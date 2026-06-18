@@ -347,7 +347,7 @@ const AtletaGridCard: React.FC<{
   return (
     <button
       onClick={onClick}
-      className="bg-white/60 dark:bg-[#08090c]/40 border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-4.5 text-left transition-all duration-300 hover:scale-[1.03] hover:shadow-md hover:border-slate-350 dark:hover:border-white/10 flex flex-col justify-between h-[210px] group cursor-pointer glass-panel select-none relative overflow-hidden w-full"
+      className="bg-white/60 dark:bg-white/[0.04] border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-4.5 text-left transition-all duration-300 hover:scale-[1.03] hover:shadow-md hover:border-slate-350 dark:hover:border-white/10 flex flex-col justify-between h-[210px] group cursor-pointer glass-panel select-none relative overflow-hidden w-full"
     >
       {/* Detalhe de glow sutil de fundo no hover com a cor do status */}
       <div 

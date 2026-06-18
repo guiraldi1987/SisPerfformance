@@ -88,11 +88,11 @@
 @layer utilities {
   /* Glassmorphism e Acrílico Premium */
   .glass-panel {
-    @apply bg-white/70 dark:bg-[#0b0c10]/75 backdrop-blur-md border border-slate-200/40 dark:border-white/[0.04] shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.2)];
+    @apply bg-white/70 dark:bg-white/[0.05] backdrop-blur-md border border-slate-200/40 dark:border-white/[0.04] shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.2)];
   }
   
   .glass-panel-hover {
-    @apply transition-all duration-300 hover:bg-white/90 dark:hover:bg-[#0e1015]/80 hover:border-slate-300/50 dark:hover:border-white/[0.08] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] hover:-translate-y-0.5;
+    @apply transition-all duration-300 hover:bg-white/90 dark:hover:bg-white/[0.08] hover:border-slate-300/50 dark:hover:border-white/[0.08] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] hover:-translate-y-0.5;
   }
 
   /* Glow e Brilho Neon sutil nas bordas e sombras */
