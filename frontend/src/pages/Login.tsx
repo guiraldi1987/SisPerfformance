@@ -76,7 +76,7 @@ export const Login: React.FC = () => {
           <h2 className="text-base font-bold text-slate-800 dark:text-slate-200 mb-1 font-outfit">
             Entrar no sistema
           </h2>
-          <p className="text-xs text-slate-400 mb-6 leading-relaxed">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
             Use suas credenciais autorizadas para acessar o painel analítico do clube.
           </p>
 
