@@ -57,7 +57,7 @@ export const AcwrChart: React.FC<Props> = ({ serie, height = 220 }) => {
 
   return (
     <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ minWidth: 600 }}>
+      <svg role="img" aria-label="Gráfico de ACWR (carga aguda 7 dias ÷ carga crônica 28 dias) por sessão" viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ minWidth: 600 }}>
         {/* Bandas coloridas das zonas */}
         {ZONAS.map((z, i) => {
           const yTop = y(Math.min(z.max, yMax));

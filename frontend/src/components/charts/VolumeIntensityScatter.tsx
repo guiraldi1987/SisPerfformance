@@ -61,7 +61,7 @@ export const VolumeIntensityScatter: React.FC<Props> = ({
 
   return (
     <div className="relative">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full block" style={{ height, minHeight: 240 }}
+      <svg role="img" aria-label="Dispersão de volume por intensidade dos atletas" viewBox={`0 0 ${W} ${H}`} className="w-full block" style={{ height, minHeight: 240 }}
         onMouseLeave={() => setHoverId(null)}>
         {/* ── Quadrantes (zonas) ───────────────────────────────────────────── */}
         {/* Sub-treinado: vol baixo + int baixa (canto inferior esq) */}

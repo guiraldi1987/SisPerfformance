@@ -40,7 +40,7 @@ export const Gauge: React.FC<GaugeProps> = ({ title, value, max, topAtleta, unit
 
   return (
     <div className="flex flex-col items-center">
-      <svg viewBox="0 0 200 125" className="w-44 h-28">
+      <svg role="img" aria-label={`${title}: ${value.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}${unit ? ' ' + unit : ''} de ${max} máximo`} viewBox="0 0 200 125" className="w-44 h-28">
         {/* Trilha de fundo */}
         <path
           d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}

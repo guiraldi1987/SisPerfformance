@@ -47,7 +47,7 @@ export const MatchTrainingCompare: React.FC<Props> = ({ data, matchCount, traini
   }
 
   return (
-    <div className="space-y-3.5">
+    <div role="img" aria-label="Comparação de carga entre jogos e treinos por métrica" className="space-y-3.5">
       {ROWS.map(metric => {
         const point = data[metric.key];
         const max = Math.max(point.match, point.training, 1);

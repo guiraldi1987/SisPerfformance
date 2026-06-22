@@ -163,7 +163,7 @@ export const BoxPlotByPosition: React.FC<Props> = ({ atletas, defaultMetric = 'd
         </div>
       </div>
 
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full block" style={{ minHeight: 240 }}>
+      <svg role="img" aria-label="Box plot da distribuição da métrica por posição" viewBox={`0 0 ${W} ${H}`} className="w-full block" style={{ minHeight: 240 }}>
         {/* Grid Y + ticks */}
         {yTicks.map(t => (
           <g key={t}>

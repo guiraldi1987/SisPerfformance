@@ -128,6 +128,8 @@ const Sparkline: React.FC<{
 
       {/* Sparkline */}
       <svg
+        role="img"
+        aria-label="Tendência da métrica nas últimas sessões"
         viewBox={`0 0 ${W} ${H}`}
         className="w-full block text-slate-400 dark:text-slate-500"
         preserveAspectRatio="none"

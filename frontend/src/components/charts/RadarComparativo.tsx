@@ -63,7 +63,7 @@ export const RadarComparativo: React.FC<Props> = ({ axes, posicaoLabel, amostras
 
   return (
     <div className="relative">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full block" style={{ minHeight: 260 }}>
+      <svg role="img" aria-label={`Radar comparativo por posição${posicaoLabel ? ` — ${posicaoLabel}` : ''}`} viewBox={`0 0 ${W} ${H}`} className="w-full block" style={{ minHeight: 260 }}>
         {/* ── Anéis ──────────────────────────────────────────────────────── */}
         {RINGS.map(ratio => {
           const pts = Array.from({ length: total }, (_, i) => point(i, total, ratio));
