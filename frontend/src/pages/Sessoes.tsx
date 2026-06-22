@@ -71,7 +71,7 @@ const Icon = {
     </svg>
   ),
   Trash: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-3.5 h-3.5">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-3.5 h-3.5" aria-hidden="true">
       <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
     </svg>
   ),
@@ -113,7 +113,7 @@ const Icon = {
     </svg>
   ),
   Edit: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-3.5 h-3.5">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-3.5 h-3.5" aria-hidden="true">
       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
     </svg>
@@ -222,19 +222,21 @@ const SessaoCard: React.FC<{
       </div>
 
       {/* Edit + Trash */}
-      <div className="absolute top-3 right-3 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300">
+      <div className="absolute top-3 right-3 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-all duration-300">
         <button
           onClick={onEdit}
+          aria-label={`Editar sessão ${sessao.descricao || sessao.data}`}
           title="Editar sessão"
-          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-indigo-500 border border-slate-200 dark:border-white/10 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 shadow-sm hover:shadow-indigo-500/25 transition-all"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-indigo-500 border border-slate-200 dark:border-white/10 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-indigo-500 shadow-sm hover:shadow-indigo-500/25 transition-all"
           onMouseDown={e => e.stopPropagation()}
         >
           <Icon.Edit />
         </button>
         <button
           onClick={onDelete}
+          aria-label={`Remover sessão ${sessao.descricao || sessao.data}`}
           title="Remover sessão"
-          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-rose-500 border border-slate-200 dark:border-white/10 hover:bg-rose-500 hover:text-white hover:border-rose-500 shadow-sm hover:shadow-rose-500/25 transition-all"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-rose-500 border border-slate-200 dark:border-white/10 hover:bg-rose-500 hover:text-white hover:border-rose-500 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-rose-500 shadow-sm hover:shadow-rose-500/25 transition-all"
           onMouseDown={e => e.stopPropagation()}
         >
           <Icon.Trash />
