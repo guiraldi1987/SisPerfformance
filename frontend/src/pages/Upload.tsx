@@ -76,8 +76,9 @@ export const Upload: React.FC = () => {
 
         {/* Arquivo */}
         <div>
-          <label className={labelCls}>Arquivo CSV (Catapult)</label>
+          <label htmlFor="up-file" className={labelCls}>Arquivo CSV (Catapult)</label>
           <input
+            id="up-file"
             type="file" accept=".csv"
             onChange={e => onSelectFile(e.target.files?.[0] ?? null)}
             required
@@ -90,8 +91,8 @@ export const Upload: React.FC = () => {
 
         {/* Tipo */}
         <div>
-          <label className={labelCls}>Tipo</label>
-          <select value={tipo} onChange={e => setTipo(e.target.value as 'Treino' | 'Jogo')} className={inputCls}>
+          <label htmlFor="up-tipo" className={labelCls}>Tipo</label>
+          <select id="up-tipo" value={tipo} onChange={e => setTipo(e.target.value as 'Treino' | 'Jogo')} className={inputCls}>
             <option>Treino</option>
             <option>Jogo</option>
           </select>
@@ -101,10 +102,11 @@ export const Upload: React.FC = () => {
 
         {/* Jogo */}
         <div>
-          <label className={labelCls}>
+          <label htmlFor="up-jogo" className={labelCls}>
             Jogo <span className="normal-case font-normal text-slate-400">(adversário / descrição)</span>
           </label>
           <input
+            id="up-jogo"
             type="text" value={jogo}
             onChange={e => setJogo(e.target.value)}
             placeholder="Ex: XV de Jaú x Paulista FC"
@@ -115,8 +117,9 @@ export const Upload: React.FC = () => {
         {/* Equipe + Local */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={labelCls}>Equipe</label>
+            <label htmlFor="up-equipe" className={labelCls}>Equipe</label>
             <input
+              id="up-equipe"
               type="text" value={equipe}
               onChange={e => setEquipe(e.target.value)}
               placeholder="Ex: Paulista FC"
@@ -124,8 +127,9 @@ export const Upload: React.FC = () => {
             />
           </div>
           <div>
-            <label className={labelCls}>Local</label>
+            <label htmlFor="up-local" className={labelCls}>Local</label>
             <input
+              id="up-local"
               type="text" value={local}
               onChange={e => setLocal(e.target.value)}
               placeholder="Ex: Zezinho Magalhães"

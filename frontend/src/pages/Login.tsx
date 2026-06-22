@@ -123,8 +123,9 @@ export const Login: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPwd(v => !v)}
+                aria-label={showPwd ? 'Ocultar senha' : 'Mostrar senha'}
+                aria-pressed={showPwd}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-slate-400 hover:text-club-red px-2 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 uppercase tracking-widest transition-colors duration-200"
-                tabIndex={-1}
               >
                 {showPwd ? 'Ocultar' : 'Mostrar'}
               </button>
