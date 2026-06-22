@@ -56,7 +56,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <Ctx.Provider value={value}>
       {children}
-      <div className="fixed top-4 right-4 z-[60] flex flex-col gap-2 pointer-events-none print:hidden">
+      <div aria-live="polite" aria-atomic="false" className="fixed top-4 right-4 z-[60] flex flex-col gap-2 pointer-events-none print:hidden">
         {toasts.map(t => <ToastItem key={t.id} toast={t} onDismiss={() => remove(t.id)} />)}
       </div>
     </Ctx.Provider>
@@ -80,8 +80,6 @@ const ToastItem: React.FC<{ toast: Toast; onDismiss: () => void }> = ({ toast, o
 
   return (
     <div
-      role="status"
-      aria-live="polite"
       className={`pointer-events-auto flex items-center gap-3 min-w-[260px] max-w-md px-4 py-3 rounded-xl shadow-2xl text-white text-sm font-semibold transition-all duration-200 ${palette.bg} ${
         entered ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
       }`}

@@ -6,6 +6,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastProvider } from './components/Toast';
 import { AuthProvider } from './components/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { RouteAnnouncer } from './components/RouteAnnouncer';
 import { installFetchInterceptor } from './lib/authClient';
 
 // Patch global no fetch — injeta Authorization e trata 401. Único side-effect
@@ -31,6 +32,7 @@ function App() {
         <AuthProvider>
           <ToastProvider>
             <BrowserRouter>
+              <RouteAnnouncer />
               <Suspense fallback={<div className="flex items-center justify-center h-screen text-slate-500">Carregando…</div>}>
                 <Routes>
                   {/* Rota pública */}
