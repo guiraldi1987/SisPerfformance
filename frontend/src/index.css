@@ -174,6 +174,24 @@
     animation: none !important;
   }
 
+  /* Superfícies translúcidas/halo do dark não podem vazar pro papel: força branco */
+  .bg-surface, .bg-card, .bg-elevated, .bg-input,
+  .glass-panel, .glass-panel-hover, .stripe-bg,
+  header, .sticky {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .sticky { position: static !important; }
+
+  /* Cinzas do tema dark (texto quase branco) ficariam invisíveis no papel branco.
+     Escurece só as famílias neutras — cores semânticas e texto branco-sobre-cor intactos. */
+  [class*="text-slate-"], [class*="text-gray-"],
+  [class*="text-zinc-"], [class*="text-neutral-"] {
+    color: #1e293b !important;
+  }
+
   aside, nav.print-hide, .print-hide,
   button.print-hide,
   [role="dialog"],
