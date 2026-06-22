@@ -937,11 +937,26 @@ Cinco arquivos ainda usavam cores hexadecimais escuras hard-coded que conflitava
 
 #### Escopo e restrições
 - **Dark-only:** todas as alterações são restritas aos seletores `.dark …`. O tema claro ficou intacto.
-- **`@media print` não alterado:** o bloco de impressão não recebe nenhum dos novos gradientes/sombras. Validação visual em `Ctrl+P` feita separadamente pelo responsável.
+- **`@media print` (nesta fase):** não foi tocado. ⚠️ Verificação posterior (Fase 33) revelou que o relatório **saía com fundo escuro** ao imprimir do modo escuro — bug pré-existente desde a Onda 1, **corrigido na Fase 33**.
 - **Sem libs externas, sem mudança de schema ou endpoint.**
 
 #### Deploy
 Frontend-only: rebuild do frontend na VPS (`npm run build` em `frontend/`). Nenhuma dep nova.
+
+---
+
+### Fase 33 — Correção: impressão saía com fundo escuro
+
+Verificação visual headless (Chrome + PDF real) da Fase 32 revelou que **relatórios impressos a partir do modo escuro saíam com fundo escuro** — `Ctrl+P → Salvar PDF` em `/sessao/:id` gerava página preta com texto claro, contrariando o objetivo do bloco `@media print` (`body { background: #fff }`). Bug **pré-existente desde a Onda 1** (não introduzido pela Fase 32): o wrapper de página usa `.bg-surface`, escuro no `.dark`, e com `* { print-color-adjust: exact }` o fundo escuro era forçado pra impressão — mas o bloco print só resetava `html/body`, não as utilities de superfície nem o `header` sticky.
+
+Correção (`frontend/src/index.css`, dentro de `@media print`):
+- `.bg-surface/.bg-card/.bg-elevated/.bg-input`, `.glass-panel(-hover)`, `.stripe-bg`, `header` e `.sticky` → `background: #fff`, `background-image: none`, `backdrop-filter: none` (e `.sticky` vira `position: static`).
+- Famílias de texto neutras (`text-slate/gray/zinc/neutral-*`) → `#1e293b` para legibilidade no papel (o quase-branco do dark ficaria invisível). Cores semânticas (vermelho do clube, métricas, donuts) e `text-white` sobre cor preservados.
+
+Resultado: impressão idêntica e limpa (fundo branco, texto escuro, cores semânticas intactas) tanto do modo escuro quanto do claro. Validado via PDF real (`page.pdf`, `printBackground` on/off — saídas idênticas).
+
+#### Deploy
+Frontend-only: rebuild do frontend na VPS. Nenhuma dep nova.
 
 ---
 
@@ -1080,4 +1095,4 @@ Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto
 
 ---
 
-**Última atualização:** sessão de chat de 2026-06-18 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30); UX Onda 2 — `ConfirmModal` acessível (foco/trap/Escape/restore), confirmação obrigatória ao inativar atleta no Painel, skeletons em `JogadorPerfil` e `SessaoDashboard`, estados vazios com CTA em `Backups` e `Comparar`, validação de extensão/tamanho + feedback de envio no `Upload` (Fase 31); Dark Premium — tokens `.dark` translúcidos (surface-card/elevated/input em RGBA), halo radial de fundo, sheen de topo + sombra de elevação nos utilitários `.bg-card`/`.bg-elevated`, limpeza de hex ad-hoc em 5 arquivos (`index.css`, `Sessoes.tsx`, `Layout.tsx`, `Painel.tsx`, `SessaoDashboard.tsx`); dark-only, light e print intactos (Fase 32).
+**Última atualização:** sessão de chat de 2026-06-22 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30); UX Onda 2 — `ConfirmModal` acessível (foco/trap/Escape/restore), confirmação obrigatória ao inativar atleta no Painel, skeletons em `JogadorPerfil` e `SessaoDashboard`, estados vazios com CTA em `Backups` e `Comparar`, validação de extensão/tamanho + feedback de envio no `Upload` (Fase 31); Dark Premium — tokens `.dark` translúcidos (surface-card/elevated/input em RGBA), halo radial de fundo, sheen de topo + sombra de elevação nos utilitários `.bg-card`/`.bg-elevated`, limpeza de hex ad-hoc em 5 arquivos (`index.css`, `Sessoes.tsx`, `Layout.tsx`, `Painel.tsx`, `SessaoDashboard.tsx`); dark-only, light intacto (Fase 32); correção da impressão que saía com fundo escuro ao imprimir do modo escuro (bug pré-existente desde a Onda 1) — reset de superfícies/`header`/`.sticky` e escurecimento das famílias de texto neutras dentro do `@media print`, validado via PDF real headless; impressão agora sai branca e legível em ambos os temas (Fase 33).
