@@ -235,14 +235,15 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
 
         {/* Legenda */}
         <div className="flex items-center gap-2 mt-4 text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-outfit">
-          <span>Menos</span>
+          <span>Menos carga</span>
           <div className="flex gap-0.5">
             {[0.1, 0.3, 0.5, 0.75, 1.0].map(i => (
               <div key={i} className="w-3 h-3 rounded-sm border border-slate-200 dark:border-white/[0.03]"
                 style={{ background: `rgba(204, 30, 30, ${0.06 + i * 0.52})` }} />
             ))}
           </div>
-          <span>Mais</span>
+          <span>Mais carga</span>
+          <span className="normal-case font-medium text-slate-400/80">(Player Load médio/dia)</span>
           <span className="ml-4 inline-flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-sm border-2 border-club-red" /> Jogo
           </span>
@@ -769,7 +770,7 @@ export const Painel: React.FC = () => {
                             <span className="font-extrabold">{up ? '↑' : '↓'}</span>
                             <span className="font-sans font-bold">{m.label}</span>
                             <span className="opacity-85 font-extrabold">{up ? '+' : ''}{dpct}%</span>
-                            <span className="opacity-50 text-[9px] font-sans font-medium">z={Math.abs(m.z).toFixed(1)}</span>
+                            <span title="z-score = nº de desvios-padrão vs. a média pessoal do atleta (|z|>2 = anomalia)" className="opacity-50 text-[9px] font-sans font-medium cursor-help">z={Math.abs(m.z).toFixed(1)}</span>
                           </span>
                         );
                       })}
@@ -1017,7 +1018,7 @@ export const Painel: React.FC = () => {
                     <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Atleta</th>
                     <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Posição</th>
                     <th className="text-center px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Tend.</th>
-                    <th className="text-right px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">ACWR</th>
+                    <th title="ACWR = carga aguda (7 dias) ÷ carga crônica (28 dias). Zonas: <0,8 subtreino · 0,8–1,3 ideal · 1,3–1,5 atenção · >1,5 risco" className="text-right px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit cursor-help">ACWR</th>
                     <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit w-44">Gráfico ACWR</th>
                     <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Status Zona</th>
                   </tr>
