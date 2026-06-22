@@ -6,19 +6,19 @@ import { useAuth } from '../components/AuthProvider';
 
 const Icon = {
   Dashboard: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
       <rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" />
       <rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" />
     </svg>
   ),
   Players: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
       <circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.8-3.4 3.5-5 6.5-5s5.7 1.6 6.5 5" />
       <circle cx="17" cy="9" r="2.5" /><path d="M16 14.5c2.6.2 4.5 1.7 5 4" />
     </svg>
   ),
   Users: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -26,35 +26,35 @@ const Icon = {
     </svg>
   ),
   Upload: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
       <path d="M12 16V4M7 9l5-5 5 5" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
     </svg>
   ),
   Calendar: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
       <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
     </svg>
   ),
   Compare: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
       <path d="M16 3h5v5M8 3H3v5M21 3l-7 7M3 3l7 7M16 21h5v-5M8 21H3v-5M21 21l-7-7M3 21l7-7" />
     </svg>
   ),
   Backup: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110">
       <ellipse cx="12" cy="5" rx="8" ry="3" />
       <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3" />
       <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
     </svg>
   ),
   Sun: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 rotate-0 transition-transform duration-500 hover:rotate-90">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 rotate-0 transition-transform duration-500 hover:rotate-90">
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
     </svg>
   ),
   Moon: () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 rotate-0 transition-transform duration-500 hover:-rotate-12">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 rotate-0 transition-transform duration-500 hover:-rotate-12">
       <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
     </svg>
   ),
@@ -107,7 +107,7 @@ export const Layout: React.FC = () => {
     <div className="min-h-screen flex bg-surface transition-colors duration-300">
 
       {/* ── SIDEBAR ── */}
-      <aside className="w-64 shrink-0 flex flex-col bg-card border-r border-slate-200/50 dark:border-white/[0.04] transition-colors duration-300 relative z-20">
+      <aside aria-label="Barra lateral" className="w-64 shrink-0 flex flex-col bg-card border-r border-slate-200/50 dark:border-white/[0.04] transition-colors duration-300 relative z-20">
 
         {/* Logo Club */}
         <div className="px-6 py-6 flex items-center gap-3 border-b border-slate-100 dark:border-white/[0.04]">
@@ -135,7 +135,7 @@ export const Layout: React.FC = () => {
             <p className="text-[9px] font-extrabold tracking-widest uppercase text-slate-400 dark:text-slate-600 px-3.5 mb-2.5">
               Análise Tática
             </p>
-            <nav className="space-y-1">
+            <nav aria-label="Análise tática" className="space-y-1">
               <NavLink to="/painel"    className={navCls}><Icon.Dashboard /> Painel do Time</NavLink>
               <NavLink to="/sessoes"   className={navCls}><Icon.Calendar />  Sessões</NavLink>
               <NavLink to="/comparar"  className={navCls}><Icon.Compare />   Comparar</NavLink>
@@ -146,7 +146,7 @@ export const Layout: React.FC = () => {
             <p className="text-[9px] font-extrabold tracking-widest uppercase text-slate-400 dark:text-slate-600 px-3.5 mb-2.5">
               Administração
             </p>
-            <nav className="space-y-1">
+            <nav aria-label="Administração" className="space-y-1">
               <NavLink to="/jogadores" className={navCls}><Icon.Players /> Elenco</NavLink>
               <NavLink to="/upload"    className={navCls}><Icon.Upload />  Upload GPS</NavLink>
               <NavLink to="/usuarios"  className={navCls}><Icon.Users />   Usuários</NavLink>
@@ -183,7 +183,7 @@ export const Layout: React.FC = () => {
                 onClick={handleLogout}
                 className="w-full mt-2.5 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-bold text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-rose-500/5 dark:hover:bg-rose-500/10 uppercase tracking-widest transition-all duration-200"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
                 </svg>
                 Sair do sistema
