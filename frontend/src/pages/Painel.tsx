@@ -86,7 +86,7 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
 
   if (dias.length <= 21) {
     return (
-      <div className="overflow-x-auto pb-1 select-none">
+      <div className="overflow-x-auto pb-1 select-none" tabIndex={0} aria-label="Calendário de carga">
         <div className="flex gap-2 min-w-max py-2 px-1">
           {dias.map(d => {
             const intensidade = maxCarga > 0 ? d.cargaMedia / maxCarga : 0;
@@ -173,7 +173,7 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
   const DOW = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   return (
-    <div className="overflow-x-auto pb-1 select-none">
+    <div className="overflow-x-auto pb-1 select-none" tabIndex={0} aria-label="Calendário de carga">
       <div className="inline-block min-w-max py-2 px-1">
         {/* Labels de mês */}
         <div className="flex pl-8 mb-1.5">
@@ -1011,7 +1011,7 @@ export const Painel: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" tabIndex={0} aria-label="Tabela de carga ACWR por atleta">
               <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-slate-200/50 dark:border-white/[0.04] select-none">

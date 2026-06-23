@@ -354,6 +354,7 @@ export const Jogadores: React.FC = () => {
               <div>
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 block">Posição</label>
                 <select
+                  aria-label="Posição do atleta"
                   className={`${inputCls} w-full`}
                   value={editForm.posicao}
                   onChange={e => setEditForm(f => ({ ...f, posicao: e.target.value }))}
@@ -389,6 +390,7 @@ export const Jogadores: React.FC = () => {
                   <div className="mt-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 block">Data de saída</label>
                     <input type="date" value={editForm.dataSaida}
+                      aria-label="Data de saída do atleta"
                       onChange={e => setEditForm(f => ({ ...f, dataSaida: e.target.value }))}
                       className={`${inputCls} w-full`} />
                   </div>
@@ -548,7 +550,7 @@ export const Jogadores: React.FC = () => {
       <form onSubmit={criar} className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4 bg-slate-50 dark:bg-white/[0.02] p-4 rounded-xl border border-slate-200 dark:border-white/5 print-hide">
         <input className={inputCls} placeholder="Nome completo" value={form.nomeCompleto} onChange={e => setForm({ ...form, nomeCompleto: e.target.value })} required />
         <input className={inputCls} placeholder="Apelido" value={form.apelido} onChange={e => setForm({ ...form, apelido: e.target.value })} />
-        <select className={inputCls} value={form.posicao} onChange={e => setForm({ ...form, posicao: e.target.value })}>
+        <select className={inputCls} value={form.posicao} onChange={e => setForm({ ...form, posicao: e.target.value })} aria-label="Posição do novo atleta">
           <option value="">— Posição —</option>
           {POSICOES.map(p => <option key={p}>{p}</option>)}
         </select>

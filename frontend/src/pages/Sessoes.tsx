@@ -708,9 +708,11 @@ export const Sessoes: React.FC = () => {
           <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
             <span className="text-[10px] font-bold uppercase tracking-widest">De</span>
             <input type="date" value={de} onChange={e => setDe(e.target.value)}
+              aria-label="Data inicial"
               className="px-2 py-1 text-[11px] bg-input border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red" />
             <span className="text-[10px] font-bold uppercase tracking-widest">Até</span>
             <input type="date" value={ate} onChange={e => setAte(e.target.value)}
+              aria-label="Data final"
               className="px-2 py-1 text-[11px] bg-input border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red" />
           </div>
 
@@ -719,6 +721,7 @@ export const Sessoes: React.FC = () => {
             <div className="flex items-center gap-1">
               <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ordenar</span>
               <select value={sort} onChange={e => setSort(e.target.value as SortKey)}
+                aria-label="Ordenar sessões"
                 className="px-2 py-1 text-[11px] bg-input border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red">
                 <option value="dataDesc">Data ↓</option>
                 <option value="dataAsc">Data ↑</option>

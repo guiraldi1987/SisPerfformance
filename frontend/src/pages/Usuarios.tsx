@@ -328,6 +328,7 @@ export const Usuarios: React.FC = () => {
                   Função / Especialidade
                 </label>
                 <select
+                  aria-label="Função / Especialidade"
                   className={inputCls}
                   value={form.role}
                   onChange={e => setForm(f => ({ ...f, role: e.target.value }))}

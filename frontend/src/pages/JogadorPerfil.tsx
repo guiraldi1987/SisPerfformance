@@ -433,6 +433,7 @@ export const JogadorPerfil: React.FC = () => {
               <div>
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 block">Posição</label>
                 <select
+                  aria-label="Posição do atleta"
                   className="w-full border border-slate-300 dark:border-white/10 bg-input dark:text-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-club-red"
                   value={editForm.posicao}
                   onChange={e => setEditForm(f => ({ ...f, posicao: e.target.value }))}
@@ -557,6 +558,7 @@ export const JogadorPerfil: React.FC = () => {
             <select
               value={filtroSessaoId == null ? '' : String(filtroSessaoId)}
               onChange={e => setFiltroSessaoId(e.target.value ? Number(e.target.value) : null)}
+              aria-label="Filtrar por sessão"
               className="px-2.5 py-1.5 text-xs bg-input border border-slate-200 dark:border-white/10 rounded-lg text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red max-w-[260px]"
             >
               <option value="">Todas as sessões</option>
@@ -585,7 +587,7 @@ export const JogadorPerfil: React.FC = () => {
 
         {/* ═══════════════════ TABELA ═══════════════════ */}
         <div className="bg-card rounded-xl border border-slate-200 dark:border-white/[0.06] overflow-hidden shadow-xl dark:shadow-black/20">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0} aria-label="Tabela de sessões do atleta">
             <table className="w-full text-[12px] xl:text-[13.5px] table-auto">
               <thead className="bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/[0.06]">
                 <tr>

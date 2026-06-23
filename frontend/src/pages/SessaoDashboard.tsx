@@ -350,7 +350,7 @@ const VolumeIntensityChart: React.FC<{
   const yTicks = [0, yMax * 0.25, yMax * 0.5, yMax * 0.75, yMax];
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto" tabIndex={0} aria-label="Gráfico de volume e intensidade por atleta">
       <div className="flex gap-6 mb-4 justify-center text-xs font-outfit uppercase tracking-wider font-bold">
         <span className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
           <span className="w-3.5 h-3.5 rounded-md inline-block shadow-sm shadow-[#0d9488]/30" style={{ background: `linear-gradient(135deg, #0d9488, #14b8a6)` }} />
@@ -924,9 +924,10 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
 
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Posição</span>
-          <select 
-            value={filtroPos} 
+          <select
+            value={filtroPos}
             onChange={e => setFiltroPos(e.target.value)}
+            aria-label="Filtrar por posição"
             className="px-3 py-1.5 text-xs bg-white/70 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all"
           >
             <option value="Todas">Todas as Posições</option>
@@ -936,9 +937,10 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
 
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Ordenar por</span>
-          <select 
-            value={sortBy} 
+          <select
+            value={sortBy}
             onChange={e => setSortBy(e.target.value as SortKey)}
+            aria-label="Ordenar atletas por"
             className="px-3 py-1.5 text-xs bg-white/70 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-2 focus:ring-club-red/20 focus:border-club-red transition-all"
           >
             <option value="nome">Nome</option>
@@ -975,7 +977,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
         )}
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0} aria-label="Tabela de métricas por atleta">
         <table className="w-full text-[12px] xl:text-[13.5px] table-auto">
           <thead className="bg-slate-100/50 dark:bg-white/[0.01] border-b border-slate-200/40 dark:border-white/[0.04]">
             <tr>

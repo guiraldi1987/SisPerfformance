@@ -245,6 +245,7 @@ export const Comparar: React.FC = () => {
             </div>
             <div className="flex items-center gap-3">
               <select value={filtroPosicao} onChange={e => { setFiltroPosicao(e.target.value); setSelecionados([]); setDados(null); }}
+                aria-label="Filtrar por posição"
                 className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 bg-input text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red">
                 <option value="">Todas as posições</option>
                 {posicoesDisp.map(p => <option key={p} value={p}>{p}</option>)}
@@ -346,6 +347,7 @@ export const Comparar: React.FC = () => {
                       if (v > 0) { setFiltroPreset('sessao'); setSessaoEscolhida(v); setTipo('geral'); }
                       else { setFiltroPreset('todos-jogos'); setSessaoEscolhida(null); setTipo('jogos'); }
                     }}
+                    aria-label="Selecionar sessão específica"
                     className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 bg-input text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red max-w-[280px]"
                   >
                     <option value="">— Selecionar jogo —</option>
@@ -418,7 +420,7 @@ export const Comparar: React.FC = () => {
             <div className={cardCls}>
               <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Evolução Recente</h2>
               <p className="text-[11px] text-slate-400 mb-4">Últimas 10 sessões — tendência de cada métrica</p>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" tabIndex={0} aria-label="Tabela de evolução recente por atleta">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
@@ -455,7 +457,7 @@ export const Comparar: React.FC = () => {
             <div className={cardCls}>
               <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Ranking por Métrica</h2>
               <p className="text-[11px] text-slate-400 mb-4">🥇 = melhor no grupo em cada métrica</p>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" tabIndex={0} aria-label="Tabela de ranking por métrica">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/[0.06]">
