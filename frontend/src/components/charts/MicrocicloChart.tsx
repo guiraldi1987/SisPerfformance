@@ -77,7 +77,7 @@ export const MicrocicloChart: React.FC<Props> = ({ pontos, totalJogos, totalSess
   const maxV = Math.max(1, ...pontosOrdenados.map(p => p[metric]));
 
   return (
-    <div role="img" aria-label="Microciclo MD-: carga por dia relativo ao jogo">
+    <div role="group" aria-label="Microciclo MD-: carga por dia relativo ao jogo">
       {/* Header com toggle de métrica */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="text-[11px] text-slate-400 dark:text-slate-500">
