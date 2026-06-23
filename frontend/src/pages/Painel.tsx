@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE } from '../lib/api';
 import { formatData } from '../lib/format';
-import { posicaoCodigo, POSICAO_COLOR, posicaoLabel } from '../lib/constants';
+import { posicaoCodigo, POSICAO_COLOR, posicaoLabel, ensureContrastBg } from '../lib/constants';
 import { useToast } from '../components/Toast';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { LoadingState } from '../components/ui/LoadingState';
@@ -372,7 +372,7 @@ const AtletaGridCard: React.FC<{
             <div className="flex items-center gap-1.5 mt-0.5">
               {cod && atleta.posicao ? (
                 <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[8px] font-extrabold text-white font-outfit leading-none shrink-0"
-                  style={{ background: POSICAO_COLOR[cod] ?? '#64748b' }}>
+                  style={{ background: ensureContrastBg(POSICAO_COLOR[cod] ?? '#64748b') }}>
                   {posicaoLabel(atleta.posicao)}
                 </span>
               ) : (
@@ -733,7 +733,7 @@ export const Painel: React.FC = () => {
                             const cod = posicaoCodigo(an.posicao);
                             return (
                               <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[8px] font-extrabold text-white font-outfit leading-none shrink-0"
-                                style={{ background: POSICAO_COLOR[cod] ?? '#64748b' }}>
+                                style={{ background: ensureContrastBg(POSICAO_COLOR[cod] ?? '#64748b') }}>
                                 {posicaoLabel(an.posicao)}
                               </span>
                             );
@@ -808,7 +808,7 @@ export const Painel: React.FC = () => {
                     className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-amber-500/10 dark:border-amber-500/5 bg-amber-500/[0.01] dark:bg-amber-950/[0.01] transition-all hover:bg-amber-500/[0.03] dark:hover:bg-amber-500/[0.02]">
                     {cod ? (
                       <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg text-[9px] font-extrabold text-white shrink-0 font-outfit shadow-sm"
-                        style={{ background: POSICAO_COLOR[cod] ?? '#64748b' }}>
+                        style={{ background: ensureContrastBg(POSICAO_COLOR[cod] ?? '#64748b') }}>
                         {cod}
                       </span>
                     ) : <span className="w-7 text-center text-[10px] text-slate-500 font-outfit shrink-0">—</span>}
@@ -1049,7 +1049,7 @@ export const Painel: React.FC = () => {
                         <td className="px-4 py-3">
                           {cod && a.posicao ? (
                             <span className="inline-flex items-center justify-center h-5 px-2 rounded-md text-[9px] font-extrabold text-white font-outfit shadow-sm"
-                              style={{ background: POSICAO_COLOR[cod] ?? '#64748b' }}>
+                              style={{ background: ensureContrastBg(POSICAO_COLOR[cod] ?? '#64748b') }}>
                               {posicaoLabel(a.posicao)}
                             </span>
                           ) : <span className="text-[10px] text-slate-500 font-outfit">—</span>}

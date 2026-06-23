@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_BASE } from '../lib/api';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { PlayerAvatar } from '../components/PlayerAvatar';
-import { POSICOES, posicaoCodigo, POSICAO_COLOR } from '../lib/constants';
+import { POSICOES, posicaoCodigo, POSICAO_COLOR, ensureContrastBg } from '../lib/constants';
 import { formatData } from '../lib/format';
 import { useToast } from '../components/Toast';
 
@@ -450,7 +450,7 @@ export const Jogadores: React.FC = () => {
                       const c = posicaoCodigo(j.posicao);
                       return (
                         <span className="inline-flex items-center justify-center w-7 h-7 rounded text-[10px] font-extrabold text-white shrink-0"
-                          style={{ background: POSICAO_COLOR[c] ?? '#64748b' }}>
+                          style={{ background: ensureContrastBg(POSICAO_COLOR[c] ?? '#64748b') }}>
                           {c}
                         </span>
                       );
