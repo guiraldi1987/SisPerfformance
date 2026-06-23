@@ -960,6 +960,35 @@ Frontend-only: rebuild do frontend na VPS. Nenhuma dep nova.
 
 ---
 
+### Fase 34 — UX Onda 4 (Acessibilidade WCAG 2.1 AA) + Onda 5 (Clareza de domínio)
+
+Penúltima e última ondas do programa de UX (`docs/superpowers/specs/2026-06-17-ux-frontend-program-design.md`; a Onda 3 — Mobile — foi pulada por ora). Plano: `docs/superpowers/plans/2026-06-22-ux-onda4-5-acessibilidade-clareza.md`. Execução subagent-driven (implementer + review por task) + varredura **axe-core headless** (Chrome via puppeteer) como gate objetivo. Frontend-only.
+
+**Onda 4 — Acessibilidade:**
+- **Regiões `aria-live`:** novo `components/RouteAnnouncer.tsx` (anuncia título da página ao navegar), `aria-live` movido pro container estático dos toasts, `role="alert"` no erro de login.
+- **Formulários:** `htmlFor`/`id` nos 5 campos do Upload; toggle de senha do Login agora focável (`tabIndex` removido) com `aria-label`/`aria-pressed`.
+- **Ícones e landmarks:** `aria-hidden` nos ícones decorativos da sidebar/logout; `aria-label` em `<aside>` e nos dois `<nav>`.
+- **Charts:** `role="img"`+`aria-label` nos 8 gráficos (Gauge/Acwr/Trend/Radar/BoxPlot/Scatter via `<svg>`; MatchTrainingCompare via `<div>`). MicrocicloChart, por ter `<button>` interno de métrica, usa `role="group"` (não `role="img"`, que proíbe filhos interativos).
+- **Ações por linha:** `aria-label` único por sessão nos botões Editar/Excluir + foco visível (`focus-within`/`focus-visible`).
+- **Controles de filtro (axe):** `aria-label` nos `<select>` e `<input type=date>` sem rótulo (Sessões, Comparar, JogadorPerfil, SessaoDashboard, Jogadores, Usuarios).
+- **Tabelas roláveis (axe):** `tabIndex={0}` + `aria-label` nos contêineres `.overflow-x-auto` de tabelas largas (foco de teclado p/ rolar).
+- **Contraste:** texto cinza-claro informativo escurecido no claro (`text-slate-400`→`text-slate-500`, **só no claro**, `dark:` preservado) — reduziu violações sérias de contraste (Painel light 317→108, SessaoDashboard 47→19).
+- **Movimento:** `prefers-reduced-motion` estendido (iteration-count + scroll-behavior).
+
+**Onda 5 — Clareza:** tooltips (`title=`) explicando **ACWR** (cabeçalho da tabela) e **z-score** (chip de anomalia) no Painel; legenda do heatmap passou a comunicar a unidade ("Player Load médio/dia").
+
+**Verificação (axe-core headless, dark+light):** zerados os **críticos** (`select-name`, `label`) e o sério de tabelas (`scrollable-region-focusable`). Build verde; impressão (`Ctrl+P`) revalidada (branca, sem regressão); paridade dark/light conferida por screenshot.
+
+**Residuais conhecidos (precisam de decisão de design/estrutura — NÃO bloqueiam):**
+- **Contraste de texto de cor semântica** (ex.: `text-emerald-500` de status, badges de anomalia branco-sobre-âmbar): ~108 nós (Painel claro) / ~19 (SessaoDashboard claro) / 5 badges (Painel escuro). Atingir AA exige escurecer a paleta semântica (verde/âmbar) — decisão de marca.
+- **`nested-interactive`** no card de Sessões (botões Editar/Excluir aninhados num card que é `<button>`): pré-existente, exige reestruturar o card.
+- **Landmarks** (`landmark-no-duplicate-main`/`-unique`/`-is-top-level`, `region`, `heading-order`): moderados; estruturação de `<main>`/regiões por página.
+
+#### Deploy
+Frontend-only: rebuild do frontend na VPS. Nenhuma dep nova.
+
+---
+
 ## ✅ Status — Tudo do roadmap original implementado
 
 Todos os Lotes 1, 2 e 3 do plano original foram concluídos:
@@ -1095,4 +1124,4 @@ Esse diretório contém os arquivos `.jsonl` da conversa e a memória do projeto
 
 ---
 
-**Última atualização:** sessão de chat de 2026-06-22 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30); UX Onda 2 — `ConfirmModal` acessível (foco/trap/Escape/restore), confirmação obrigatória ao inativar atleta no Painel, skeletons em `JogadorPerfil` e `SessaoDashboard`, estados vazios com CTA em `Backups` e `Comparar`, validação de extensão/tamanho + feedback de envio no `Upload` (Fase 31); Dark Premium — tokens `.dark` translúcidos (surface-card/elevated/input em RGBA), halo radial de fundo, sheen de topo + sombra de elevação nos utilitários `.bg-card`/`.bg-elevated`, limpeza de hex ad-hoc em 5 arquivos (`index.css`, `Sessoes.tsx`, `Layout.tsx`, `Painel.tsx`, `SessaoDashboard.tsx`); dark-only, light intacto (Fase 32); correção da impressão que saía com fundo escuro ao imprimir do modo escuro (bug pré-existente desde a Onda 1) — reset de superfícies/`header`/`.sticky` e escurecimento das famílias de texto neutras dentro do `@media print`, validado via PDF real headless; impressão agora sai branca e legível em ambos os temas (Fase 33).
+**Última atualização:** sessão de chat de 2026-06-23 — Deploy em produção na VPS Hostgator Cloud 1 (Ubuntu 22.04, IP 143.95.212.89) com hardening completo (UFW, fail2ban, SSH só por chave, usuário não-root `apexpro`), stack Node 20 + PM2 + Nginx + Certbot, repo privado `guiraldi1987/SisPerfformance` com deploy key read-only, SSL Let's Encrypt em `https://apexpro.grupommp.com.br` (renovação automática), backup diário do SQLite via cron com retenção de 14 dias, e CORS travado no domínio de produção (Fase 27); correções no CSS de impressão para que o conteúdo flua entre páginas e o layout fique compacto estilo relatório nas 4 páginas com botão Imprimir (Fase 28); feature de backup do banco de dados com disparo manual + automático diário às 03:00, retenção de 5 backups automáticos e página de administração em `/backups` (Fase 29); UX Onda 1 — tokens de superfície, paleta `M_COLOR` canônica, 4 componentes compartilhados (`Button`, `PageHeader`, `LoadingState`, `EmptyState`), varredura de fundos hex ad-hoc em 14 arquivos e troca de emojis por SVG no Painel (Fase 30); UX Onda 2 — `ConfirmModal` acessível (foco/trap/Escape/restore), confirmação obrigatória ao inativar atleta no Painel, skeletons em `JogadorPerfil` e `SessaoDashboard`, estados vazios com CTA em `Backups` e `Comparar`, validação de extensão/tamanho + feedback de envio no `Upload` (Fase 31); Dark Premium — tokens `.dark` translúcidos (surface-card/elevated/input em RGBA), halo radial de fundo, sheen de topo + sombra de elevação nos utilitários `.bg-card`/`.bg-elevated`, limpeza de hex ad-hoc em 5 arquivos (`index.css`, `Sessoes.tsx`, `Layout.tsx`, `Painel.tsx`, `SessaoDashboard.tsx`); dark-only, light intacto (Fase 32); correção da impressão que saía com fundo escuro ao imprimir do modo escuro (bug pré-existente desde a Onda 1) — reset de superfícies/`header`/`.sticky` e escurecimento das famílias de texto neutras dentro do `@media print`, validado via PDF real headless; impressão agora sai branca e legível em ambos os temas (Fase 33); UX Onda 4 (Acessibilidade WCAG 2.1 AA) + Onda 5 (Clareza) — regiões `aria-live` (toast/erro/troca de rota via `RouteAnnouncer`), labels de formulário/filtros, `aria-hidden`+landmarks na sidebar, nome acessível nos 8 charts, ações de sessão com foco visível, tabelas roláveis focáveis, contraste de texto muted no claro (`slate-400`→`500`), reduce-motion, tooltips de ACWR/z-score e unidade no heatmap; validado com axe-core headless (críticos e sério de tabelas zerados; residual de contraste de cor semântica + nested-interactive do card documentado) — Onda 3 (Mobile) pulada por ora (Fase 34).
