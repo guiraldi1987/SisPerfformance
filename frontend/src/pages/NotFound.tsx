@@ -18,7 +18,7 @@ export const NotFound: React.FC = () => {
           </code>
           não existe.
         </p>
-        <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
+        <p className="text-xs text-slate-500 dark:text-slate-500 mb-6">
           Verifique se o link está correto ou volte ao painel principal.
         </p>
         <div className="flex gap-3 justify-center">

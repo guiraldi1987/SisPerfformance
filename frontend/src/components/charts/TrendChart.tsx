@@ -36,7 +36,7 @@ export const TrendChart: React.FC<Props> = ({ pontos }) => {
 
   if (pontos.length < 2) {
     return (
-      <div className="flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 py-12 text-center">
+      <div className="flex items-center justify-center text-xs text-slate-500 dark:text-slate-500 py-12 text-center">
         Mínimo de 2 sessões para gerar tendência. Sessões disponíveis: {pontos.length}.
       </div>
     );
@@ -92,7 +92,7 @@ const Sparkline: React.FC<{
   const trendColor =
     trend === 'up'   ? 'text-emerald-600 dark:text-emerald-400'
   : trend === 'down' ? 'text-amber-600 dark:text-amber-400'
-                     : 'text-slate-400 dark:text-slate-500';
+                     : 'text-slate-500 dark:text-slate-500';
 
   const fmt = (v: number) =>
     v.toLocaleString('pt-BR', { minimumFractionDigits: metric.dec, maximumFractionDigits: metric.dec });
@@ -120,8 +120,8 @@ const Sparkline: React.FC<{
         <span className="text-xl font-extrabold tabular-nums text-slate-900 dark:text-white leading-none">
           {fmt(last)}
         </span>
-        <span className="text-[10px] text-slate-400">{metric.unit}</span>
-        <span className="text-[9px] text-slate-400 dark:text-slate-500 ml-auto">
+        <span className="text-[10px] text-slate-500">{metric.unit}</span>
+        <span className="text-[9px] text-slate-500 dark:text-slate-500 ml-auto">
           última
         </span>
       </div>
@@ -131,7 +131,7 @@ const Sparkline: React.FC<{
         role="img"
         aria-label="Tendência da métrica nas últimas sessões"
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full block text-slate-400 dark:text-slate-500"
+        className="w-full block text-slate-500 dark:text-slate-500"
         preserveAspectRatio="none"
         style={{ height: H }}
         onMouseLeave={() => onHover(null)}
@@ -187,7 +187,7 @@ const Sparkline: React.FC<{
       </svg>
 
       {/* Footer */}
-      <div className="flex items-center justify-between text-[9px] text-slate-400 dark:text-slate-500 mt-1 tabular-nums">
+      <div className="flex items-center justify-between text-[9px] text-slate-500 dark:text-slate-500 mt-1 tabular-nums">
         <span>min {fmt(min)}</span>
         <span className="text-slate-500 dark:text-slate-400">avg {fmt(avg)}</span>
         <span>max {fmt(max)}</span>
@@ -197,7 +197,7 @@ const Sparkline: React.FC<{
       {hoverPoint && (
         <div className="absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full bg-slate-900/95 dark:bg-black/90 backdrop-blur-sm border border-white/10 rounded-md px-2 py-1.5 text-[10px] pointer-events-none shadow-xl z-10 whitespace-nowrap">
           <div className="text-white font-bold tabular-nums">
-            {fmt(hoverPoint[metric.key])} <span className="text-slate-400 font-normal">{metric.unit}</span>
+            {fmt(hoverPoint[metric.key])} <span className="text-slate-500 font-normal">{metric.unit}</span>
           </div>
           <div className="text-slate-300 text-[9px] flex items-center gap-1.5">
             <span className={`w-1.5 h-1.5 rounded-full ${hoverPoint.tipo === 'Jogo' ? 'bg-club-red' : 'bg-slate-400'}`} />

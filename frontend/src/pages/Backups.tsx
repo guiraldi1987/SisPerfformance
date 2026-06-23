@@ -122,7 +122,7 @@ export const Backups = () => {
       ) : (
         <div className="rounded-2xl border border-slate-200 dark:border-white/[0.06] overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 dark:bg-white/[0.02] text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-500 font-extrabold">
+            <thead className="bg-slate-50 dark:bg-white/[0.02] text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 font-extrabold">
               <tr>
                 <th className="text-left px-4 py-3">Data</th>
                 <th className="text-left px-4 py-3">Origem</th>

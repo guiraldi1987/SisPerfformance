@@ -26,7 +26,7 @@ export const AcwrChart: React.FC<Props> = ({ serie, height = 220 }) => {
 
   if (pontos.length < 2) {
     return (
-      <div className="flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 py-12 px-4 text-center">
+      <div className="flex items-center justify-center text-xs text-slate-500 dark:text-slate-500 py-12 px-4 text-center">
         Coletando dados base — ACWR confiável requer ~28 dias de histórico.
         <br />Sessões disponíveis: {serie.length} dias.
       </div>

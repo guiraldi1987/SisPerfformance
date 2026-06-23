@@ -84,10 +84,10 @@ export const Gauge: React.FC<GaugeProps> = ({ title, value, max, topAtleta, unit
       </svg>
       <span className="text-2xl font-bold text-slate-900 dark:text-white -mt-1 tabular-nums">
         {value.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
-        {unit && <span className="text-xs font-normal text-slate-400 ml-1">{unit}</span>}
+        {unit && <span className="text-xs font-normal text-slate-500 ml-1">{unit}</span>}
       </span>
       {topAtleta !== undefined && (
-        <span className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 tabular-nums">
+        <span className="text-[11px] text-slate-500 dark:text-slate-500 mt-0.5 tabular-nums">
           Máx: {topAtleta.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
         </span>
       )}

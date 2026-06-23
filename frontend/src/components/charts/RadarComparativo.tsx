@@ -39,7 +39,7 @@ export const RadarComparativo: React.FC<Props> = ({ axes, posicaoLabel, amostras
 
   if (axes.length < 3 || amostras < 3) {
     return (
-      <div className="flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 py-12 text-center">
+      <div className="flex items-center justify-center text-xs text-slate-500 dark:text-slate-500 py-12 text-center">
         Radar precisa de ≥3 jogos da posição como referência.
         <br />Amostras atuais: {amostras}.
       </div>
@@ -141,7 +141,7 @@ export const RadarComparativo: React.FC<Props> = ({ axes, posicaoLabel, amostras
         })}
 
         {/* Centro: 0% */}
-        <circle cx={CX} cy={CY} r={2} fill="currentColor" className="text-slate-400 dark:text-slate-600" />
+        <circle cx={CX} cy={CY} r={2} fill="currentColor" className="text-slate-500 dark:text-slate-600" />
       </svg>
 
       {/* Legenda */}
@@ -174,15 +174,15 @@ export const RadarComparativo: React.FC<Props> = ({ axes, posicaoLabel, amostras
                 <span className="text-white">{fmt(a.player, a.dec)} {a.unit}</span>
               </div>
               <div className="flex justify-between gap-4">
-                <span className="text-slate-400">Média pos.</span>
+                <span className="text-slate-500">Média pos.</span>
                 <span className="text-slate-200">{fmt(a.avg, a.dec)} {a.unit}</span>
               </div>
               <div className="flex justify-between gap-4">
-                <span className="text-slate-400">Top (p95)</span>
+                <span className="text-slate-500">Top (p95)</span>
                 <span className="text-slate-200">{fmt(a.top, a.dec)} {a.unit}</span>
               </div>
               <div className="flex justify-between gap-4 pt-1 mt-1 border-t border-white/10">
-                <span className="text-slate-400">vs média</span>
+                <span className="text-slate-500">vs média</span>
                 <span className={pctVsAvg >= 0 ? 'text-emerald-400' : 'text-amber-400'}>
                   {pctVsAvg >= 0 ? '+' : ''}{pctVsAvg.toFixed(0)}% · {(r.player * 100).toFixed(0)}% top
                 </span>

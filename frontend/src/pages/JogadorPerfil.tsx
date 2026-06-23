@@ -467,7 +467,7 @@ export const JogadorPerfil: React.FC = () => {
               size="lg"
             />
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500">
                 Análise do Atleta
               </p>
               <h1 className="text-xl font-extrabold text-slate-900 dark:text-white leading-tight">
@@ -491,9 +491,9 @@ export const JogadorPerfil: React.FC = () => {
                   );
                 })()}
                 {jogador.apelido && (
-                  <span className="text-[11px] text-slate-400">"{jogador.apelido}"</span>
+                  <span className="text-[11px] text-slate-500">"{jogador.apelido}"</span>
                 )}
-                <span className="text-[10px] text-slate-400 font-mono">· {jogador.codigoCsv}</span>
+                <span className="text-[10px] text-slate-500 font-mono">· {jogador.codigoCsv}</span>
               </div>
             </div>
           </div>
@@ -521,7 +521,7 @@ export const JogadorPerfil: React.FC = () => {
         {/* Filtros */}
         <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-slate-100 dark:border-white/[0.06]">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Tipo</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Tipo</span>
             <div className="flex gap-1 bg-slate-100 dark:bg-white/5 p-1 rounded-lg">
               {(['Todos', 'Treino', 'Jogo'] as const).map(t => (
                 <button key={t} onClick={() => setFiltroTipo(t)}
@@ -537,7 +537,7 @@ export const JogadorPerfil: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Período</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Período</span>
             <div className="flex gap-1 bg-slate-100 dark:bg-white/5 p-1 rounded-lg">
               {periodosDispo.map(p => (
                 <button key={p} onClick={() => setFiltroPeriodo(p)}
@@ -554,7 +554,7 @@ export const JogadorPerfil: React.FC = () => {
 
           {/* Filtro por sessão específica */}
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Sessão</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Sessão</span>
             <select
               value={filtroSessaoId == null ? '' : String(filtroSessaoId)}
               onChange={e => setFiltroSessaoId(e.target.value ? Number(e.target.value) : null)}
@@ -631,7 +631,7 @@ export const JogadorPerfil: React.FC = () => {
                         {sessao.tipo}
                       </span>
                     </td>
-                    <td className="px-3 py-2.5 text-[12px] xl:text-[13px] text-slate-400">
+                    <td className="px-3 py-2.5 text-[12px] xl:text-[13px] text-slate-500">
                       {m.periodo === 'Session' ? 'Sessão' : m.periodo}
                     </td>
                     <td className="px-3 py-2.5 text-right tabular-nums text-[12px] xl:text-[13px] text-slate-500 dark:text-slate-400">
@@ -684,7 +684,7 @@ export const JogadorPerfil: React.FC = () => {
                 ))}
 
                 {sessoesComPeriodo.length === 0 && (
-                  <tr><td colSpan={18} className="py-12 text-center text-sm text-slate-400">
+                  <tr><td colSpan={18} className="py-12 text-center text-sm text-slate-500">
                     Nenhuma sessão encontrada para os filtros selecionados.
                   </td></tr>
                 )}
@@ -727,11 +727,11 @@ export const JogadorPerfil: React.FC = () => {
                 <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300">
                   Evolução por Sessão
                 </h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[11px] text-slate-500 mt-0.5">
                   Tendência das principais métricas — linha tracejada = média do atleta · ponto sólido = jogo · ponto translúcido = treino
                 </p>
               </div>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-slate-500">
                 <b className="text-slate-700 dark:text-slate-300">{trendPontos.length}</b> sessões com participação
               </span>
             </div>
@@ -748,7 +748,7 @@ export const JogadorPerfil: React.FC = () => {
                 <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300">
                   Jogo × Treino
                 </h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[11px] text-slate-500 mt-0.5">
                   Médias por sessão — quanto mais próximas as barras, mais o treino reproduz a demanda do jogo
                 </p>
               </div>
@@ -765,13 +765,13 @@ export const JogadorPerfil: React.FC = () => {
                 <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300">
                   Insights
                 </h2>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[11px] text-slate-500 mt-0.5">
                   Análise automática dos padrões deste atleta
                 </p>
               </div>
 
               {insights.length === 0 ? (
-                <div className="text-center text-xs text-slate-400 dark:text-slate-500 py-8 px-4">
+                <div className="text-center text-xs text-slate-500 dark:text-slate-500 py-8 px-4">
                   Dados insuficientes para gerar insights neste período.
                 </div>
               ) : (
@@ -819,7 +819,7 @@ export const JogadorPerfil: React.FC = () => {
                   <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300">
                     ACWR · Risco de Lesão
                   </h2>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-slate-500 mt-0.5">
                     Razão entre carga aguda (7 dias) e crônica (28 dias) — baseado em Player Load
                   </p>
                 </div>
@@ -848,7 +848,7 @@ export const JogadorPerfil: React.FC = () => {
                   <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300">
                     Microciclo · MD-N · MD · MD+N
                   </h2>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-slate-500 mt-0.5">
                     Carga média por dia do ciclo — cada treino classificado pelo offset ao jogo mais próximo
                   </p>
                 </div>
@@ -866,7 +866,7 @@ export const JogadorPerfil: React.FC = () => {
                   <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300">
                     Radar · Atleta × Posição
                   </h2>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-slate-500 mt-0.5">
                     Médias do atleta em jogos comparadas à posição <b className="text-slate-600 dark:text-slate-300">{radarEixos.posicao}</b> · borda externa = melhor (p95)
                   </p>
                 </div>
@@ -887,7 +887,7 @@ export const JogadorPerfil: React.FC = () => {
               <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300">
                 Médias do Atleta
               </h2>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-slate-500">
                 Calculadas sobre {stats.totalSessoes} sessões filtradas
               </p>
             </div>

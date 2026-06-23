@@ -36,7 +36,7 @@ export const VolumeIntensityScatter: React.FC<Props> = ({
 
   if (pontos.length === 0) {
     return (
-      <div className="flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 py-12">
+      <div className="flex items-center justify-center text-xs text-slate-500 dark:text-slate-500 py-12">
         Sem atletas com dados nesta sessão.
       </div>
     );
@@ -169,7 +169,7 @@ export const VolumeIntensityScatter: React.FC<Props> = ({
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full" style={{ background: hovered.posicao ? (POSICAO_COLOR[posicaoCodigo(hovered.posicao)] ?? '#64748b') : '#64748b' }} />
             <span className="text-white font-bold">{hovered.apelido || hovered.nome}</span>
-            {hovered.posicao && <span className="text-slate-400 text-[10px]">{hovered.posicao}</span>}
+            {hovered.posicao && <span className="text-slate-500 text-[10px]">{hovered.posicao}</span>}
           </div>
           <div className="flex gap-3 text-slate-300 tabular-nums">
             <span>Vol <b className="text-white">{hovered.volumePct.toFixed(0)}%</b></span>

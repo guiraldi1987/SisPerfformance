@@ -42,7 +42,7 @@ export const MicrocicloChart: React.FC<Props> = ({ pontos, totalJogos, totalSess
 
   if (totalJogos === 0) {
     return (
-      <div className="flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 py-12 text-center px-4">
+      <div className="flex items-center justify-center text-xs text-slate-500 dark:text-slate-500 py-12 text-center px-4">
         Microciclo precisa de pelo menos um jogo registrado para classificar os treinos como MD-N.
       </div>
     );
@@ -80,7 +80,7 @@ export const MicrocicloChart: React.FC<Props> = ({ pontos, totalJogos, totalSess
     <div role="group" aria-label="Microciclo MD-: carga por dia relativo ao jogo">
       {/* Header com toggle de métrica */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <div className="text-[11px] text-slate-400 dark:text-slate-500">
+        <div className="text-[11px] text-slate-500 dark:text-slate-500">
           <b className="text-slate-700 dark:text-slate-300">{totalJogos}</b> jogos ·{' '}
           <b className="text-slate-700 dark:text-slate-300">{totalSessoes}</b> sessões na janela
         </div>
@@ -139,7 +139,7 @@ export const MicrocicloChart: React.FC<Props> = ({ pontos, totalJogos, totalSess
               }`}>
                 {md_}
               </div>
-              <div className="text-[9px] text-slate-400 dark:text-slate-500 tabular-nums">
+              <div className="text-[9px] text-slate-500 dark:text-slate-500 tabular-nums">
                 {noData ? '—' : `${p.sessoes}×`}
               </div>
             </div>

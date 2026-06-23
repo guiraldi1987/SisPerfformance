@@ -132,7 +132,7 @@ export const Layout: React.FC = () => {
         <div className="flex-1 overflow-y-auto px-4 py-6 space-y-7">
           
           <div className="space-y-1.5">
-            <p className="text-[9px] font-extrabold tracking-widest uppercase text-slate-400 dark:text-slate-600 px-3.5 mb-2.5">
+            <p className="text-[9px] font-extrabold tracking-widest uppercase text-slate-500 dark:text-slate-600 px-3.5 mb-2.5">
               Análise Tática
             </p>
             <nav aria-label="Análise tática" className="space-y-1">
@@ -143,7 +143,7 @@ export const Layout: React.FC = () => {
           </div>
 
           <div className="space-y-1.5">
-            <p className="text-[9px] font-extrabold tracking-widest uppercase text-slate-400 dark:text-slate-600 px-3.5 mb-2.5">
+            <p className="text-[9px] font-extrabold tracking-widest uppercase text-slate-500 dark:text-slate-600 px-3.5 mb-2.5">
               Administração
             </p>
             <nav aria-label="Administração" className="space-y-1">
@@ -203,7 +203,7 @@ export const Layout: React.FC = () => {
 
           {/* API Status Chip */}
           <div className="flex items-center justify-between px-3.5 py-1 bg-slate-50 dark:bg-white/[0.01] rounded-lg border border-slate-200/30 dark:border-white/[0.02]">
-            <span className="text-[9px] font-extrabold tracking-widest text-slate-400 dark:text-slate-600">CONEXÃO API</span>
+            <span className="text-[9px] font-extrabold tracking-widest text-slate-500 dark:text-slate-600">CONEXÃO API</span>
             <div className="flex items-center gap-2">
               {!apiOnline && (
                 <button

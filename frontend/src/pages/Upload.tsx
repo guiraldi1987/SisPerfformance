@@ -103,7 +103,7 @@ export const Upload: React.FC = () => {
         {/* Jogo */}
         <div>
           <label htmlFor="up-jogo" className={labelCls}>
-            Jogo <span className="normal-case font-normal text-slate-400">(adversário / descrição)</span>
+            Jogo <span className="normal-case font-normal text-slate-500">(adversário / descrição)</span>
           </label>
           <input
             id="up-jogo"

@@ -280,7 +280,7 @@ export const Usuarios: React.FC = () => {
               </h3>
               <button
                 onClick={() => setModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                className="text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-5 h-5">
                   <path d="M18 6 6 18M6 6l12 12" />
@@ -317,7 +317,7 @@ export const Usuarios: React.FC = () => {
                   required
                 />
                 {editingUser && (
-                  <p className="text-[10px] text-slate-400 mt-1">
+                  <p className="text-[10px] text-slate-500 mt-1">
                     O nome de usuário identificador não pode ser modificado após a criação.
                   </p>
                 )}
@@ -357,7 +357,7 @@ export const Usuarios: React.FC = () => {
                             ? s === 'ativo'
                               ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-700/50'
                               : 'bg-rose-50 dark:bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-300 dark:border-rose-700/50'
-                            : 'bg-transparent text-slate-400 border-slate-200 dark:border-white/10 hover:border-slate-300'
+                            : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 hover:border-slate-300'
                         }`}
                       >
                         {s === 'ativo' ? 'Ativo (Acesso Liberado)' : 'Inativo (Acesso Bloqueado)'}
@@ -368,7 +368,7 @@ export const Usuarios: React.FC = () => {
               )}
 
               <div className="pt-2 border-t border-slate-100 dark:border-white/[0.06] space-y-3">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                <p className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider">
                   {editingUser ? 'Alterar Senha (Opcional)' : 'Definir Senha de Acesso'}
                 </p>
                 <div>
@@ -428,7 +428,7 @@ export const Usuarios: React.FC = () => {
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Gerenciamento do Staff Técnico
           </h1>
-          <p className="text-sm text-slate-400 dark:text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-500">
             Cadastre, edite e administre as contas de acesso dos profissionais da comissão técnica do Paulista FC.
           </p>
         </div>
@@ -455,7 +455,7 @@ export const Usuarios: React.FC = () => {
             </svg>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500">
+            <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-500">
               Total de Profissionais
             </p>
             <p className="text-xl font-extrabold text-slate-900 dark:text-white tabular-nums">
@@ -472,7 +472,7 @@ export const Usuarios: React.FC = () => {
             </svg>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500">
+            <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-500">
               Contas Ativas
             </p>
             <p className="text-xl font-extrabold text-slate-900 dark:text-white tabular-nums">
@@ -489,7 +489,7 @@ export const Usuarios: React.FC = () => {
             </svg>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500">
+            <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-500">
               Contas Inativas
             </p>
             <p className="text-xl font-extrabold text-slate-900 dark:text-white tabular-nums">
@@ -562,7 +562,7 @@ export const Usuarios: React.FC = () => {
                               </span>
                             )}
                           </p>
-                          <p className="text-xs text-slate-400 dark:text-slate-500">
+                          <p className="text-xs text-slate-500 dark:text-slate-500">
                             @{u.username}
                           </p>
                         </div>
@@ -632,7 +632,7 @@ export const Usuarios: React.FC = () => {
               })}
               {listagemFiltrada.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-10 text-center text-slate-400 dark:text-slate-500 text-sm">
+                  <td colSpan={5} className="px-4 py-10 text-center text-slate-500 dark:text-slate-500 text-sm">
                     {busca
                       ? 'Nenhum profissional encontrado para a busca especificada.'
                       : 'Nenhum profissional cadastrado.'}

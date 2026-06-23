@@ -364,7 +364,7 @@ const VolumeIntensityChart: React.FC<{
 
       <div className="flex mt-2">
         {/* Y-axis */}
-        <div className="flex flex-col-reverse justify-between items-end pr-3 text-[10px] font-mono font-bold text-slate-400/80" style={{ height: CHART_H + 18 }}>
+        <div className="flex flex-col-reverse justify-between items-end pr-3 text-[10px] font-mono font-bold text-slate-500/80" style={{ height: CHART_H + 18 }}>
           {yTicks.map(t => <span key={t}>{Math.round(t)}%</span>)}
         </div>
 
@@ -443,7 +443,7 @@ const VolumeIntensityChart: React.FC<{
                     );
                   })}
                 </div>
-                <div className="text-[10px] font-extrabold font-outfit text-slate-400 dark:text-slate-500 uppercase tracking-widest text-center mt-2 bg-slate-100/50 dark:bg-white/[0.02] py-0.5 rounded border border-slate-200/30 dark:border-white/[0.02]">
+                <div className="text-[10px] font-extrabold font-outfit text-slate-500 dark:text-slate-500 uppercase tracking-widest text-center mt-2 bg-slate-100/50 dark:bg-white/[0.02] py-0.5 rounded border border-slate-200/30 dark:border-white/[0.02]">
                   {pos}
                 </div>
               </div>
@@ -495,12 +495,12 @@ const TabResumo: React.FC<{
           <div className="flex items-baseline justify-between mb-1.5 z-10 relative">
             <h2 className="text-base font-extrabold text-slate-800 dark:text-slate-200 font-outfit uppercase tracking-tight">Resumo da Sessão</h2>
             {historico && historico.amostras > 0 && (
-              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 font-outfit">
+              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 font-outfit">
                 Baseado em <b className="text-club-red dark:text-club-red-light font-extrabold">{historico.amostras}</b> sessões históricas
               </span>
             )}
           </div>
-          <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mb-6 uppercase tracking-wider z-10 relative">MD Comparação · barra preta = média histórica</p>
+          <p className="text-[10px] font-bold text-slate-500 dark:text-slate-500 mb-6 uppercase tracking-wider z-10 relative">MD Comparação · barra preta = média histórica</p>
 
           {/* 3 donuts grandes */}
           {scores && (
@@ -522,14 +522,14 @@ const TabResumo: React.FC<{
                 <BenchBar label="Distância (m)"   value={medias.distanciaTotal}   benchmark={MD.distanciaTotal}   color={C.volume} histRef={historico?.distanciaTotal} />
                 <BenchBar label="Dist. HS (m)"    value={medias.hsr}              benchmark={MD.hsr}              color={C.volume} histRef={historico?.hsr} />
                 <BenchBar label="Acel.+Desacel."  value={medias.acelDesacelTotal} benchmark={MD.acelDesacelTotal} color={C.volume} histRef={historico?.acelDesacelTotal} />
-                <p className="text-center font-mono text-[9px] font-extrabold text-slate-400 dark:text-slate-600 mt-2 tracking-widest uppercase">100% Benchmark de Jogo</p>
+                <p className="text-center font-mono text-[9px] font-extrabold text-slate-500 dark:text-slate-600 mt-2 tracking-widest uppercase">100% Benchmark de Jogo</p>
               </div>
               {/* Coluna direita — Intensidade (por minuto) */}
               <div className="space-y-1">
                 <BenchBar label="m/min"            value={medias.metragemPorMinuto}    benchmark={MD.metragemPorMinuto}    dec={1} color={C.intens} histRef={historico?.metragemPorMinuto} />
                 <BenchBar label="Dist. HS m/min"   value={medias.hsrPorMinuto}         benchmark={MD.hsrPorMinuto}         dec={1} color={C.intens} histRef={historico?.hsrPorMinuto} />
                 <BenchBar label="Acel.+Desac./min" value={medias.acelDesacelPorMinuto} benchmark={MD.acelDesacelPorMinuto} dec={2} color={C.intens} histRef={historico?.acelDesacelPorMinuto} />
-                <p className="text-center font-mono text-[9px] font-extrabold text-slate-400 dark:text-slate-600 mt-2 tracking-widest uppercase">100% Benchmark de Jogo</p>
+                <p className="text-center font-mono text-[9px] font-extrabold text-slate-500 dark:text-slate-600 mt-2 tracking-widest uppercase">100% Benchmark de Jogo</p>
               </div>
             </div>
           )}
@@ -542,7 +542,7 @@ const TabResumo: React.FC<{
           
           <div className="z-10 relative">
             <h2 className="text-base font-extrabold text-slate-800 dark:text-slate-200 font-outfit uppercase tracking-tight mb-1.5">Participação</h2>
-            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Presença do plantel na sessão</p>
+            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider mb-2">Presença do plantel na sessão</p>
           </div>
           {(() => {
             const total = participacao.total || 1;
@@ -583,7 +583,7 @@ const TabResumo: React.FC<{
           <div className="flex items-baseline justify-between mb-5">
             <h2 className="text-base font-extrabold text-slate-800 dark:text-slate-200 font-outfit uppercase tracking-tight">Comparativo: Volume &amp; Intensidade Individual</h2>
             {posBench && Object.keys(posBench).length > 0 && (
-              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 font-outfit uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 font-outfit uppercase tracking-wider">
                 Benchmark dinâmico por posição (Média de Jogos)
               </span>
             )}
@@ -610,7 +610,7 @@ const TabResumo: React.FC<{
           <div className="glass-panel glass-panel-hover p-6 rounded-2xl card-bounce">
             <div className="mb-4">
               <h2 className="text-base font-extrabold text-slate-800 dark:text-slate-200 font-outfit uppercase tracking-tight">Perfil do Atleta · Volume × Intensidade</h2>
-              <p className="text-xs text-slate-400 font-semibold mt-0.5 uppercase tracking-wide">
+              <p className="text-xs text-slate-500 font-semibold mt-0.5 uppercase tracking-wide">
                 Cada ponto = um atleta · cor pela posição · faixa central verde = zona ideal
                 {usaDinamico && ' · 100% = média da posição em jogos'}
               </p>
@@ -625,7 +625,7 @@ const TabResumo: React.FC<{
         <div className="glass-panel glass-panel-hover p-6 rounded-2xl card-bounce">
           <div className="mb-3">
             <h2 className="text-base font-extrabold text-slate-800 dark:text-slate-200 font-outfit uppercase tracking-tight">Distribuição por Posição</h2>
-            <p className="text-xs text-slate-400 font-semibold mt-0.5 uppercase tracking-wide">
+            <p className="text-xs text-slate-500 font-semibold mt-0.5 uppercase tracking-wide">
               Caixa = quartis Q1–Q3 da posição · linha grossa = mediana · pontos = atletas fora do intervalo (Tukey 1.5×IQR)
             </p>
           </div>
@@ -661,7 +661,7 @@ const ZonasVelocidadeChart: React.FC<{ zonas: ZonasVelocidade }> = ({ zonas }) =
       <h2 className="text-base font-extrabold text-slate-800 dark:text-slate-200 font-outfit uppercase tracking-tight mb-0.5">
         Distribuição por Zona de Velocidade
       </h2>
-      <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mb-5 uppercase tracking-wider">
+      <p className="text-[10px] font-bold text-slate-500 dark:text-slate-500 mb-5 uppercase tracking-wider">
         Distância total do time em cada zona ({fmtNum(total)} m no total)
       </p>
 
@@ -708,13 +708,13 @@ const ZonasVelocidadeChart: React.FC<{ zonas: ZonasVelocidade }> = ({ zonas }) =
                   {z.label}
                 </span>
               </div>
-              <p className="text-[9px] font-semibold text-slate-400 dark:text-slate-500 z-10 relative">{z.range}</p>
+              <p className="text-[9px] font-semibold text-slate-500 dark:text-slate-500 z-10 relative">{z.range}</p>
               
               <div className="mt-2 flex items-baseline gap-1 z-10 relative">
                 <span className="text-lg font-black font-outfit tracking-tighter tabular-nums text-slate-800 dark:text-slate-100 group-hover/card:text-slate-950 dark:group-hover/card:text-white transition-colors">
                   {fmtNum(v)}
                 </span>
-                <span className="text-[10px] font-extrabold text-slate-400 font-outfit uppercase">m</span>
+                <span className="text-[10px] font-extrabold text-slate-500 font-outfit uppercase">m</span>
               </div>
               
               <div className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 tabular-nums z-10 relative">
@@ -736,7 +736,7 @@ const TabPeriodos: React.FC<{ data: AnaliseData }> = ({ data }) => {
   if (periodos.length === 0) {
     return (
       <div className="glass-panel p-10 rounded-2xl text-center">
-        <p className="text-slate-400 dark:text-slate-500 font-semibold text-sm">
+        <p className="text-slate-500 dark:text-slate-500 font-semibold text-sm">
           Nenhum dado de período disponível.
         </p>
       </div>
@@ -898,11 +898,11 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
       <div className="px-6 py-4 border-b border-slate-200/40 dark:border-white/[0.04] flex items-center justify-between gap-4 flex-wrap bg-white/10 dark:bg-white/[0.01]">
         <div>
           <h2 className="text-base font-extrabold text-slate-800 dark:text-slate-200 font-outfit uppercase tracking-tight">Análise do Atleta</h2>
-          <p className="print-hide text-[10px] font-semibold text-slate-400 mt-0.5 uppercase tracking-wide">
+          <p className="print-hide text-[10px] font-semibold text-slate-500 mt-0.5 uppercase tracking-wide">
             Clique em um jogador para ver a performance individual · Clique nas colunas para ordenar
           </p>
         </div>
-        <span className="text-xs font-bold text-slate-400 bg-slate-100 dark:bg-white/[0.03] px-3 py-1 rounded-full border border-slate-200/50 dark:border-white/[0.02] shrink-0">
+        <span className="text-xs font-bold text-slate-500 bg-slate-100 dark:bg-white/[0.03] px-3 py-1 rounded-full border border-slate-200/50 dark:border-white/[0.02] shrink-0">
           <b className="text-slate-700 dark:text-slate-200">{atletasFiltrados.length}</b> de {atletas.length} atletas
         </span>
       </div>
@@ -911,7 +911,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
       <div className="print-hide px-6 py-3.5 border-b border-slate-200/40 dark:border-white/[0.04] flex items-center gap-4 flex-wrap bg-slate-50/30 dark:bg-white/[0.005]">
         <div className="relative flex-1 min-w-[240px] max-w-sm">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-            className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none">
+            className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-500 pointer-events-none">
             <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
           </svg>
           <input
@@ -923,7 +923,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Posição</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit">Posição</span>
           <select
             value={filtroPos}
             onChange={e => setFiltroPos(e.target.value)}
@@ -936,7 +936,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Ordenar por</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit">Ordenar por</span>
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value as SortKey)}
@@ -1068,7 +1068,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
                         {posicaoLabel(a.posicao)}
                       </span>
                     );
-                  })() : <span className="text-slate-400 text-xs">—</span>}
+                  })() : <span className="text-slate-500 text-xs">—</span>}
                 </td>
                 <td className="px-3 py-2.5"><BarCell value={n(a.distanciaTotal)}    max={maxDist}    color={M_COLOR.dist}   /></td>
                 <td className="px-3 py-2.5"><BarCell value={n(a.metragemPorMinuto)} max={maxMpm}     color={M_COLOR.mpm} dec={1} /></td>
@@ -1147,7 +1147,7 @@ const TabAtletas: React.FC<{ atletas: AtletaRow[] }> = ({ atletas }) => {
             })()}
 
             {atletasFiltrados.length === 0 && (
-              <tr><td colSpan={15} className="py-12 text-center text-sm font-semibold text-slate-400">
+              <tr><td colSpan={15} className="py-12 text-center text-sm font-semibold text-slate-500">
                 {atletas.length === 0
                   ? 'Nenhum dado de atleta para a sessão.'
                   : 'Nenhum atleta encontrado com os filtros selecionados.'}
@@ -1243,7 +1243,7 @@ export const SessaoDashboard: React.FC = () => {
         <div className="flex items-center justify-between gap-6 mb-4 flex-wrap">
           <div className="min-w-0 flex items-center gap-3">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 font-outfit">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-500 font-outfit">
                 Relatório de Performance Fisiológica
               </p>
               <div className="flex items-center gap-3 mt-1 flex-wrap">
@@ -1308,22 +1308,22 @@ export const SessaoDashboard: React.FC = () => {
         {/* Linha 2: Chips de Metadados Translúcidos */}
         <div className="flex flex-wrap gap-x-4 gap-y-2 text-[10px] border-t border-slate-200/40 dark:border-white/[0.04] pt-3.5">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/60 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/[0.02]">
-            <span className="font-extrabold font-outfit uppercase tracking-widest text-slate-400 dark:text-slate-500">Data</span>
+            <span className="font-extrabold font-outfit uppercase tracking-widest text-slate-500 dark:text-slate-500">Data</span>
             <span className="text-slate-800 dark:text-slate-200 font-bold font-mono">{formatData(sessao.data)}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/60 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/[0.02]">
-            <span className="font-extrabold font-outfit uppercase tracking-widest text-slate-400 dark:text-slate-500">Duração</span>
+            <span className="font-extrabold font-outfit uppercase tracking-widest text-slate-500 dark:text-slate-500">Duração</span>
             <span className="text-slate-800 dark:text-slate-200 font-bold font-mono">{fmtSec(tempoTotal)}</span>
           </div>
           {sessao.equipe && (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/60 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/[0.02]">
-              <span className="font-extrabold font-outfit uppercase tracking-widest text-slate-400 dark:text-slate-500">Elenco</span>
+              <span className="font-extrabold font-outfit uppercase tracking-widest text-slate-500 dark:text-slate-500">Elenco</span>
               <span className="text-slate-800 dark:text-slate-200 font-bold font-outfit uppercase tracking-wider">{sessao.equipe}</span>
             </div>
           )}
           {sessao.local && (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/60 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/[0.02]">
-              <span className="font-extrabold font-outfit uppercase tracking-widest text-slate-400 dark:text-slate-500">Arena</span>
+              <span className="font-extrabold font-outfit uppercase tracking-widest text-slate-500 dark:text-slate-500">Arena</span>
               <span className="text-slate-800 dark:text-slate-200 font-bold font-outfit uppercase tracking-wider">{sessao.local}</span>
             </div>
           )}

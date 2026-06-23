@@ -72,7 +72,7 @@ const TendenciaIcon: React.FC<{ tendencia: 'subindo' | 'descendo' | 'estavel' }>
   <span className={`text-[10px] font-extrabold font-outfit px-1.5 py-0.5 rounded-md ${
     tendencia === 'subindo'  ? 'bg-rose-500/10 text-rose-500'    :
     tendencia === 'descendo' ? 'bg-emerald-500/10 text-emerald-500' :
-    'bg-slate-500/10 text-slate-400'
+    'bg-slate-500/10 text-slate-500'
   }`}>
     {tendencia === 'subindo' ? '▲' : tendencia === 'descendo' ? '▼' : '—'}
   </span>
@@ -94,7 +94,7 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
             const isToday = d.data === todayIso;
             return (
               <div key={d.data} className="flex flex-col items-center gap-1.5 transition-transform hover:scale-[1.04]">
-                <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 font-outfit">
+                <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-500 font-outfit">
                   {d.diaSemana}
                 </span>
                 <div
@@ -112,7 +112,7 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
                   }}
                   title={`${formatData(d.data)} · ${d.atletasCount} atletas · Carga ${d.cargaMedia.toFixed(1)}`}
                 >
-                  <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 font-outfit">{d.data.slice(8, 10)}/{d.data.slice(5, 7)}</span>
+                  <span className="text-[9px] font-bold text-slate-500 dark:text-slate-500 font-outfit">{d.data.slice(8, 10)}/{d.data.slice(5, 7)}</span>
                   {d.cargaMedia > 0 ? (
                     <span className="text-sm font-extrabold tabular-nums text-slate-800 dark:text-white font-mono mt-0.5">
                       {d.cargaMedia.toFixed(0)}
@@ -180,7 +180,7 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
           {Array.from({ length: totalSemanas }).map((_, w) => {
             const ml = monthLabels.find(m => m.week === w);
             return (
-              <div key={w} className="w-3.5 text-[8px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-600 font-outfit">
+              <div key={w} className="w-3.5 text-[8px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-600 font-outfit">
                 {ml?.label ?? ''}
               </div>
             );
@@ -192,7 +192,7 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
           {/* Coluna de rótulos dom/seg/... */}
           <div className="flex flex-col gap-0.5 pr-1 justify-around">
             {DOW.map((d, i) => (
-              <div key={d} className="h-3 text-[8px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-650 leading-none flex items-center font-outfit"
+              <div key={d} className="h-3 text-[8px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-650 leading-none flex items-center font-outfit"
                 style={{ visibility: i % 2 === 1 ? 'visible' : 'hidden' }}>
                 {d}
               </div>
@@ -234,7 +234,7 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
         </div>
 
         {/* Legenda */}
-        <div className="flex items-center gap-2 mt-4 text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-outfit">
+        <div className="flex items-center gap-2 mt-4 text-[9px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-500 font-outfit">
           <span>Menos carga</span>
           <div className="flex gap-0.5">
             {[0.1, 0.3, 0.5, 0.75, 1.0].map(i => (
@@ -243,7 +243,7 @@ const HeatmapCalendario: React.FC<{ dias: DiaCarga[] }> = ({ dias }) => {
             ))}
           </div>
           <span>Mais carga</span>
-          <span className="normal-case font-medium text-slate-400/80">(Player Load médio/dia)</span>
+          <span className="normal-case font-medium text-slate-500/80">(Player Load médio/dia)</span>
           <span className="ml-4 inline-flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-sm border-2 border-club-red" /> Jogo
           </span>
@@ -316,7 +316,7 @@ const AlertCard: React.FC<{
             {info.label}
           </p>
         </div>
-        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 font-mono tabular-nums leading-none">
+        <p className="text-[10px] font-bold text-slate-500 dark:text-slate-500 font-mono tabular-nums leading-none">
           {pct.toFixed(0)}% do elenco
         </p>
       </div>
@@ -378,8 +378,8 @@ const AtletaGridCard: React.FC<{
               ) : (
                 <span className="text-[9px] text-slate-450 font-outfit shrink-0">—</span>
               )}
-              <span className="text-[9px] text-slate-400 font-mono tracking-tight shrink-0">•</span>
-              <span className="text-[9px] text-slate-400 font-outfit truncate shrink-0">
+              <span className="text-[9px] text-slate-500 font-mono tracking-tight shrink-0">•</span>
+              <span className="text-[9px] text-slate-500 font-outfit truncate shrink-0">
                 {formataUltimaSessaoText(atleta.ultimaSessao)}
               </span>
             </div>
@@ -389,7 +389,7 @@ const AtletaGridCard: React.FC<{
         {/* ACWR e Tendência de Carga */}
         <div className="flex items-end justify-between w-full">
           <div className="space-y-0.5">
-            <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 font-outfit leading-none">
+            <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-500 font-outfit leading-none">
               Status ACWR
             </span>
             <div className="flex items-baseline gap-2">
@@ -404,7 +404,7 @@ const AtletaGridCard: React.FC<{
           </div>
 
           <div className="flex flex-col items-end gap-0.5 shrink-0">
-            <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 font-outfit leading-none">
+            <span className="text-[8px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-500 font-outfit leading-none">
               Tendência
             </span>
             <TendenciaIcon tendencia={atleta.tendencia} />
@@ -426,7 +426,7 @@ const AtletaGridCard: React.FC<{
         </div>
 
         {/* Cargas Aguda e Crônica */}
-        <div className="flex justify-between items-center text-[9px] font-mono text-slate-400 dark:text-slate-500 w-full">
+        <div className="flex justify-between items-center text-[9px] font-mono text-slate-500 dark:text-slate-500 w-full">
           <div className="flex gap-1.5">
             <span>AGUDA: <strong className="text-slate-650 dark:text-slate-350">{atleta.cargaAguda.toFixed(0)}</strong></span>
             <span className="opacity-40">|</span>
@@ -571,22 +571,22 @@ export const Painel: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3">
             
             <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/[0.04] shadow-sm">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4 text-slate-400"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.8-3.4 3.5-5 6.5-5s5.7 1.6 6.5 5" /></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4 text-slate-500"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.8-3.4 3.5-5 6.5-5s5.7 1.6 6.5 5" /></svg>
               <span className="text-sm font-extrabold text-slate-850 dark:text-white font-mono tabular-nums leading-none">{data.totalAtletas}</span>
-              <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit leading-none">atletas</span>
+              <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit leading-none">atletas</span>
             </div>
 
             <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/[0.04] shadow-sm">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4 text-slate-400"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4 text-slate-500"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
               <span className="text-sm font-extrabold text-slate-850 dark:text-white font-mono tabular-nums leading-none">{data.totalSessoes}</span>
-              <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit leading-none">sessões</span>
+              <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit leading-none">sessões</span>
             </div>
 
             {data.ultimaSessao && (
               <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/[0.04] shadow-sm">
                 <span className={`w-2 h-2 rounded-full shrink-0 ${data.ultimaSessao.tipo === 'Jogo' ? 'bg-club-red animate-pulse' : 'bg-emerald-500'}`} />
                 <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 font-outfit">{formatData(data.ultimaSessao.data)}</span>
-                <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">{data.ultimaSessao.tipo}</span>
+                <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit">{data.ultimaSessao.tipo}</span>
               </div>
             )}
 
@@ -683,7 +683,7 @@ export const Painel: React.FC = () => {
                 }`}>
                   Desvios da Média Pessoal · {'>'}2σ
                 </h3>
-                <p className="text-[11px] text-slate-400 mt-1 leading-none">
+                <p className="text-[11px] text-slate-500 mt-1 leading-none">
                   Atletas cuja última sessão fugiu significativamente do próprio histórico.
                 </p>
               </div>
@@ -749,7 +749,7 @@ export const Painel: React.FC = () => {
                         }`}>
                           {an.tipo === 'Jogo' ? 'MD' : an.tipo}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-mono tabular-nums">
+                        <span className="text-[10px] text-slate-500 font-mono tabular-nums">
                           {formatData(an.data)}
                         </span>
                       </div>
@@ -790,7 +790,7 @@ export const Painel: React.FC = () => {
                 <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-amber-500 dark:text-amber-400 font-outfit">
                   Sem participação recente · {'>'}60 dias
                 </h3>
-                <p className="text-[11px] text-slate-400 mt-1 leading-none">
+                <p className="text-[11px] text-slate-500 mt-1 leading-none">
                   Atletas marcados como ativos, mas sem registros recentes.
                 </p>
               </div>
@@ -811,14 +811,14 @@ export const Painel: React.FC = () => {
                         style={{ background: POSICAO_COLOR[cod] ?? '#64748b' }}>
                         {cod}
                       </span>
-                    ) : <span className="w-7 text-center text-[10px] text-slate-400 font-outfit shrink-0">—</span>}
+                    ) : <span className="w-7 text-center text-[10px] text-slate-500 font-outfit shrink-0">—</span>}
 
                     <button onClick={() => navigate(`/jogador/${a.id}`)}
                       className="flex-1 text-left min-w-0 cursor-pointer">
                       <p className="text-xs font-bold text-slate-800 dark:text-white truncate hover:text-club-red transition-colors font-outfit">
                         {a.apelido || a.nome.split(',')[0]}
                       </p>
-                      <p className="text-[10px] text-slate-400 truncate mt-0.5 font-mono">
+                      <p className="text-[10px] text-slate-500 truncate mt-0.5 font-mono">
                         {a.ultimaSessao
                           ? `Última: ${formatData(a.ultimaSessao)} · ${a.diasSemSessao}d atrás`
                           : 'Sem registros'}
@@ -836,7 +836,7 @@ export const Painel: React.FC = () => {
             </div>
 
             {candidatosInativar.length > 8 && (
-              <p className="text-[10px] text-slate-400 text-center mt-4 font-outfit">
+              <p className="text-[10px] text-slate-500 text-center mt-4 font-outfit">
                 + {candidatosInativar.length - 8} {candidatosInativar.length - 8 === 1 ? 'atleta' : 'atletas'} — use o assistente em <button onClick={() => navigate('/jogadores')} className="text-club-red font-bold hover:underline cursor-pointer">Elenco</button> para atualizar lote.
               </p>
             )}
@@ -847,10 +847,10 @@ export const Painel: React.FC = () => {
         <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
             <div>
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 font-outfit">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-500 font-outfit">
                 Carga de Treinamento do Time
               </h3>
-              <p className="text-[11px] text-slate-400 mt-1 font-mono tabular-nums leading-none">
+              <p className="text-[11px] text-slate-500 mt-1 font-mono tabular-nums leading-none">
                 {formatData(data.windowStart)} → {formatData(data.windowEnd)} ·{' '}
                 <span className="font-extrabold text-slate-700 dark:text-slate-200">{data.windowDias}</span> dias analisados
               </p>
@@ -865,7 +865,7 @@ export const Painel: React.FC = () => {
                     className={`px-3 py-1.5 rounded-lg text-[10px] font-extrabold uppercase font-outfit tracking-wider transition-all cursor-pointer ${
                       presetAtivo === p
                         ? 'bg-club-red text-white shadow-sm accent-glow'
-                        : 'text-slate-400 dark:text-slate-450 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/5'
+                        : 'text-slate-500 dark:text-slate-450 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/5'
                     }`}>
                     {p}D
                   </button>
@@ -873,7 +873,7 @@ export const Painel: React.FC = () => {
               </div>
 
               {/* Custom range com inputs elegantes */}
-              <div className="flex items-center gap-2 text-[10px] font-extrabold uppercase text-slate-400 font-outfit">
+              <div className="flex items-center gap-2 text-[10px] font-extrabold uppercase text-slate-500 font-outfit">
                 <span>DE</span>
                 <input type="date" value={windowStart}
                   max={windowEnd}
@@ -910,7 +910,7 @@ export const Painel: React.FC = () => {
                   </button>
                 )}
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">Acute:Chronic Workload Ratio · Clique sobre o atleta para ver perfil analítico.</p>
+              <p className="text-[11px] text-slate-500 mt-1">Acute:Chronic Workload Ratio · Clique sobre o atleta para ver perfil analítico.</p>
             </div>
             
             <div className="flex flex-wrap items-center gap-4 select-none sm:justify-end">
@@ -954,7 +954,7 @@ export const Painel: React.FC = () => {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-extrabold uppercase font-outfit tracking-wider transition-all cursor-pointer ${
                     tipoVisualizacao === 'cards'
                       ? 'bg-club-red text-white shadow-sm'
-                      : 'text-slate-400 dark:text-slate-450 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/5'
+                      : 'text-slate-500 dark:text-slate-450 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/5'
                   }`}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-3.5 h-3.5">
@@ -970,7 +970,7 @@ export const Painel: React.FC = () => {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-extrabold uppercase font-outfit tracking-wider transition-all cursor-pointer ${
                     tipoVisualizacao === 'tabela'
                       ? 'bg-club-red text-white shadow-sm'
-                      : 'text-slate-400 dark:text-slate-450 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/5'
+                      : 'text-slate-500 dark:text-slate-450 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/5'
                   }`}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-3.5 h-3.5">
@@ -989,14 +989,14 @@ export const Painel: React.FC = () => {
 
           {atletasFiltrados.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 px-4 select-none text-center">
-              <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400 mb-3">
+              <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-500 mb-3">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-6 h-6">
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
               </div>
               <p className="text-xs font-bold text-slate-700 dark:text-slate-200 font-outfit">Nenhum atleta encontrado</p>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-md leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-md leading-relaxed">
                 Não há atletas com o status de <b>{filtroZona ? ZONA_INFO[filtroZona].label : 'carga'}</b> registrados no período de {formatData(windowStart)} a {formatData(windowEnd)}.
               </p>
             </div>
@@ -1015,12 +1015,12 @@ export const Painel: React.FC = () => {
               <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-slate-200/50 dark:border-white/[0.04] select-none">
-                    <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Atleta</th>
-                    <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Posição</th>
-                    <th className="text-center px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Tend.</th>
-                    <th title="ACWR = carga aguda (7 dias) ÷ carga crônica (28 dias). Zonas: <0,8 subtreino · 0,8–1,3 ideal · 1,3–1,5 atenção · >1,5 risco" className="text-right px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit cursor-help">ACWR</th>
-                    <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit w-44">Gráfico ACWR</th>
-                    <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-400 font-outfit">Status Zona</th>
+                    <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit">Atleta</th>
+                    <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit">Posição</th>
+                    <th className="text-center px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit">Tend.</th>
+                    <th title="ACWR = carga aguda (7 dias) ÷ carga crônica (28 dias). Zonas: <0,8 subtreino · 0,8–1,3 ideal · 1,3–1,5 atenção · >1,5 risco" className="text-right px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit cursor-help">ACWR</th>
+                    <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit w-44">Gráfico ACWR</th>
+                    <th className="text-left px-4 py-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-outfit">Status Zona</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100/50 dark:divide-white/[0.02]">
@@ -1052,7 +1052,7 @@ export const Painel: React.FC = () => {
                               style={{ background: POSICAO_COLOR[cod] ?? '#64748b' }}>
                               {posicaoLabel(a.posicao)}
                             </span>
-                          ) : <span className="text-[10px] text-slate-400 font-outfit">—</span>}
+                          ) : <span className="text-[10px] text-slate-500 font-outfit">—</span>}
                         </td>
 
                         <td className="px-4 py-3 text-center">
@@ -1095,7 +1095,7 @@ export const Painel: React.FC = () => {
 
           {atletasAgrupados.semDados.length > 0 && (
             <div className="border-t border-slate-150/40 dark:border-white/[0.03] pt-4.5 mt-4">
-              <p className="text-[10px] text-slate-400 font-outfit leading-relaxed flex items-center gap-1">
+              <p className="text-[10px] text-slate-500 font-outfit leading-relaxed flex items-center gap-1">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-3.5 h-3.5 shrink-0"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
                 Contém {atletasAgrupados.semDados.length} {atletasAgrupados.semDados.length === 1 ? 'atleta' : 'atletas'} em fase de captação inicial ou transição (dados de treino insuficientes para cálculo de ACWR).
               </p>

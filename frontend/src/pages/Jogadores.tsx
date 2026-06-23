@@ -302,7 +302,7 @@ export const Jogadores: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setEditJogador(null)}>
           <div className="bg-card border border-slate-200 dark:border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
             <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">Editar Jogador</h3>
-            <p className="text-xs text-slate-400 mb-2">{editJogador.nomeCompleto}</p>
+            <p className="text-xs text-slate-500 mb-2">{editJogador.nomeCompleto}</p>
             
             {/* Foto Upload Area */}
             <div className="flex flex-col items-center justify-center py-4 mb-4 border-b border-slate-100 dark:border-white/5 relative">
@@ -379,7 +379,7 @@ export const Jogadores: React.FC = () => {
                           ? s === 'ativo'
                             ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-700/50'
                             : 'bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-white/30'
-                          : 'bg-transparent text-slate-400 border-slate-200 dark:border-white/10 hover:border-slate-300'
+                          : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 hover:border-slate-300'
                       }`}>
                       {s === 'ativo' ? 'No elenco' : 'Saiu do clube'}
                     </button>
@@ -388,7 +388,7 @@ export const Jogadores: React.FC = () => {
 
                 {editForm.status === 'inativo' && (
                   <div className="mt-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1 block">Data de saída</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-1 block">Data de saída</label>
                     <input type="date" value={editForm.dataSaida}
                       aria-label="Data de saída do atleta"
                       onChange={e => setEditForm(f => ({ ...f, dataSaida: e.target.value }))}
@@ -454,13 +454,13 @@ export const Jogadores: React.FC = () => {
                           {c}
                         </span>
                       );
-                    })() : <span className="w-7 text-center text-xs text-slate-400">—</span>}
+                    })() : <span className="w-7 text-center text-xs text-slate-500">—</span>}
                     <span className={`flex-1 text-sm font-bold truncate ${
-                      sel ? 'text-slate-900 dark:text-white' : 'text-slate-400 line-through'
+                      sel ? 'text-slate-900 dark:text-white' : 'text-slate-500 line-through'
                     }`}>
                       {j.apelido || j.nomeCompleto}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono">{j.codigoCsv}</span>
+                    <span className="text-[10px] text-slate-500 font-mono">{j.codigoCsv}</span>
                     <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
                       sel
                         ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
@@ -497,7 +497,7 @@ export const Jogadores: React.FC = () => {
       <div className="flex items-start justify-between gap-4 mb-2 flex-wrap">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Elenco</h1>
-          <p className="text-sm text-slate-400 dark:text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-500">
             Jogadores são criados automaticamente no upload. Edite para apelido, posição e status.
           </p>
         </div>
@@ -591,7 +591,7 @@ export const Jogadores: React.FC = () => {
                       <p className={`font-semibold ${inativo ? 'text-slate-500 dark:text-slate-400 line-through' : 'text-slate-900 dark:text-white'}`}>
                         {j.apelido || j.nomeCompleto}
                       </p>
-                      {j.apelido && <p className="text-xs text-slate-400">{j.nomeCompleto}</p>}
+                      {j.apelido && <p className="text-xs text-slate-500">{j.nomeCompleto}</p>}
                     </div>
                   </div>
                 </td>
@@ -659,7 +659,7 @@ export const Jogadores: React.FC = () => {
                       className={`inline-flex items-center justify-center w-7 h-7 rounded-md transition-colors ${
                         inativo
                           ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
-                          : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'
+                          : 'text-slate-500 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5'
                       }`}
                     >
                       {inativo ? (
@@ -689,7 +689,7 @@ export const Jogadores: React.FC = () => {
               );
             })}
             {!loading && lista.length === 0 && (
-              <tr><td colSpan={6} className="px-3 py-10 text-center text-slate-400 dark:text-slate-500 text-sm">
+              <tr><td colSpan={6} className="px-3 py-10 text-center text-slate-500 dark:text-slate-500 text-sm">
                 {busca || statusFiltro !== 'todos'
                   ? 'Nenhum jogador corresponde aos filtros.'
                   : 'Nenhum jogador cadastrado.'}

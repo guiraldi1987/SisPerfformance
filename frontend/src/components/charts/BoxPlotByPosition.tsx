@@ -122,7 +122,7 @@ export const BoxPlotByPosition: React.FC<Props> = ({ atletas, defaultMetric = 'd
 
   if (rows.length === 0 || posicoesOrdenadas.length === 0) {
     return (
-      <div className="text-center text-xs text-slate-400 dark:text-slate-500 py-8">
+      <div className="text-center text-xs text-slate-500 dark:text-slate-500 py-8">
         Sem dados suficientes para a métrica selecionada.
       </div>
     );
@@ -148,7 +148,7 @@ export const BoxPlotByPosition: React.FC<Props> = ({ atletas, defaultMetric = 'd
     <div className="relative">
       {/* Toggle métrica */}
       <div className="flex flex-wrap items-center justify-end gap-1 mb-3">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mr-1">Métrica</span>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mr-1">Métrica</span>
         <div className="flex gap-1 bg-slate-100 dark:bg-white/5 p-1 rounded-lg">
           {METRICS.map(m => (
             <button key={m.key} onClick={() => setMetric(m.key)}
@@ -281,7 +281,7 @@ export const BoxPlotByPosition: React.FC<Props> = ({ atletas, defaultMetric = 'd
           <div className="text-white font-bold mb-0.5">
             {hoverOutlier.row.apelido || hoverOutlier.row.nome}
           </div>
-          <div className="text-slate-400 text-[10px] mb-1">
+          <div className="text-slate-500 text-[10px] mb-1">
             {hoverOutlier.row.posicao || hoverOutlier.pos}
           </div>
           <div className="tabular-nums">

@@ -93,7 +93,7 @@ const RadarOverlay: React.FC<{ jogadores: JogadorComparacao[]; tipo: 'jogos' | '
         return <text key={a.key} x={x} y={y + dy} fontSize="9.5" textAnchor={anchor}
           className="fill-slate-600 dark:fill-slate-300 font-bold">{a.label}</text>;
       })}
-      <circle cx={CX} cy={CY} r={1.5} fill="currentColor" className="text-slate-400" />
+      <circle cx={CX} cy={CY} r={1.5} fill="currentColor" className="text-slate-500" />
     </svg>
   );
 };
@@ -101,7 +101,7 @@ const RadarOverlay: React.FC<{ jogadores: JogadorComparacao[]; tipo: 'jogos' | '
 // ─── Mini Sparkline ───────────────────────────────────────────────────────────
 
 const Sparkline: React.FC<{ pontos: number[]; color: string; w?: number; h?: number }> = ({ pontos, color, w = 100, h = 28 }) => {
-  if (pontos.length < 2) return <span className="text-[10px] text-slate-400">—</span>;
+  if (pontos.length < 2) return <span className="text-[10px] text-slate-500">—</span>;
   const max = Math.max(...pontos, 1);
   const min = Math.min(...pontos, 0);
   const range = max - min || 1;
@@ -124,7 +124,7 @@ const MetricBar: React.FC<{ jogadores: JogadorComparacao[]; metricKey: MetricKey
     <div className="space-y-1">
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">{label}</span>
-        <span className="text-[10px] text-slate-400">{unit}</span>
+        <span className="text-[10px] text-slate-500">{unit}</span>
       </div>
       {jogadores.map((j, ji) => {
         const val = values[ji]!;
@@ -221,9 +221,9 @@ export const Comparar: React.FC = () => {
       {/* HEADER */}
       <header className="bg-card border-b border-slate-200 dark:border-white/[0.06] px-8 py-4 flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Análise Comparativa</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500">Análise Comparativa</p>
           <h1 className="text-xl font-extrabold text-slate-900 dark:text-white">Comparar Jogadores</h1>
-          <p className="text-[11px] text-slate-400 mt-1">Selecione 2 a 4 jogadores para comparação lado a lado de métricas</p>
+          <p className="text-[11px] text-slate-500 mt-1">Selecione 2 a 4 jogadores para comparação lado a lado de métricas</p>
         </div>
         <button onClick={() => window.print()}
           title="Imprimir ou salvar como PDF"
@@ -241,7 +241,7 @@ export const Comparar: React.FC = () => {
           <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
             <div>
               <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300">Selecionar Jogadores</h2>
-              <p className="text-[11px] text-slate-400 mt-0.5">Filtre por posição para comparar atletas da mesma função</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">Filtre por posição para comparar atletas da mesma função</p>
             </div>
             <div className="flex items-center gap-3">
               <select value={filtroPosicao} onChange={e => { setFiltroPosicao(e.target.value); setSelecionados([]); setDados(null); }}
@@ -279,7 +279,7 @@ export const Comparar: React.FC = () => {
                     <p className={`text-xs font-bold truncate ${sel ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
                       {j.apelido || j.nomeCompleto.split(',')[0]}
                     </p>
-                    <p className="text-[10px] text-slate-400 truncate">{posicaoLabel(j.posicao)}</p>
+                    <p className="text-[10px] text-slate-500 truncate">{posicaoLabel(j.posicao)}</p>
                   </div>
                   {sel && (
                     <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
@@ -294,7 +294,7 @@ export const Comparar: React.FC = () => {
 
           {/* Ações */}
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 dark:border-white/[0.06]">
-            <span className="text-[11px] text-slate-400">
+            <span className="text-[11px] text-slate-500">
               <b className="text-slate-700 dark:text-slate-300">{selecionados.length}</b> de 4 selecionados
             </span>
             <div className="flex gap-2">
@@ -320,7 +320,7 @@ export const Comparar: React.FC = () => {
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                 {/* Chips rápidos */}
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 shrink-0">Base</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 shrink-0">Base</span>
                   <div className="flex gap-1 bg-slate-100 dark:bg-white/5 p-1 rounded-lg flex-wrap">
                     {([
                       ['ultimo-1', 'Último Jogo'],
@@ -339,7 +339,7 @@ export const Comparar: React.FC = () => {
 
                 {/* Dropdown sessão específica */}
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 shrink-0">Ou sessão</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 shrink-0">Ou sessão</span>
                   <select
                     value={filtroPreset === 'sessao' ? String(sessaoEscolhida ?? '') : ''}
                     onChange={e => {
@@ -367,7 +367,7 @@ export const Comparar: React.FC = () => {
                 </div>
 
                 {/* Info do filtro ativo */}
-                <span className="text-[10px] text-slate-400 ml-auto">
+                <span className="text-[10px] text-slate-500 ml-auto">
                   {filtroPreset === 'sessao' && sessaoEscolhida
                     ? `Sessão #${sessaoEscolhida}`
                     : filtroPreset === 'ultimo-1' ? 'Dados do último jogo de cada atleta'
@@ -389,7 +389,7 @@ export const Comparar: React.FC = () => {
                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-card border border-slate-200 dark:border-white/[0.06] hover:border-slate-300 transition-colors">
                     <span className="w-3 h-3 rounded-full shrink-0" style={{ background: color }} />
                     <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{nome}</span>
-                    <span className="text-[10px] text-slate-400">{posicaoLabel(j.jogador.posicao)} · {(j[tipo] as Stats).sessoes}s</span>
+                    <span className="text-[10px] text-slate-500">{posicaoLabel(j.jogador.posicao)} · {(j[tipo] as Stats).sessoes}s</span>
                   </button>
                 );
               })}
@@ -400,14 +400,14 @@ export const Comparar: React.FC = () => {
               {/* Radar (2/5) */}
               <div className={`lg:col-span-2 ${cardCls}`}>
                 <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Radar Comparativo</h2>
-                <p className="text-[11px] text-slate-400 mb-3">5 métricas sobrepostas — borda externa = melhor entre selecionados</p>
+                <p className="text-[11px] text-slate-500 mb-3">5 métricas sobrepostas — borda externa = melhor entre selecionados</p>
                 <RadarOverlay jogadores={dados} tipo={tipo} />
               </div>
 
               {/* Barras (3/5) */}
               <div className={`lg:col-span-3 ${cardCls} print-compact-metrics`}>
                 <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Métricas Detalhadas</h2>
-                <p className="text-[11px] text-slate-400 mb-4">Barras comparativas — <span className="text-emerald-500 font-bold">verde</span> = melhor no grupo</p>
+                <p className="text-[11px] text-slate-500 mb-4">Barras comparativas — <span className="text-emerald-500 font-bold">verde</span> = melhor no grupo</p>
                 <div className="space-y-4">
                   {METRICAS.map(m => (
                     <MetricBar key={m.key} jogadores={dados} metricKey={m.key} label={m.label} unit={m.unit} dec={m.dec} tipo={tipo} />
@@ -419,11 +419,11 @@ export const Comparar: React.FC = () => {
             {/* Sparklines */}
             <div className={cardCls}>
               <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Evolução Recente</h2>
-              <p className="text-[11px] text-slate-400 mb-4">Últimas 10 sessões — tendência de cada métrica</p>
+              <p className="text-[11px] text-slate-500 mb-4">Últimas 10 sessões — tendência de cada métrica</p>
               <div className="overflow-x-auto" tabIndex={0} aria-label="Tabela de evolução recente por atleta">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    <tr className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-500">
                       <th className="text-left px-3 py-2">Jogador</th>
                       <th className="text-center px-3 py-2">Distância</th>
                       <th className="text-center px-3 py-2">m/min</th>
@@ -456,7 +456,7 @@ export const Comparar: React.FC = () => {
             {/* Tabela ranking */}
             <div className={cardCls}>
               <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Ranking por Métrica</h2>
-              <p className="text-[11px] text-slate-400 mb-4">🥇 = melhor no grupo em cada métrica</p>
+              <p className="text-[11px] text-slate-500 mb-4">🥇 = melhor no grupo em cada métrica</p>
               <div className="overflow-x-auto" tabIndex={0} aria-label="Tabela de ranking por métrica">
                 <table className="w-full text-sm">
                   <thead>

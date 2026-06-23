@@ -36,7 +36,7 @@ const ROWS: Array<{
 export const MatchTrainingCompare: React.FC<Props> = ({ data, matchCount, trainingCount }) => {
   if (matchCount === 0 || trainingCount === 0) {
     return (
-      <div className="text-center text-xs text-slate-400 dark:text-slate-500 py-8 px-4">
+      <div className="text-center text-xs text-slate-500 dark:text-slate-500 py-8 px-4">
         {matchCount === 0 && trainingCount === 0
           ? 'Nenhuma sessão para comparar.'
           : matchCount === 0
@@ -91,7 +91,7 @@ export const MatchTrainingCompare: React.FC<Props> = ({ data, matchCount, traini
               </div>
               {/* Bar TREINO */}
               <div className="flex items-center gap-2">
-                <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 w-14 shrink-0 tracking-wide">TREINO</span>
+                <span className="text-[9px] font-bold text-slate-500 dark:text-slate-500 w-14 shrink-0 tracking-wide">TREINO</span>
                 <div className="flex-1 h-5 bg-slate-100 dark:bg-white/[0.04] rounded-sm overflow-hidden relative">
                   <div className="absolute inset-y-0 left-0 rounded-sm flex items-center justify-end pr-2 transition-all"
                        style={{ width: `${(point.training / max) * 100}%`, background: metric.color, opacity: 0.45 }}>
@@ -106,7 +106,7 @@ export const MatchTrainingCompare: React.FC<Props> = ({ data, matchCount, traini
         );
       })}
 
-      <div className="flex items-center gap-3 pt-2 mt-3 border-t border-slate-100 dark:border-white/[0.04] text-[10px] text-slate-400 dark:text-slate-500">
+      <div className="flex items-center gap-3 pt-2 mt-3 border-t border-slate-100 dark:border-white/[0.04] text-[10px] text-slate-500 dark:text-slate-500">
         <span><b className="text-slate-600 dark:text-slate-300">{matchCount}</b> jogos</span>
         <span>·</span>
         <span><b className="text-slate-600 dark:text-slate-300">{trainingCount}</b> treinos</span>

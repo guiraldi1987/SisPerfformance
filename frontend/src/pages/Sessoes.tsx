@@ -66,7 +66,7 @@ function useDebouncedValue<T>(value: T, delayMs = 200): T {
 const Icon = {
   Search: () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-      className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+      className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">
       <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
     </svg>
   ),
@@ -163,7 +163,7 @@ const SessaoCard: React.FC<{
               isJogo ? 'bg-club-red/10 border border-club-red/20' : 'bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.06]'
             }`}>
               <span className={`text-[8px] font-extrabold uppercase leading-none ${
-                isJogo ? 'text-club-red' : 'text-slate-400 dark:text-slate-500'
+                isJogo ? 'text-club-red' : 'text-slate-500 dark:text-slate-500'
               }`}>
                 {MESES_SHORT[Number(sessao.data.slice(5, 7)) - 1]}
               </span>
@@ -177,7 +177,7 @@ const SessaoCard: React.FC<{
               <p className="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-club-red transition-colors">
                 {titulo}
               </p>
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">
+              <p className="text-[10px] text-slate-500 dark:text-slate-500 truncate">
                 {sessao.local || sessao.equipe || formatData(sessao.data)}
               </p>
             </div>
@@ -284,7 +284,7 @@ const MesSection: React.FC<{
           )}
         </div>
         {cargaMediaMes > 0 && (
-          <span className="ml-auto text-[10px] text-slate-400 dark:text-slate-500 tabular-nums">
+          <span className="ml-auto text-[10px] text-slate-500 dark:text-slate-500 tabular-nums">
             Carga média <b className="text-slate-700 dark:text-slate-200">{cargaMediaMes.toFixed(1)}</b>
           </span>
         )}
@@ -391,7 +391,7 @@ const CalendarView: React.FC<{
       {/* Grid 7 colunas */}
       <div className="grid grid-cols-7 gap-1.5">
         {DIAS_SHORT.map(d => (
-          <div key={d} className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 pb-1">
+          <div key={d} className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 pb-1">
             {d}
           </div>
         ))}
@@ -449,7 +449,7 @@ const CalendarView: React.FC<{
                     </div>
                   ))}
                   {sessoesNoDia.length > 2 && (
-                    <div className="text-[9px] font-bold text-slate-400 px-1 mt-0.5">+{sessoesNoDia.length - 2}</div>
+                    <div className="text-[9px] font-bold text-slate-500 px-1 mt-0.5">+{sessoesNoDia.length - 2}</div>
                   )}
                 </div>
               )}
@@ -466,12 +466,12 @@ const CalendarView: React.FC<{
             <h4 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-club-red" />
               {formatData(diaSelecionado)}
-              <span className="text-[11px] text-slate-400 font-medium ml-1">
+              <span className="text-[11px] text-slate-500 font-medium ml-1">
                 ({sessoesDoDia.length} {sessoesDoDia.length === 1 ? 'sessão' : 'sessões'})
               </span>
             </h4>
             <button onClick={() => setDiaSelecionado(null)}
-              className="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-club-red transition-colors">
+              className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-club-red transition-colors">
               Fechar ✕
             </button>
           </div>
@@ -645,23 +645,23 @@ export const Sessoes: React.FC = () => {
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-club-red via-orange-500 to-amber-400" />
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-0.5">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-0.5">
               Arquivo de Sessões
             </p>
             <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Sessões</h1>
             <div className="flex items-center gap-2 mt-2">
               <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06]">
                 <span className="text-sm font-extrabold text-slate-900 dark:text-white tabular-nums">{sessoes.length}</span>
-                <span className="text-[10px] text-slate-400">total</span>
+                <span className="text-[10px] text-slate-500">total</span>
               </div>
               <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-club-red/5 border border-club-red/15">
                 <span className="w-2 h-2 rounded-full bg-club-red" />
                 <span className="text-sm font-extrabold text-club-red tabular-nums">{totalJogos}</span>
-                <span className="text-[10px] text-slate-400">{totalJogos === 1 ? 'jogo' : 'jogos'}</span>
+                <span className="text-[10px] text-slate-500">{totalJogos === 1 ? 'jogo' : 'jogos'}</span>
               </div>
               <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06]">
                 <span className="text-sm font-extrabold text-slate-900 dark:text-white tabular-nums">{totalTreinos}</span>
-                <span className="text-[10px] text-slate-400">{totalTreinos === 1 ? 'treino' : 'treinos'}</span>
+                <span className="text-[10px] text-slate-500">{totalTreinos === 1 ? 'treino' : 'treinos'}</span>
               </div>
               {filtrosAtivos && (
                 <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30">
@@ -719,7 +719,7 @@ export const Sessoes: React.FC = () => {
           {/* Sort (apenas vista lista) */}
           {view === 'lista' && (
             <div className="flex items-center gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ordenar</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Ordenar</span>
               <select value={sort} onChange={e => setSort(e.target.value as SortKey)}
                 aria-label="Ordenar sessões"
                 className="px-2 py-1 text-[11px] bg-input border border-slate-200 dark:border-white/10 rounded-md text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red">
@@ -758,7 +758,7 @@ export const Sessoes: React.FC = () => {
 
       <main className="p-6">
         {loading && (
-          <p className="text-center text-sm text-slate-400 py-12">Carregando sessões…</p>
+          <p className="text-center text-sm text-slate-500 py-12">Carregando sessões…</p>
         )}
         {erro && (
           <p className="text-center text-sm text-red-500 py-12">{erro}</p>

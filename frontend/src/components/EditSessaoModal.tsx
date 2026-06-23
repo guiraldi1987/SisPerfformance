@@ -57,7 +57,7 @@ export const EditSessaoModal: React.FC<EditSessaoModalProps> = ({ sessao, onClos
   };
 
   const inputCls = 'w-full px-3 py-2 text-sm bg-input border border-slate-200 dark:border-white/10 rounded-lg text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red transition-colors';
-  const labelCls = 'block text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1';
+  const labelCls = 'block text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-1';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all" onClick={onClose}>
@@ -76,7 +76,7 @@ export const EditSessaoModal: React.FC<EditSessaoModalProps> = ({ sessao, onClos
             </div>
             Editar Sessão
           </h3>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">✕</button>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">✕</button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -91,7 +91,7 @@ export const EditSessaoModal: React.FC<EditSessaoModalProps> = ({ sessao, onClos
                       ? t === 'Jogo'
                         ? 'bg-club-red/10 text-club-red border-club-red/30'
                         : 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white border-slate-300 dark:border-white/20'
-                      : 'bg-transparent text-slate-400 border-slate-200 dark:border-white/10 hover:border-slate-300'
+                      : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 hover:border-slate-300'
                   }`}>
                   {t === 'Jogo' ? 'Jogo (MD)' : 'Treino'}
                 </button>
