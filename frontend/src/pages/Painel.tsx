@@ -366,9 +366,9 @@ const AtletaGridCard: React.FC<{
             className="group-hover:border-slate-400 dark:group-hover:border-white/20 transition-colors"
           />
           <div className="min-w-0 flex-1">
-            <h4 className="text-sm font-extrabold text-slate-850 dark:text-white truncate font-outfit leading-snug group-hover:text-club-red transition-colors">
+            <h3 className="text-sm font-extrabold text-slate-850 dark:text-white truncate font-outfit leading-snug group-hover:text-club-red transition-colors">
               {atleta.apelido || atleta.nome.split(',')[0]}
-            </h4>
+            </h3>
             <div className="flex items-center gap-1.5 mt-0.5">
               {cod && atleta.posicao ? (
                 <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[8px] font-extrabold text-white font-outfit leading-none shrink-0"
@@ -787,9 +787,9 @@ export const Painel: React.FC = () => {
           <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
             <div className="flex flex-wrap items-baseline justify-between mb-4 gap-3">
               <div>
-                <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-amber-500 dark:text-amber-400 font-outfit">
+                <h2 className="text-[10px] font-extrabold uppercase tracking-widest text-amber-500 dark:text-amber-400 font-outfit">
                   Sem participação recente · {'>'}60 dias
-                </h3>
+                </h2>
                 <p className="text-[11px] text-slate-500 mt-1 leading-none">
                   Atletas marcados como ativos, mas sem registros recentes.
                 </p>
@@ -847,9 +847,9 @@ export const Painel: React.FC = () => {
         <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
             <div>
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-500 font-outfit">
+              <h2 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-500 font-outfit">
                 Carga de Treinamento do Time
-              </h3>
+              </h2>
               <p className="text-[11px] text-slate-500 mt-1 font-mono tabular-nums leading-none">
                 {formatData(data.windowStart)} → {formatData(data.windowEnd)} ·{' '}
                 <span className="font-extrabold text-slate-700 dark:text-slate-200">{data.windowDias}</span> dias analisados
@@ -898,9 +898,9 @@ export const Painel: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-5 gap-4">
             <div>
               <div className="flex items-center gap-2.5">
-                <h3 className="text-sm font-extrabold text-slate-850 dark:text-white font-outfit">
+                <h2 className="text-sm font-extrabold text-slate-850 dark:text-white font-outfit">
                   {filtroZona ? `Elenco (${ZONA_INFO[filtroZona].label})` : 'Elenco Completo'} — Carga ACWR
-                </h3>
+                </h2>
                 {filtroZona && (
                   <button
                     onClick={() => setFiltroZona(null)}

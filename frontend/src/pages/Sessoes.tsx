@@ -273,9 +273,9 @@ const MesSection: React.FC<{
       <button onClick={() => setOpen(o => !o)}
         className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-card border border-slate-200 dark:border-white/[0.06] hover:border-slate-300 dark:hover:border-white/10 transition-all group">
         <Icon.Chevron open={open} />
-        <h3 className="text-sm font-extrabold text-slate-900 dark:text-white capitalize">
+        <h2 className="text-sm font-extrabold text-slate-900 dark:text-white capitalize">
           {monthLabel(mesKey)}
-        </h3>
+        </h2>
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/5 text-[10px] font-bold text-slate-600 dark:text-slate-300">
             {sessoes.length} sessões
@@ -374,9 +374,9 @@ const CalendarView: React.FC<{
             className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
             <Icon.ArrowL />
           </button>
-          <h3 className="text-base font-extrabold text-slate-900 dark:text-white capitalize min-w-[180px] text-center">
+          <h2 className="text-base font-extrabold text-slate-900 dark:text-white capitalize min-w-[180px] text-center">
             {monthLabel(mesAtivo)}
-          </h3>
+          </h2>
           <button onClick={() => navegarMes(1)}
             className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
             <Icon.ArrowR />
@@ -467,13 +467,13 @@ const CalendarView: React.FC<{
         <div className="relative overflow-hidden bg-card border border-slate-200 dark:border-white/[0.06] rounded-xl p-5 shadow-lg mt-2">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-club-red via-orange-500 to-amber-400" />
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-club-red" />
               {formatData(diaSelecionado)}
               <span className="text-[11px] text-slate-500 font-medium ml-1">
                 ({sessoesDoDia.length} {sessoesDoDia.length === 1 ? 'sessão' : 'sessões'})
               </span>
-            </h4>
+            </h3>
             <button onClick={() => setDiaSelecionado(null)}
               className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-club-red transition-colors">
               Fechar ✕
