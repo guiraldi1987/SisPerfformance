@@ -676,13 +676,13 @@ export const Painel: React.FC = () => {
           <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
             <div className="flex flex-wrap items-baseline justify-between mb-4 gap-2">
               <div>
-                <h3 className={`text-[10px] font-extrabold uppercase tracking-widest font-outfit ${
+                <h2 className={`text-[10px] font-extrabold uppercase tracking-widest font-outfit ${
                   data.anomalias.length > 0
-                    ? 'text-amber-500 dark:text-amber-400'
-                    : 'text-emerald-500 dark:text-emerald-400'
+                    ? 'text-amber-700 dark:text-amber-400'
+                    : 'text-emerald-700 dark:text-emerald-400'
                 }`}>
                   Desvios da Média Pessoal · {'>'}2σ
-                </h3>
+                </h2>
                 <p className="text-[11px] text-slate-500 mt-1 leading-none">
                   Atletas cuja última sessão fugiu significativamente do próprio histórico.
                 </p>

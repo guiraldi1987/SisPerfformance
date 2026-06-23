@@ -150,16 +150,17 @@ const SessaoCard: React.FC<{
   const ratio = cargaMax > 0 ? Math.min(sessao.cargaMedia / cargaMax, 1) : 0;
   const accentColor = isJogo ? '#cc1e1e' : ratio >= 0.7 ? '#f59e0b' : '#0d9488';
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }}
-      className="group relative w-full text-left bg-card rounded-xl border border-slate-200 dark:border-white/[0.06] overflow-hidden hover:shadow-lg hover:border-slate-300 dark:hover:border-white/15 transition-all hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-club-red/50">
+    <div className="group relative w-full text-left bg-card rounded-xl border border-slate-200 dark:border-white/[0.06] overflow-hidden hover:shadow-lg hover:border-slate-300 dark:hover:border-white/15 transition-all hover:-translate-y-0.5">
       {/* Accent bar lateral */}
       <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl" style={{ background: accentColor }} />
+      {/* Link "esticado": cobre o card pra navegacao, irmao dos botoes de acao (evita button aninhado) */}
+      <button
+        onClick={onClick}
+        aria-label={`Abrir relatório da sessão ${titulo}`}
+        className="absolute inset-0 z-0 rounded-xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-club-red/50"
+      />
 
-      <div className="p-3.5 pl-4">
+      <div className="relative z-[1] pointer-events-none p-3.5 pl-4">
         {/* Header */}
         <div className="flex items-start justify-between gap-2 mb-2.5">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -226,7 +227,7 @@ const SessaoCard: React.FC<{
       </div>
 
       {/* Edit + Trash */}
-      <div className="absolute top-3 right-3 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-all duration-300">
+      <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 pointer-events-none group-hover:pointer-events-auto focus-within:pointer-events-auto transition-all duration-300">
         <button
           onClick={e => { e.stopPropagation(); onEdit(e); }}
           aria-label={`Editar sessão ${sessao.descricao || sessao.data}`}
