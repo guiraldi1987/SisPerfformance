@@ -150,8 +150,12 @@ const SessaoCard: React.FC<{
   const ratio = cargaMax > 0 ? Math.min(sessao.cargaMedia / cargaMax, 1) : 0;
   const accentColor = isJogo ? '#cc1e1e' : ratio >= 0.7 ? '#f59e0b' : '#0d9488';
   return (
-    <button onClick={onClick}
-      className="group relative w-full text-left bg-card rounded-xl border border-slate-200 dark:border-white/[0.06] overflow-hidden hover:shadow-lg hover:border-slate-300 dark:hover:border-white/15 transition-all hover:-translate-y-0.5">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }}
+      className="group relative w-full text-left bg-card rounded-xl border border-slate-200 dark:border-white/[0.06] overflow-hidden hover:shadow-lg hover:border-slate-300 dark:hover:border-white/15 transition-all hover:-translate-y-0.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-club-red/50">
       {/* Accent bar lateral */}
       <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl" style={{ background: accentColor }} />
 
@@ -224,7 +228,7 @@ const SessaoCard: React.FC<{
       {/* Edit + Trash */}
       <div className="absolute top-3 right-3 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-all duration-300">
         <button
-          onClick={onEdit}
+          onClick={e => { e.stopPropagation(); onEdit(e); }}
           aria-label={`Editar sessão ${sessao.descricao || sessao.data}`}
           title="Editar sessão"
           className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-indigo-500 border border-slate-200 dark:border-white/10 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-indigo-500 shadow-sm hover:shadow-indigo-500/25 transition-all"
@@ -233,7 +237,7 @@ const SessaoCard: React.FC<{
           <Icon.Edit />
         </button>
         <button
-          onClick={onDelete}
+          onClick={e => { e.stopPropagation(); onDelete(e); }}
           aria-label={`Remover sessão ${sessao.descricao || sessao.data}`}
           title="Remover sessão"
           className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-rose-500 border border-slate-200 dark:border-white/10 hover:bg-rose-500 hover:text-white hover:border-rose-500 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-rose-500 shadow-sm hover:shadow-rose-500/25 transition-all"
@@ -242,7 +246,7 @@ const SessaoCard: React.FC<{
           <Icon.Trash />
         </button>
       </div>
-    </button>
+    </div>
   );
 };
 
