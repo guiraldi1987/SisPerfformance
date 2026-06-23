@@ -760,7 +760,7 @@ export const Sessoes: React.FC = () => {
         </div>
       </header>
 
-      <main className="p-6">
+      <div className="p-6">
         {loading && (
           <p className="text-center text-sm text-slate-500 py-12">Carregando sessões…</p>
         )}
@@ -816,7 +816,7 @@ export const Sessoes: React.FC = () => {
             onCardClick={(id) => navigate(`/sessao/${id}`)}
           />
         )}
-      </main>
+      </div>
     </div>
   );
 };

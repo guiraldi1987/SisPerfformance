@@ -111,7 +111,7 @@ export const Backups = () => {
         }
       />
 
-      <main className="p-6 md:p-8 max-w-4xl mx-auto">
+      <div className="p-6 md:p-8 max-w-4xl mx-auto">
       {loading ? (
         <p className="text-slate-500 dark:text-slate-400 text-sm">Carregando…</p>
       ) : list.length === 0 ? (
@@ -176,7 +176,7 @@ export const Backups = () => {
         onConfirm={handleDelete}
         onCancel={() => setConfirmTarget(null)}
       />
-      </main>
+      </div>
     </div>
   );
 };

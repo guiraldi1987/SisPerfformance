@@ -583,7 +583,7 @@ export const JogadorPerfil: React.FC = () => {
         </div>
       </header>
 
-      <main className="py-4 md:py-6 w-full space-y-6 px-3 md:px-4 lg:px-4">
+      <div className="py-4 md:py-6 w-full space-y-6 px-3 md:px-4 lg:px-4">
 
         {/* ═══════════════════ TABELA ═══════════════════ */}
         <div className="bg-card rounded-xl border border-slate-200 dark:border-white/[0.06] overflow-hidden shadow-xl dark:shadow-black/20">
@@ -900,7 +900,7 @@ export const JogadorPerfil: React.FC = () => {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };

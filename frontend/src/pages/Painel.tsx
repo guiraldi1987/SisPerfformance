@@ -604,7 +604,7 @@ export const Painel: React.FC = () => {
         </div>
       </header>
 
-      <main className="p-6 space-y-6 max-w-[1600px] mx-auto">
+      <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
 
         {/* ALERTAS — 4 cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1102,7 +1102,7 @@ export const Painel: React.FC = () => {
             </div>
           )}
         </div>
-      </main>
+      </div>
       <ConfirmModal
         open={inativarAlvo !== null}
         message={`Marcar este atleta como inativo? A data de saída será registrada como ${inativarAlvo?.ultimaSessao ? formatData(inativarAlvo.ultimaSessao) : 'hoje'}.`}

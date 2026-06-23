@@ -36,7 +36,7 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface px-4 relative overflow-hidden transition-colors duration-300">
+    <main className="min-h-screen flex items-center justify-center bg-surface px-4 relative overflow-hidden transition-colors duration-300">
       
       {/* Decorative Blur Background (Mesh Gradient) */}
       <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-club-red/10 dark:bg-club-red/[0.07] blur-[100px] pointer-events-none" />
@@ -175,6 +175,6 @@ export const Login: React.FC = () => {
           Acesso Restrito Paulista FC · ApexPRO
         </p>
       </div>
-    </div>
+    </main>
   );
 };

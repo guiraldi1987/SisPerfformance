@@ -235,7 +235,7 @@ export const Comparar: React.FC = () => {
         </button>
       </header>
 
-      <main className="p-6 space-y-6">
+      <div className="p-6 space-y-6">
         {/* SELEÇÃO */}
         <div className={`${cardCls} print-hide`}>
           <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
@@ -509,7 +509,7 @@ export const Comparar: React.FC = () => {
             description="Marque de 2 a 4 jogadores acima para comparar as métricas lado a lado."
           />
         )}
-      </main>
+      </div>
     </div>
   );
 };
