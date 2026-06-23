@@ -181,7 +181,7 @@ export const Layout: React.FC = () => {
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full mt-2.5 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-bold text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-rose-500/5 dark:hover:bg-rose-500/10 uppercase tracking-widest transition-all duration-200"
+                className="w-full mt-2.5 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-bold text-slate-500 dark:text-slate-400 hover:text-red-700 hover:bg-rose-500/5 dark:hover:bg-rose-500/10 uppercase tracking-widest transition-all duration-200"
               >
                 <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
@@ -215,7 +215,7 @@ export const Layout: React.FC = () => {
                   {pinging ? '…' : 'Tentar'}
                 </button>
               )}
-              <span className={`flex items-center gap-1 text-[10px] font-extrabold uppercase ${apiOnline ? 'text-emerald-500' : 'text-red-500'}`}>
+              <span className={`flex items-center gap-1 text-[10px] font-extrabold uppercase ${apiOnline ? 'text-emerald-700' : 'text-red-700'}`}>
                 <span className={`w-1.5 h-1.5 rounded-full ${apiOnline ? 'bg-emerald-500 animate-pulse neon-glow-green' : 'bg-red-500'}`} />
                 {apiOnline ? 'Online' : 'Offline'}
               </span>

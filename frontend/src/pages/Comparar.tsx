@@ -407,7 +407,7 @@ export const Comparar: React.FC = () => {
               {/* Barras (3/5) */}
               <div className={`lg:col-span-3 ${cardCls} print-compact-metrics`}>
                 <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Métricas Detalhadas</h2>
-                <p className="text-[11px] text-slate-500 mb-4">Barras comparativas — <span className="text-emerald-500 font-bold">verde</span> = melhor no grupo</p>
+                <p className="text-[11px] text-slate-500 mb-4">Barras comparativas — <span className="text-emerald-700 font-bold">verde</span> = melhor no grupo</p>
                 <div className="space-y-4">
                   {METRICAS.map(m => (
                     <MetricBar key={m.key} jogadores={dados} metricKey={m.key} label={m.label} unit={m.unit} dec={m.dec} tipo={tipo} />

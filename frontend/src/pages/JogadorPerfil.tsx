@@ -405,7 +405,7 @@ export const JogadorPerfil: React.FC = () => {
   };
 
   if (loading) return <LoadingState label="Carregando perfil do atleta…" />;
-  if (erro)    return <div className="flex items-center justify-center h-64 text-red-500 text-sm">{erro}</div>;
+  if (erro)    return <div className="flex items-center justify-center h-64 text-red-700 text-sm">{erro}</div>;
   if (!data)   return null;
 
   const { jogador } = data;

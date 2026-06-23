@@ -155,7 +155,7 @@ export const Backups = () => {
                       </button>
                       <button
                         onClick={() => setConfirmTarget(b.filename)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:bg-rose-500/5 transition-colors"
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-rose-700 hover:bg-rose-500/5 transition-colors"
                       >
                         Excluir
                       </button>

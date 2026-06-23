@@ -241,7 +241,7 @@ const SessaoCard: React.FC<{
           onClick={e => { e.stopPropagation(); onDelete(e); }}
           aria-label={`Remover sessão ${sessao.descricao || sessao.data}`}
           title="Remover sessão"
-          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-rose-500 border border-slate-200 dark:border-white/10 hover:bg-rose-500 hover:text-white hover:border-rose-500 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-rose-500 shadow-sm hover:shadow-rose-500/25 transition-all"
+          className="flex items-center justify-center w-7 h-7 rounded-full bg-white dark:bg-elevated text-rose-700 border border-slate-200 dark:border-white/10 hover:bg-rose-500 hover:text-white hover:border-rose-500 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-rose-500 shadow-sm hover:shadow-rose-500/25 transition-all"
           onMouseDown={e => e.stopPropagation()}
         >
           <Icon.Trash />
@@ -671,7 +671,7 @@ export const Sessoes: React.FC = () => {
               {filtrosAtivos && (
                 <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30">
                   <span className="text-sm font-extrabold text-amber-600 tabular-nums">{filtradas.length}</span>
-                  <span className="text-[10px] text-amber-500">filtrados</span>
+                  <span className="text-[10px] text-amber-700">filtrados</span>
                 </div>
               )}
             </div>
@@ -766,7 +766,7 @@ export const Sessoes: React.FC = () => {
           <p className="text-center text-sm text-slate-500 py-12">Carregando sessões…</p>
         )}
         {erro && (
-          <p className="text-center text-sm text-red-500 py-12">{erro}</p>
+          <p className="text-center text-sm text-red-700 py-12">{erro}</p>
         )}
 
         {!loading && !erro && sessoes.length === 0 && (

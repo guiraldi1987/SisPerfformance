@@ -558,9 +558,9 @@ export const Jogadores: React.FC = () => {
         <button className="bg-club-red text-white font-bold rounded-lg px-4 py-2 text-sm hover:opacity-90 accent-glow">Adicionar</button>
       </form>
 
-      {erroForm && <p className="text-rose-500 text-sm mb-4">{erroForm}</p>}
+      {erroForm && <p className="text-rose-700 text-sm mb-4">{erroForm}</p>}
       {loading && <p className="text-slate-500 dark:text-slate-400 text-sm">Carregando…</p>}
-      {erro && <p className="text-rose-500 text-sm">{erro}</p>}
+      {erro && <p className="text-rose-700 text-sm">{erro}</p>}
 
       <div className="border border-slate-200 dark:border-white/5 rounded-xl overflow-hidden bg-card">
         <table className="w-full text-sm">
@@ -627,7 +627,7 @@ export const Jogadores: React.FC = () => {
                 <td className="px-3 py-2.5 text-[11px] text-slate-500 dark:text-slate-400 tabular-nums whitespace-nowrap">
                   {j.dataChegada ? `Desde ${formatData(j.dataChegada)}` : '—'}
                   {j.dataSaida && (
-                    <div className="text-rose-500 dark:text-rose-400 text-[10px]">Saiu {formatData(j.dataSaida)}</div>
+                    <div className="text-rose-700 dark:text-rose-400 text-[10px]">Saiu {formatData(j.dataSaida)}</div>
                   )}
                 </td>
                 <td className="px-3 py-2.5 text-slate-500 dark:text-slate-500 font-mono text-xs">{j.codigoCsv}</td>
@@ -677,7 +677,7 @@ export const Jogadores: React.FC = () => {
                     <button
                       onClick={() => setPendingDeleteId(j.id)}
                       title="Remover permanentemente"
-                      className="inline-flex items-center justify-center w-7 h-7 rounded-md text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors"
+                      className="inline-flex items-center justify-center w-7 h-7 rounded-md text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-3.5 h-3.5">
                         <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />

@@ -511,7 +511,7 @@ export const Usuarios: React.FC = () => {
       </div>
 
       {/* FEEDBACK DE ESTADO */}
-      {erro && <p className="text-rose-500 text-sm mb-4">{erro}</p>}
+      {erro && <p className="text-rose-700 text-sm mb-4">{erro}</p>}
       {loading && <p className="text-slate-500 dark:text-slate-400 text-sm">Carregando staff…</p>}
 
       {/* TABELA DE USUÁRIOS */}
@@ -618,7 +618,7 @@ export const Usuarios: React.FC = () => {
                           className={`inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors ${
                             isMe
                               ? 'text-slate-300 dark:text-slate-700 cursor-not-allowed'
-                              : 'text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20'
+                              : 'text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-900/20'
                           }`}
                         >
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4">

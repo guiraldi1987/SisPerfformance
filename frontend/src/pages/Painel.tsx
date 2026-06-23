@@ -70,8 +70,8 @@ const ZONA_INFO: Record<Zona, { label: string; color: string; bg: string; ring: 
 
 const TendenciaIcon: React.FC<{ tendencia: 'subindo' | 'descendo' | 'estavel' }> = ({ tendencia }) => (
   <span className={`text-[10px] font-extrabold font-outfit px-1.5 py-0.5 rounded-md ${
-    tendencia === 'subindo'  ? 'bg-rose-500/10 text-rose-500'    :
-    tendencia === 'descendo' ? 'bg-emerald-500/10 text-emerald-500' :
+    tendencia === 'subindo'  ? 'bg-rose-500/10 text-rose-700'    :
+    tendencia === 'descendo' ? 'bg-emerald-500/10 text-emerald-700' :
     'bg-slate-500/10 text-slate-500'
   }`}>
     {tendencia === 'subindo' ? '▲' : tendencia === 'descendo' ? '▼' : '—'}
@@ -303,7 +303,7 @@ const AlertCard: React.FC<{
             style={{ stroke: info.color, strokeDasharray: circumference, strokeDashoffset, transition: 'stroke-dashoffset 0.8s ease' }} />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xl font-extrabold tabular-nums leading-none font-outfit" style={{ color: info.color }}>{count}</span>
+          <span className="text-xl font-extrabold tabular-nums leading-none font-outfit" style={{ color: ensureContrastBg(info.color) }}>{count}</span>
         </div>
       </div>
 
@@ -312,7 +312,7 @@ const AlertCard: React.FC<{
           <svg viewBox="0 0 24 24" fill="none" stroke={info.color} strokeWidth="2.2" className="w-4 h-4 shrink-0">
             <path strokeLinecap="round" strokeLinejoin="round" d={ICONS[zona]} />
           </svg>
-          <p className="text-[10px] font-extrabold uppercase tracking-widest font-outfit" style={{ color: info.color }}>
+          <p className="text-[10px] font-extrabold uppercase tracking-widest font-outfit" style={{ color: ensureContrastBg(info.color) }}>
             {info.label}
           </p>
         </div>
@@ -393,11 +393,11 @@ const AtletaGridCard: React.FC<{
               Status ACWR
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold font-mono tabular-nums leading-none tracking-tight" style={{ color: info.color }}>
+              <span className="text-2xl font-extrabold font-mono tabular-nums leading-none tracking-tight" style={{ color: ensureContrastBg(info.color) }}>
                 {atleta.acwr != null ? atleta.acwr.toFixed(2) : '—'}
               </span>
               <span className={`inline-flex px-1.5 py-0.5 rounded text-[8px] font-extrabold font-outfit uppercase shrink-0 ${info.ring}`}
-                style={{ color: info.color, background: info.color + '0d' }}>
+                style={{ color: ensureContrastBg(info.color), background: info.color + '0d' }}>
                 {info.label}
               </span>
             </div>
@@ -547,7 +547,7 @@ export const Painel: React.FC = () => {
   };
 
   if (loading) return <LoadingState label="Carregando painel analítico…" />;
-  if (erro)    return <div className="flex items-center justify-center h-screen text-red-500 text-xs font-semibold uppercase tracking-wider font-outfit">{erro}</div>;
+  if (erro)    return <div className="flex items-center justify-center h-screen text-red-700 text-xs font-semibold uppercase tracking-wider font-outfit">{erro}</div>;
   if (!data || !atletasAgrupados) return null;
 
   return (
@@ -645,7 +645,7 @@ export const Painel: React.FC = () => {
               const isRisco = insight.toLowerCase().includes('risco') || insight.toLowerCase().includes('acwr > 1.5');
               const isBaixa = insight.toLowerCase().includes('sub-treinado') || insight.toLowerCase().includes('acwr < 0.8');
               const isVolume = insight.toLowerCase().includes('volume') || insight.toLowerCase().includes('%');
-              const iconColor = isRisco ? 'text-red-500' : isBaixa ? 'text-yellow-500' : 'text-club-red';
+              const iconColor = isRisco ? 'text-red-700' : isBaixa ? 'text-yellow-700' : 'text-club-red';
               const iconPath = isRisco
                 ? 'M12 9v4m0 4h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0z' // alerta
                 : isBaixa
@@ -763,7 +763,7 @@ export const Painel: React.FC = () => {
                           <span key={m.key}
                             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold font-mono tabular-nums ${
                               up
-                                ? 'bg-rose-500/10 border border-rose-500/20 text-rose-500'
+                                ? 'bg-rose-500/10 border border-rose-500/20 text-rose-700'
                                 : 'bg-sky-500/10 border border-sky-500/20 text-sky-500'
                             }`}
                             title={`Última: ${m.latest} ${m.unit} · Média: ${m.mean} ${m.unit} · z=${m.z}`}>
@@ -787,7 +787,7 @@ export const Painel: React.FC = () => {
           <div className="bg-card border border-slate-200/50 dark:border-white/[0.04] rounded-2xl p-6 shadow-sm glass-panel transition-colors">
             <div className="flex flex-wrap items-baseline justify-between mb-4 gap-3">
               <div>
-                <h2 className="text-[10px] font-extrabold uppercase tracking-widest text-amber-500 dark:text-amber-400 font-outfit">
+                <h2 className="text-[10px] font-extrabold uppercase tracking-widest text-amber-700 dark:text-amber-400 font-outfit">
                   Sem participação recente · {'>'}60 dias
                 </h2>
                 <p className="text-[11px] text-slate-500 mt-1 leading-none">
@@ -827,7 +827,7 @@ export const Painel: React.FC = () => {
 
                     <button onClick={() => setInativarAlvo(a)}
                       title={`Marcar inativo (data de saída = ${a.ultimaSessao ? formatData(a.ultimaSessao) : 'hoje'})`}
-                      className="px-3 py-1.5 rounded-xl text-[9px] font-extrabold bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 hover:text-rose-600 transition-all cursor-pointer font-outfit uppercase tracking-widest active:scale-95 shadow-sm">
+                      className="px-3 py-1.5 rounded-xl text-[9px] font-extrabold bg-rose-500/10 text-rose-700 hover:bg-rose-500/20 hover:text-rose-600 transition-all cursor-pointer font-outfit uppercase tracking-widest active:scale-95 shadow-sm">
                       Inativar Atleta
                     </button>
                   </div>
@@ -932,7 +932,7 @@ export const Painel: React.FC = () => {
                           : 'border-transparent bg-transparent hover:bg-slate-100/50 dark:hover:bg-white/5'
                       }`}
                       style={{
-                        color: info.color,
+                        color: ensureContrastBg(info.color),
                         borderColor: filtroZona === z ? info.color : 'transparent',
                         background: filtroZona === z ? info.color + '0d' : undefined,
                       }}
@@ -1060,7 +1060,7 @@ export const Painel: React.FC = () => {
                         </td>
 
                         <td className="px-4 py-3 text-right">
-                          <span className="text-xs font-extrabold font-mono tabular-nums leading-none" style={{ color: info.color }}>
+                          <span className="text-xs font-extrabold font-mono tabular-nums leading-none" style={{ color: ensureContrastBg(info.color) }}>
                             {a.acwr != null ? a.acwr.toFixed(2) : '—'}
                           </span>
                         </td>
@@ -1080,7 +1080,7 @@ export const Painel: React.FC = () => {
 
                         <td className="px-4 py-3">
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[9px] font-extrabold font-outfit uppercase border ${info.ring}`}
-                            style={{ color: info.color, background: info.color + '0d' }}>
+                            style={{ color: ensureContrastBg(info.color), background: info.color + '0d' }}>
                             <span className="w-1.5 h-1.5 rounded-full" style={{ background: info.color }} />
                             {info.label}
                           </span>
