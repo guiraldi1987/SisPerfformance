@@ -4,6 +4,7 @@ import { API_BASE } from '../lib/api';
 import { formatData } from '../lib/format';
 import { POSICOES, posicaoCodigo, POSICAO_COLOR, posicaoLabel } from '../lib/constants';
 import { EmptyState } from '../components/ui/EmptyState';
+import { Select } from '../components/ui/Select';
 
 interface SessaoDisp { id: number; data: string; tipo: string; descricao: string | null; equipe: string | null; local: string | null; }
 type FiltroPreset = 'ultimo-1' | 'ultimo-3' | 'ultimo-5' | 'todos-jogos' | 'tudo' | 'sessao';
@@ -244,12 +245,13 @@ export const Comparar: React.FC = () => {
               <p className="text-[11px] text-slate-500 mt-0.5">Filtre por posição para comparar atletas da mesma função</p>
             </div>
             <div className="flex items-center gap-3">
-              <select value={filtroPosicao} onChange={e => { setFiltroPosicao(e.target.value); setSelecionados([]); setDados(null); }}
-                aria-label="Filtrar por posição"
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 bg-input text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red">
-                <option value="">Todas as posições</option>
-                {posicoesDisp.map(p => <option key={p} value={p}>{p}</option>)}
-              </select>
+              <Select
+                ariaLabel="Filtrar por posição"
+                value={filtroPosicao}
+                onChange={v => { setFiltroPosicao(v); setSelecionados([]); setDados(null); }}
+                className="min-w-[150px]"
+                options={[{ value: '', label: 'Todas as posições' }, ...posicoesDisp.map(p => ({ value: p, label: p }))]}
+              />
             </div>
           </div>
 
@@ -340,30 +342,28 @@ export const Comparar: React.FC = () => {
                 {/* Dropdown sessão específica */}
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 shrink-0">Ou sessão</span>
-                  <select
+                  <Select
+                    ariaLabel="Selecionar sessão específica"
                     value={filtroPreset === 'sessao' ? String(sessaoEscolhida ?? '') : ''}
-                    onChange={e => {
-                      const v = Number(e.target.value);
-                      if (v > 0) { setFiltroPreset('sessao'); setSessaoEscolhida(v); setTipo('geral'); }
+                    onChange={v => {
+                      const num = Number(v);
+                      if (num > 0) { setFiltroPreset('sessao'); setSessaoEscolhida(num); setTipo('geral'); }
                       else { setFiltroPreset('todos-jogos'); setSessaoEscolhida(null); setTipo('jogos'); }
                     }}
-                    aria-label="Selecionar sessão específica"
-                    className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-white/10 bg-input text-slate-700 dark:text-slate-200 focus:outline-none focus:border-club-red max-w-[280px]"
-                  >
-                    <option value="">— Selecionar jogo —</option>
-                    {sessoesDisp.filter(s => s.tipo === 'Jogo').map(s => (
-                      <option key={s.id} value={s.id}>
-                        {formatData(s.data)} — {s.descricao || 'Jogo'}{s.local ? ` (${s.local})` : ''}
-                      </option>
-                    ))}
-                    <optgroup label="Treinos">
-                      {sessoesDisp.filter(s => s.tipo === 'Treino').map(s => (
-                        <option key={s.id} value={s.id}>
-                          {formatData(s.data)} — {s.descricao || 'Treino'}
-                        </option>
-                      ))}
-                    </optgroup>
-                  </select>
+                    className="max-w-[280px]"
+                    options={[
+                      { value: '', label: '— Selecionar jogo —' },
+                      ...sessoesDisp.filter(s => s.tipo === 'Jogo').map(s => ({
+                        value: String(s.id),
+                        label: `${formatData(s.data)} — ${s.descricao || 'Jogo'}${s.local ? ` (${s.local})` : ''}`,
+                      })),
+                      ...sessoesDisp.filter(s => s.tipo === 'Treino').map(s => ({
+                        value: String(s.id),
+                        label: `${formatData(s.data)} — ${s.descricao || 'Treino'}`,
+                        group: 'Treinos',
+                      })),
+                    ]}
+                  />
                 </div>
 
                 {/* Info do filtro ativo */}
