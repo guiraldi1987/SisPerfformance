@@ -65,6 +65,22 @@
     color: #e2e8f0;
   }
 
+  /* Controles nativos seguem o tema. Sem color-scheme declarado, o Chrome/Windows
+     abre o popup de <select> com fundo claro do SO enquanto herda o texto claro
+     (slate-200) → datas ilegíveis. As cores explícitas em option/optgroup garantem
+     contraste mesmo quando o navegador ignora color-scheme no popup. */
+  :root { color-scheme: light; }
+  .dark { color-scheme: dark; }
+
+  .dark select option,
+  .dark select optgroup {
+    background-color: #0f1722;
+    color: #e2e8f0;
+  }
+  .dark select optgroup {
+    color: #94a3b8;
+  }
+
   /* Melhoria estética geral de scrollbars no tema escuro */
   ::-webkit-scrollbar {
     width: 6px;
